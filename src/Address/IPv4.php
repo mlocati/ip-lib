@@ -125,7 +125,7 @@ class IPv4 implements AddressInterface
         if ($long) {
             return $this->getComparableString();
         }
-        
+
         return $this->address;
     }
 
