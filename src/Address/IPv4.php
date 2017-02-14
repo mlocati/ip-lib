@@ -122,6 +122,10 @@ class IPv4 implements AddressInterface
      */
     public function toString($long = false)
     {
+        if ($long) {
+            return $this->getComparableString();
+        }
+        
         return $this->address;
     }
 
