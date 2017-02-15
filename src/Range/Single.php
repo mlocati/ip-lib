@@ -47,6 +47,18 @@ class Single implements RangeInterface
     }
 
     /**
+     * Create the range instance starting from an address instance.
+     *
+     * @param AddressInterface $address
+     *
+     * @return static
+     */
+    public static function fromAddress(AddressInterface $address)
+    {
+        return new static($address);
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @see RangeInterface::toString()
