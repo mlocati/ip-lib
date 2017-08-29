@@ -28,7 +28,7 @@ require_once 'path/to/iplib/ip-lib.php';
 
 ## Installation with Composer
 
-Simply run `composer install mlocati/ip-lib`, or add these lines to your `composer.json` file:
+Simply run `composer require mlocati/ip-lib`, or add these lines to your `composer.json` file:
 
 ```json
 "require": {
