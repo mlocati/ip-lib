@@ -184,7 +184,7 @@ class Pattern implements RangeInterface
     {
         return $this->toAddress;
     }
-    
+
     /**
      * {@inheritdoc}
      *
