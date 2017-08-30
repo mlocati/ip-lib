@@ -168,6 +168,26 @@ class Pattern implements RangeInterface
     /**
      * {@inheritdoc}
      *
+     * @see RangeInterface::getStartAddress()
+     */
+    public function getStartAddress()
+    {
+        return $this->fromAddress;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see RangeInterface::getEndAddress()
+     */
+    public function getEndAddress()
+    {
+        return $this->toAddress;
+    }
+    
+    /**
+     * {@inheritdoc}
+     *
      * @see RangeInterface::getComparableStartString()
      */
     public function getComparableStartString()

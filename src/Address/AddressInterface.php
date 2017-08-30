@@ -65,4 +65,18 @@ interface AddressInterface
      * @return bool
      */
     public function matches(RangeInterface $range);
+
+    /**
+     * Get the address right after this IP address (if available).
+     *
+     * @return AddressInterface|null
+     */
+    public function getNextAddress();
+
+    /**
+     * Get the address right before this IP address (if available).
+     *
+     * @return AddressInterface|null
+     */
+    public function getPreviousAddress();
 }

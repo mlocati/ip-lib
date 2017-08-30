@@ -402,4 +402,54 @@ class IPv6 implements AddressInterface
     {
         return $range->contains($this);
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see AddressInterface::getNextAddress()
+     */
+    public function getNextAddress()
+    {
+        $overflow = false;
+        $words = $this->getWords();
+        for ($i = count($words) - 1; $i >= 0; --$i) {
+            if ($words[$i] === 0xffff) {
+                if ($i === 0) {
+                    $overflow = true;
+                    break;
+                }
+                $words[$i] = 0;
+            } else {
+                ++$words[$i];
+                break;
+            }
+        }
+
+        return $overflow ? null : static::fromWords($words);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see AddressInterface::getPreviousAddress()
+     */
+    public function getPreviousAddress()
+    {
+        $overflow = false;
+        $words = $this->getWords();
+        for ($i = count($words) - 1; $i >= 0; --$i) {
+            if ($words[$i] === 0) {
+                if ($i === 0) {
+                    $overflow = true;
+                    break;
+                }
+                $words[$i] = 0xffff;
+            } else {
+                --$words[$i];
+                break;
+            }
+        }
+
+        return $overflow ? null : static::fromWords($words);
+    }
 }

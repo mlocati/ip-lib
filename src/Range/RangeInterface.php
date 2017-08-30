@@ -44,6 +44,20 @@ interface RangeInterface
     public function contains(AddressInterface $address);
 
     /**
+     * Get the initial address contained in this range.
+     *
+     * @return AddressInterface
+     */
+    public function getStartAddress();
+
+    /**
+     * Get the final address contained in this range.
+     *
+     * @return AddressInterface
+     */
+    public function getEndAddress();
+
+    /**
      * Get a string representation of the starting address of this range than can be used when comparing addresses and ranges.
      *
      * @return string

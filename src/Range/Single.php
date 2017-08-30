@@ -108,6 +108,26 @@ class Single implements RangeInterface
     /**
      * {@inheritdoc}
      *
+     * @see RangeInterface::getStartAddress()
+     */
+    public function getStartAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see RangeInterface::getEndAddress()
+     */
+    public function getEndAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see RangeInterface::getComparableStartString()
      */
     public function getComparableStartString()

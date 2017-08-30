@@ -17,6 +17,7 @@ class ValidTest extends \PHPUnit_Framework_TestCase
             array('f::1', 'f::1', '000f:0000:0000:0000:0000:0000:0000:0001'),
             array('::f:0:1', '::f:0:1', '0000:0000:0000:0000:0000:000f:0000:0001'),
             array('1:02:003:0004::', '1:2:3:4::', '0001:0002:0003:0004:0000:0000:0000:0000'),
+            array('::ffff:ffff:ffff:ffff:ffff:ffff:ffff', '0:ffff:ffff:ffff:ffff:ffff:ffff:ffff', '0000:ffff:ffff:ffff:ffff:ffff:ffff:ffff'),
         );
     }
 

@@ -62,6 +62,17 @@ $address = \IPLib\Factory::addressFromString('127.0.0.1');
 ```
 
 
+### Get the next/previous addresses
+
+```php
+$address = \IPLib\Factory::addressFromString('::1');
+echo (string) $address->getPreviousAddress();
+// prints ::
+echo (string) $address->getNextAddress();
+// prints ::2
+```
+
+
 ### Parse an IP address range
 
 To parse a subnet (CIDR) range:
@@ -100,6 +111,17 @@ $range = \IPLib\Factory::rangeFromString('::');
 $range = \IPLib\Factory::rangeFromBoundaries('192.168.0.1', '192.168.255.255');
 echo (string) $range;
 // prints 192.168.0.0/16
+```
+
+
+### Retrive the boundaries of a range
+
+```php
+$range = \IPLib\Factory::rangeFromString('127.0.0.*');
+echo (string) $range->getStartAddress();
+// prints 127.0.0.0
+echo (string) $range->getEndAddress();
+// prints 127.0.0.255
 ```
 
 

@@ -290,4 +290,54 @@ class IPv4 implements AddressInterface
     {
         return $range->contains($this);
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see AddressInterface::getNextAddress()
+     */
+    public function getNextAddress()
+    {
+        $overflow = false;
+        $bytes = $this->getBytes();
+        for ($i = count($bytes) - 1; $i >= 0; --$i) {
+            if ($bytes[$i] === 255) {
+                if ($i === 0) {
+                    $overflow = true;
+                    break;
+                }
+                $bytes[$i] = 0;
+            } else {
+                ++$bytes[$i];
+                break;
+            }
+        }
+
+        return $overflow ? null : static::fromBytes($bytes);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see AddressInterface::getPreviousAddress()
+     */
+    public function getPreviousAddress()
+    {
+        $overflow = false;
+        $bytes = $this->getBytes();
+        for ($i = count($bytes) - 1; $i >= 0; --$i) {
+            if ($bytes[$i] === 0) {
+                if ($i === 0) {
+                    $overflow = true;
+                    break;
+                }
+                $bytes[$i] = 255;
+            } else {
+                --$bytes[$i];
+                break;
+            }
+        }
+
+        return $overflow ? null : static::fromBytes($bytes);
+    }
 }
