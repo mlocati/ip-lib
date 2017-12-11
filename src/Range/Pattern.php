@@ -150,7 +150,7 @@ class Pattern implements RangeInterface
      */
     public function getRangeType()
     {
-        return $this->address->getRangeType();
+        return $this->fromAddress->getRangeType();
     }
 
     /**
