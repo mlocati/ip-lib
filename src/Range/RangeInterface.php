@@ -35,6 +35,13 @@ interface RangeInterface
     public function getAddressType();
 
     /**
+     * Get the type of range of the IP address.
+     *
+     * @return int One of the \IPLib\Range\Type::T_... constants
+     */
+    public function getRangeType();
+
+    /**
      * Check if this range contains an IP address.
      *
      * @param AddressInterface $address

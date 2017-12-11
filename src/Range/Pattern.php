@@ -146,6 +146,16 @@ class Pattern implements RangeInterface
     /**
      * {@inheritdoc}
      *
+     * @see RangeInterface::getRangeType()
+     */
+    public function getRangeType()
+    {
+        return $this->address->getRangeType();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see RangeInterface::contains()
      */
     public function contains(AddressInterface $address)
