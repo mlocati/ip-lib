@@ -107,7 +107,7 @@ class Single implements RangeInterface
     {
         $result = false;
         if ($address instanceof AddressInterface) {
-            $range = Single::fromAddress($address);
+            $range = self::fromAddress($address);
         } elseif ($address instanceof RangeInterface) {
             $range = $address;
         } else {

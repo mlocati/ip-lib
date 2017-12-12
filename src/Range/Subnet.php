@@ -5,8 +5,8 @@ namespace IPLib\Range;
 use IPLib\Address\AddressInterface;
 use IPLib\Address\IPv4;
 use IPLib\Address\IPv6;
-use IPLib\Factory;
 use IPLib\Address\Type as AddressType;
+use IPLib\Factory;
 use IPLib\Range\Type as RangeType;
 
 /**
@@ -144,7 +144,6 @@ class Subnet implements RangeInterface
     public function getRangeType()
     {
         if ($this->rangeType === null) {
-
             switch ($this->getAddressType()) {
                 case AddressType::T_IPv4:
                     // Default is public
@@ -152,8 +151,9 @@ class Subnet implements RangeInterface
                     $reservedRanges = IPv4::$reservedRanges;
                     break;
                 case AddressType::T_IPv6:
-                    if (Subnet::fromString('2002::/16')->contains($this)) {
+                    if (self::fromString('2002::/16')->contains($this)) {
                         $this->rangeType = Factory::rangeFromBoundaries($this->fromAddress->toIPv4(), $this->toAddress->toIPv4())->getRangeType();
+
                         return $this->rangeType;
                     } else {
                         // Default is public
@@ -162,12 +162,12 @@ class Subnet implements RangeInterface
                     }
                     break;
                 default:
-                    return null;
+                    return;
             }
 
             // Check if range is contained within an RFC subnet
             foreach ($reservedRanges as $reservedRange) {
-                if (Subnet::fromString($reservedRange['cidr'])->contains($this)) {
+                if (self::fromString($reservedRange['cidr'])->contains($this)) {
                     $this->rangeType = $reservedRange['type'];
                     break;
                 }
@@ -176,7 +176,7 @@ class Subnet implements RangeInterface
             // Check if public/reserved (default) range contains an RFC subnet
             if ($this->rangeType === RangeType::T_PUBLIC || $this->rangeType === RangeType::T_RESERVED) {
                 foreach ($reservedRanges as $reservedRange) {
-                    if ($this->contains(Subnet::fromString($reservedRange['cidr']))) {
+                    if ($this->contains(self::fromString($reservedRange['cidr']))) {
                         if ($this->rangeType !== $reservedRange['type']) {
                             // RFC 5735 specifies that 255.255.255.255/32 is excluded from 240.0.0.0/4 and 224.0.0.0/4
                             if ($this->getAddressType() === AddressType::T_IPv4 &&

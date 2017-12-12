@@ -46,24 +46,24 @@ class IPv4 implements AddressInterface
      *
      * @var mixed
      */
-    public static $reservedRanges = [
-        ['cidr' => '0.0.0.0/32',         'type' => RangeType::T_UNSPECIFIED],      //RFC 5735
-        ['cidr' => '0.0.0.0/8',          'type' => RangeType::T_THISNETWORK],      //RFC 5735
-        ['cidr' => '10.0.0.0/8',         'type' => RangeType::T_PRIVATENETWORK],   //RFC 5735
-        ['cidr' => '127.0.0.0/8',        'type' => RangeType::T_LOOPBACK],         //RFC 5735
-        ['cidr' => '169.254.0.0/16',     'type' => RangeType::T_LINKLOCAL],        //RFC 5735
-        ['cidr' => '172.16.0.0/12',      'type' => RangeType::T_PRIVATENETWORK],   //RFC 5735
-        ['cidr' => '192.0.0.0/24',       'type' => RangeType::T_RESERVED],         //RFC 5735
-        ['cidr' => '192.0.2.0/24',       'type' => RangeType::T_RESERVED],         //RFC 5735
-        ['cidr' => '192.88.99.0/24',     'type' => RangeType::T_ANYCASTRELAY],     //RFC 5735
-        ['cidr' => '192.168.0.0/16',     'type' => RangeType::T_PRIVATENETWORK],   //RFC 5735
-        ['cidr' => '198.18.0.0/15',      'type' => RangeType::T_RESERVED],         //RFC 5735
-        ['cidr' => '198.51.100.0/24',    'type' => RangeType::T_RESERVED],         //RFC 5735
-        ['cidr' => '203.0.113.0/24',     'type' => RangeType::T_RESERVED],         //RFC 5735
-        ['cidr' => '255.255.255.255/32', 'type' => RangeType::T_LIMITEDBROADCAST], //RFC 5735
-        ['cidr' => '224.0.0.0/4',        'type' => RangeType::T_MULTICAST],        //RFC 5735
-        ['cidr' => '240.0.0.0/4',        'type' => RangeType::T_RESERVED],         //RFC 5735
-    ];
+    public static $reservedRanges = array(
+        array('cidr' => '0.0.0.0/32',         'type' => RangeType::T_UNSPECIFIED),      //RFC 5735
+        array('cidr' => '0.0.0.0/8',          'type' => RangeType::T_THISNETWORK),      //RFC 5735
+        array('cidr' => '10.0.0.0/8',         'type' => RangeType::T_PRIVATENETWORK),   //RFC 5735
+        array('cidr' => '127.0.0.0/8',        'type' => RangeType::T_LOOPBACK),         //RFC 5735
+        array('cidr' => '169.254.0.0/16',     'type' => RangeType::T_LINKLOCAL),        //RFC 5735
+        array('cidr' => '172.16.0.0/12',      'type' => RangeType::T_PRIVATENETWORK),   //RFC 5735
+        array('cidr' => '192.0.0.0/24',       'type' => RangeType::T_RESERVED),         //RFC 5735
+        array('cidr' => '192.0.2.0/24',       'type' => RangeType::T_RESERVED),         //RFC 5735
+        array('cidr' => '192.88.99.0/24',     'type' => RangeType::T_ANYCASTRELAY),     //RFC 5735
+        array('cidr' => '192.168.0.0/16',     'type' => RangeType::T_PRIVATENETWORK),   //RFC 5735
+        array('cidr' => '198.18.0.0/15',      'type' => RangeType::T_RESERVED),         //RFC 5735
+        array('cidr' => '198.51.100.0/24',    'type' => RangeType::T_RESERVED),         //RFC 5735
+        array('cidr' => '203.0.113.0/24',     'type' => RangeType::T_RESERVED),         //RFC 5735
+        array('cidr' => '255.255.255.255/32', 'type' => RangeType::T_LIMITEDBROADCAST), //RFC 5735
+        array('cidr' => '224.0.0.0/4',        'type' => RangeType::T_MULTICAST),        //RFC 5735
+        array('cidr' => '240.0.0.0/4',        'type' => RangeType::T_RESERVED),         //RFC 5735
+    );
 
     /**
      * Initializes the instance.
@@ -97,7 +97,7 @@ class IPv4 implements AddressInterface
             if (preg_match('/^'.$rx.'$/', $address, $matches)) {
                 $ok = true;
                 $nums = array();
-                for ($i = 1; $ok && $i <= 4; ++$i) {
+                for ($i = 1; $ok && $i <= 4; $i++) {
                     $ok = false;
                     $n = (int) $matches[$i];
                     if ($n >= 0 && $n <= 255) {
@@ -264,7 +264,7 @@ class IPv4 implements AddressInterface
     {
         $overflow = false;
         $bytes = $this->getBytes();
-        for ($i = count($bytes) - 1; $i >= 0; --$i) {
+        for ($i = count($bytes) - 1; $i >= 0; $i--) {
             if ($bytes[$i] === 255) {
                 if ($i === 0) {
                     $overflow = true;
@@ -272,7 +272,7 @@ class IPv4 implements AddressInterface
                 }
                 $bytes[$i] = 0;
             } else {
-                ++$bytes[$i];
+                $bytes[$i]++;
                 break;
             }
         }
@@ -289,7 +289,7 @@ class IPv4 implements AddressInterface
     {
         $overflow = false;
         $bytes = $this->getBytes();
-        for ($i = count($bytes) - 1; $i >= 0; --$i) {
+        for ($i = count($bytes) - 1; $i >= 0; $i--) {
             if ($bytes[$i] === 0) {
                 if ($i === 0) {
                     $overflow = true;
@@ -297,7 +297,7 @@ class IPv4 implements AddressInterface
                 }
                 $bytes[$i] = 255;
             } else {
-                --$bytes[$i];
+                $bytes[$i]--;
                 break;
             }
         }

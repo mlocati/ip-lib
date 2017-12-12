@@ -55,16 +55,16 @@ class IPv6 implements AddressInterface
      *
      * @var mixed
      */
-    public static $reservedRanges = [
-        ['cidr' => '::/128',    'type' => RangeType::T_UNSPECIFIED],        //RFC 4291
-        ['cidr' => '::1/128',   'type' => RangeType::T_LOOPBACK],           //RFC 4291
-        ['cidr' => '100::/64',  'type' => RangeType::T_DISCARDONLY],        //RFC 4291
-        ['cidr' => '100::/8',   'type' => RangeType::T_DISCARD],            //RFC 4291
+    public static $reservedRanges = array(
+        array('cidr' => '::/128',    'type' => RangeType::T_UNSPECIFIED),        //RFC 4291
+        array('cidr' => '::1/128',   'type' => RangeType::T_LOOPBACK),           //RFC 4291
+        array('cidr' => '100::/64',  'type' => RangeType::T_DISCARDONLY),        //RFC 4291
+        array('cidr' => '100::/8',   'type' => RangeType::T_DISCARD),            //RFC 4291
         //['cidr' => '2002::/16', 'type' => RangeType::],                   //RFC 4291
-        ['cidr' => '2000::/3',  'type' => RangeType::T_PUBLIC],             //RFC 4291
-        ['cidr' => 'fc00::/7',  'type' => RangeType::T_PRIVATENETWORK],     //RFC 4193
-        ['cidr' => 'fe80::/10', 'type' => RangeType::T_LINKLOCAL_UNICAST],  //RFC 4291
-        ['cidr' => 'ff00::/8',  'type' => RangeType::T_MULTICAST],          //RFC 4291
+        array('cidr' => '2000::/3',  'type' => RangeType::T_PUBLIC),             //RFC 4291
+        array('cidr' => 'fc00::/7',  'type' => RangeType::T_PRIVATENETWORK),     //RFC 4193
+        array('cidr' => 'fe80::/10', 'type' => RangeType::T_LINKLOCAL_UNICAST),  //RFC 4291
+        array('cidr' => 'ff00::/8',  'type' => RangeType::T_MULTICAST),          //RFC 4291
         //['cidr' => '::/8',      'type' => RangeType::T_RESERVED],         //RFC 4291
         //['cidr' => '200::/7',   'type' => RangeType::T_RESERVED],         //RFC 4048
         //['cidr' => '400::/6',   'type' => RangeType::T_RESERVED],         //RFC 4291
@@ -80,7 +80,7 @@ class IPv6 implements AddressInterface
         //['cidr' => 'f800::/6',  'type' => RangeType::T_RESERVED],         //RFC 4291
         //['cidr' => 'fe00::/9',  'type' => RangeType::T_RESERVED],         //RFC 4291
         //['cidr' => 'fec0::/10', 'type' => RangeType::T_RESERVED],         //RFC 3879
-    ];
+    );
 
     /**
      * Initializes the instance.
@@ -186,7 +186,7 @@ class IPv6 implements AddressInterface
         $result = null;
         if (count($bytes) === 16) {
             $address = '';
-            for ($i = 0; $i < 16; ++$i) {
+            for ($i = 0; $i < 16; $i++) {
                 if ($i !== 0 && $i % 2 === 0) {
                     $address .= ':';
                 }
@@ -218,7 +218,7 @@ class IPv6 implements AddressInterface
         $result = null;
         if (count($words) === 8) {
             $chunks = array();
-            for ($i = 0; $i < 8; ++$i) {
+            for ($i = 0; $i < 8; $i++) {
                 $word = $words[$i];
                 if (is_int($word) && $word >= 0 && $word <= 0xffff) {
                     $chunks[] = sprintf('%04x', $word);
@@ -257,7 +257,7 @@ class IPv6 implements AddressInterface
                         $this->getWords()
                     );
                     $shortAddress = implode(':', $chunks);
-                    for ($i = 8; $i > 1; --$i) {
+                    for ($i = 8; $i > 1; $i--) {
                         $search = '(?:^|:)'.rtrim(str_repeat('0:', $i), ':').'(?:$|:)';
                         if (preg_match('/^(.*?)'.$search.'(.*)$/', $shortAddress, $matches)) {
                             $shortAddress = $matches[1].'::'.$matches[2];
@@ -344,6 +344,7 @@ class IPv6 implements AddressInterface
 
             if ($this->matches(Subnet::fromString('2002::/16'))) {
                 $this->rangeType = $this->toIPv4()->getRangeType();
+
                 return $this->rangeType;
             }
 
@@ -403,7 +404,7 @@ class IPv6 implements AddressInterface
     {
         $overflow = false;
         $words = $this->getWords();
-        for ($i = count($words) - 1; $i >= 0; --$i) {
+        for ($i = count($words) - 1; $i >= 0; $i--) {
             if ($words[$i] === 0xffff) {
                 if ($i === 0) {
                     $overflow = true;
@@ -411,7 +412,7 @@ class IPv6 implements AddressInterface
                 }
                 $words[$i] = 0;
             } else {
-                ++$words[$i];
+                $words[$i]++;
                 break;
             }
         }
@@ -428,7 +429,7 @@ class IPv6 implements AddressInterface
     {
         $overflow = false;
         $words = $this->getWords();
-        for ($i = count($words) - 1; $i >= 0; --$i) {
+        for ($i = count($words) - 1; $i >= 0; $i--) {
             if ($words[$i] === 0) {
                 if ($i === 0) {
                     $overflow = true;
@@ -436,7 +437,7 @@ class IPv6 implements AddressInterface
                 }
                 $words[$i] = 0xffff;
             } else {
-                --$words[$i];
+                $words[$i]--;
                 break;
             }
         }
