@@ -51,6 +51,38 @@ class IPv6 implements AddressInterface
     protected $rangeType;
 
     /**
+     * The list of IPv6 RFC designated address ranges.
+     *
+     * @var mixed
+     */
+    public static $reservedRanges = [
+        ['cidr' => '::/128',    'type' => RangeType::T_UNSPECIFIED],        //RFC 4291
+        ['cidr' => '::1/128',   'type' => RangeType::T_LOOPBACK],           //RFC 4291
+        ['cidr' => '100::/64',  'type' => RangeType::T_DISCARDONLY],        //RFC 4291
+        ['cidr' => '100::/8',   'type' => RangeType::T_DISCARD],            //RFC 4291
+        //['cidr' => '2002::/16', 'type' => RangeType::],                   //RFC 4291
+        ['cidr' => '2000::/3',  'type' => RangeType::T_PUBLIC],             //RFC 4291
+        ['cidr' => 'fc00::/7',  'type' => RangeType::T_PRIVATENETWORK],     //RFC 4193
+        ['cidr' => 'fe80::/10', 'type' => RangeType::T_LINKLOCAL_UNICAST],  //RFC 4291
+        ['cidr' => 'ff00::/8',  'type' => RangeType::T_MULTICAST],          //RFC 4291
+        //['cidr' => '::/8',      'type' => RangeType::T_RESERVED],         //RFC 4291
+        //['cidr' => '200::/7',   'type' => RangeType::T_RESERVED],         //RFC 4048
+        //['cidr' => '400::/6',   'type' => RangeType::T_RESERVED],         //RFC 4291
+        //['cidr' => '800::/5',   'type' => RangeType::T_RESERVED],         //RFC 4291
+        //['cidr' => '1000::/4',  'type' => RangeType::T_RESERVED],         //RFC 4291
+        //['cidr' => '4000::/3',  'type' => RangeType::T_RESERVED],         //RFC 4291
+        //['cidr' => '6000::/3',  'type' => RangeType::T_RESERVED],         //RFC 4291
+        //['cidr' => '8000::/3',  'type' => RangeType::T_RESERVED],         //RFC 4291
+        //['cidr' => 'a000::/3',  'type' => RangeType::T_RESERVED],         //RFC 4291
+        //['cidr' => 'c000::/3',  'type' => RangeType::T_RESERVED],         //RFC 4291
+        //['cidr' => 'e000::/4',  'type' => RangeType::T_RESERVED],         //RFC 4291
+        //['cidr' => 'f000::/5',  'type' => RangeType::T_RESERVED],         //RFC 4291
+        //['cidr' => 'f800::/6',  'type' => RangeType::T_RESERVED],         //RFC 4291
+        //['cidr' => 'fe00::/9',  'type' => RangeType::T_RESERVED],         //RFC 4291
+        //['cidr' => 'fec0::/10', 'type' => RangeType::T_RESERVED],         //RFC 3879
+    ];
+
+    /**
      * Initializes the instance.
      *
      * @param string $longAddress
@@ -307,61 +339,20 @@ class IPv6 implements AddressInterface
     public function getRangeType()
     {
         if ($this->rangeType === null) {
-            switch (true) {
-                // ::/128 - rfc4291
-                case $this->longAddress === '0000:0000:0000:0000:0000:0000:0000:0000':
-                    $this->rangeType = RangeType::T_UNSPECIFIED;
+            // Default is T_RESERVED
+            $this->rangeType = RangeType::T_RESERVED;
+
+            if ($this->matches(Subnet::fromString('2002::/16'))) {
+                $this->rangeType = $this->toIPv4()->getRangeType();
+                return $this->rangeType;
+            }
+
+            // Check if range is contained within an RFC subnet
+            foreach (static::$reservedRanges as $reservedRange) {
+                if ($this->matches(Subnet::fromString($reservedRange['cidr']))) {
+                    $this->rangeType = $reservedRange['type'];
                     break;
-                // ::1/128 - rfc4291
-                case $this->longAddress === '0000:0000:0000:0000:0000:0000:0000:0001':
-                    $this->rangeType = RangeType::T_LOOPBACK;
-                    break;
-                // 100::/64 - rfc4291
-                case strpos($this->longAddress, '0100:0000:0000:0000') === 0:
-                    $this->rangeType = RangeType::T_DISCARDONLY;
-                    break;
-                // 100::/8 - rfc4291
-                case strpos($this->longAddress, '01') === 0:
-                    $this->rangeType = RangeType::T_DISCARD;
-                    break;
-                // 2002::/16 - rfc4291
-                case strpos($this->longAddress, '2002') === 0:
-                    $this->rangeType = $this->toIPv4()->getRangeType();
-                    break;
-                // 2000::/3 - rfc4291
-                case $this->matches(Subnet::fromString('2000::/3')):
-                    $this->rangeType = RangeType::T_PUBLIC; // Unicast global addresses
-                    break;
-                // fc00::/7 - rfc4193
-                case $this->matches(Subnet::fromString('fc00::/7')):
-                    $this->rangeType = RangeType::T_PRIVATENETWORK;
-                    break;
-                // fe80::/10 - rfc4291
-                case $this->matches(Subnet::fromString('fe80::/10')):
-                    $this->rangeType = RangeType::T_LINKLOCAL_UNICAST;
-                    break;
-                // ff00::/8 - rfc4291
-                case strpos($this->longAddress, 'ff') === 0:
-                    $this->rangeType = RangeType::T_MULTICAST;
-                    break;
-                // ::/8 - rfc4291
-                // 200::/7 - rfc4048
-                // 400::/6 - rfc4291
-                // 800::/5 - rfc4291
-                // 1000::/4 - rfc4291
-                // 4000::/3 - rfc4291
-                // 6000::/3 - rfc4291
-                // 8000::/3 - rfc4291
-                // a000::/3 - rfc4291
-                // c000::/3 - rfc4291
-                // e000::/4 - rfc4291
-                // f000::/5 - rfc4291
-                // f800::/6 - rfc4291
-                // fe00::/9 - rfc4291
-                // fec0::/10 - rfc3879
-                default:
-                    $this->rangeType = RangeType::T_RESERVED;
-                    break;
+                }
             }
         }
 

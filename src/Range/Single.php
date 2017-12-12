@@ -103,11 +103,18 @@ class Single implements RangeInterface
      *
      * @see RangeInterface::contains()
      */
-    public function contains(AddressInterface $address)
+    public function contains($address)
     {
         $result = false;
-        if ($address->getAddressType() === $this->getAddressType()) {
-            if ($address->toString(false) === $this->address->toString(false)) {
+        if ($address instanceof AddressInterface) {
+            $range = Single::fromAddress($address);
+        } elseif ($address instanceof RangeInterface) {
+            $range = $address;
+        } else {
+            throw new Exception('Unexpected object passed to RangeInterface::contains()');
+        }
+        if ($range->getAddressType() === $this->getAddressType()) {
+            if ($range->address->toString(false) === $this->address->toString(false)) {
                 $result = true;
             }
         }
