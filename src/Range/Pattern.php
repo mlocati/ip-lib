@@ -5,8 +5,8 @@ namespace IPLib\Range;
 use IPLib\Address\AddressInterface;
 use IPLib\Address\IPv4;
 use IPLib\Address\IPv6;
-use IPLib\Address\Type;
 use IPLib\Factory;
+use IPLib\Address\Type as AddressType;
 use IPLib\Range\Type as RangeType;
 
 /**
@@ -163,12 +163,12 @@ class Pattern implements RangeInterface
         if ($this->rangeType === null) {
 
             switch ($this->getAddressType()) {
-                case Type::T_IPv4:
+                case AddressType::T_IPv4:
                     // Default is public
                     $this->rangeType = RangeType::T_PUBLIC;
                     $reservedRanges = IPv4::$reservedRanges;
                     break;
-                case Type::T_IPv6:
+                case AddressType::T_IPv6:
                     if (Subnet::fromString('2002::/16')->contains($this)) {
                         $this->rangeType = Factory::rangeFromBoundaries($this->fromAddress->toIPv4(), $this->toAddress->toIPv4())->getRangeType();
                         return $this->rangeType;
@@ -195,6 +195,20 @@ class Pattern implements RangeInterface
                 foreach ($reservedRanges as $reservedRange) {
                     if ($this->contains(Subnet::fromString($reservedRange['cidr']))) {
                         if ($this->rangeType !== $reservedRange['type']) {
+                            // RFC 5735 specifies that 255.255.255.255/32 is excluded from 240.0.0.0/4 and 224.0.0.0/4
+                            if ($this->getAddressType() === AddressType::T_IPv4 &&
+                                ($reservedRange['type'] === RangeType::T_LIMITEDBROADCAST ||
+                                 $reservedRange['type'] === RangeType::T_UNSPECIFIED)) {
+                                continue;
+                            }
+
+                            // :: unspecified exists within ::/8 reserved
+                            // ::1/128 loopback exists within ::/8 reserved
+                            if ($this->getAddressType() === AddressType::T_IPv6 &&
+                                ($reservedRange['type'] === RangeType::T_UNSPECIFIED ||
+                                 $reservedRange['type'] === RangeType::T_LOOPBACK)) {
+                                continue;
+                            }
                             $this->rangeType = null;
                         }
                     }
