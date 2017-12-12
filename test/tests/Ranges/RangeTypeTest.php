@@ -6,7 +6,7 @@ use IPLib\Factory;
 use IPLib\Range\Type;
 use PHPUnit_Framework_TestCase;
 
-class TypeTest extends PHPUnit_Framework_TestCase
+class RangeTypeTest extends PHPUnit_Framework_TestCase
 {
     public function ipProvider()
     {
