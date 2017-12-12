@@ -1,9 +1,7 @@
 sudo: false
 
 language: php
-
-env:
-  - COMPOSER_DISABLE_XDEBUG_WARN=1
+dist: precise
 
 php:
   - 5.3
@@ -15,6 +13,7 @@ php:
   - nightly
 
 env:
+  - COMPOSER_DISABLE_XDEBUG_WARN=1
   - GET_COVERAGE=yes
   - GET_COVERAGE=no
 
