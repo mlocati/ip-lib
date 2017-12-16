@@ -181,11 +181,15 @@ class RangeTypeTest extends PHPUnit_Framework_TestCase
             // 240.0.0.0/4
             array('240.0.0.0/4', Type::T_RESERVED),
             array('240.0.0.1/4', Type::T_RESERVED),
+            array('240.*.*.*', Type::T_RESERVED),
             array('247.127.127.127/4', Type::T_RESERVED),
+            array('247.*.*.*', Type::T_RESERVED),
             array('248.128.128.128/4', Type::T_RESERVED),
+            array('248.*.*.*', Type::T_RESERVED),
             array('255.255.255.0/4', Type::T_RESERVED),
             array('255.255.255.253/4', Type::T_RESERVED),
             array('255.255.255.254/4', Type::T_RESERVED),
+            array('255.*.*.*', Type::T_RESERVED),
             // Public addresses
             array('2001:503:ba3e::2:30/32', Type::T_PUBLIC),
             array('216.58.212.68/32', Type::T_PUBLIC),
