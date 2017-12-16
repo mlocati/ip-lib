@@ -1,6 +1,6 @@
 <?php
 
-namespace IPLib\Test\Addresses;
+namespace IPLib\Test\Ranges;
 
 use IPLib\Factory;
 use IPLib\Range\Type;
@@ -16,18 +16,22 @@ class RangeTypeTest extends PHPUnit_Framework_TestCase
             // 0.0.0.0/8
             array('0.1.0.0/8', Type::T_THISNETWORK),
             array('0.255.255.255/8', Type::T_THISNETWORK),
+            array('0.*.*.*', Type::T_THISNETWORK),
             // 10.0.0.0/8
             array('10.0.0.0/8', Type::T_PRIVATENETWORK),
             array('10.1.0.0/8', Type::T_PRIVATENETWORK),
             array('10.255.255.255/8', Type::T_PRIVATENETWORK),
+            array('10.*.*.*', Type::T_PRIVATENETWORK),
             // 127.0.0.0/8
             array('127.0.0.0/8', Type::T_LOOPBACK),
             array('127.0.0.1/8', Type::T_LOOPBACK),
             array('127.255.255.255/8', Type::T_LOOPBACK),
+            array('127.*.*.*', Type::T_LOOPBACK),
             // 169.254.0.0/16
             array('169.254.0.0/16', Type::T_LINKLOCAL),
             array('169.254.1.0/16', Type::T_LINKLOCAL),
             array('169.254.255.255/16', Type::T_LINKLOCAL),
+            array('169.254.*.*', Type::T_LINKLOCAL),
             // 172.16.0.0/12
             array('172.16.0.0/12', Type::T_PRIVATENETWORK),
             array('172.16.0.1/12', Type::T_PRIVATENETWORK),
@@ -39,14 +43,17 @@ class RangeTypeTest extends PHPUnit_Framework_TestCase
             array('192.0.0.0/24', Type::T_RESERVED),
             array('192.0.0.1/24', Type::T_RESERVED),
             array('192.0.0.255/24', Type::T_RESERVED),
+            array('192.0.0.*', Type::T_RESERVED),
             // 192.0.2.0/24
             array('192.0.2.0/24', Type::T_RESERVED),
             array('192.0.2.1/24', Type::T_RESERVED),
             array('192.0.2.255/24', Type::T_RESERVED),
+            array('192.0.2.*', Type::T_RESERVED),
             // 192.88.99.0/24
             array('192.88.99.0/24', Type::T_ANYCASTRELAY),
             array('192.88.99.1/24', Type::T_ANYCASTRELAY),
             array('192.88.99.255/24', Type::T_ANYCASTRELAY),
+            array('192.88.99.*', Type::T_ANYCASTRELAY),
             // 192.168.0.0/16
             array('192.168.0.0/16', Type::T_PRIVATENETWORK),
             array('192.168.0.1/16', Type::T_PRIVATENETWORK),
@@ -57,6 +64,7 @@ class RangeTypeTest extends PHPUnit_Framework_TestCase
             array('192.168.255.0/16', Type::T_PRIVATENETWORK),
             array('192.168.255.1/16', Type::T_PRIVATENETWORK),
             array('192.168.255.255/16', Type::T_PRIVATENETWORK),
+            array('192.168.*.*', Type::T_PRIVATENETWORK),
             // 198.18.0.0/15
             array('198.18.0.0/15', Type::T_RESERVED),
             array('198.18.0.1/15', Type::T_RESERVED),
@@ -80,10 +88,12 @@ class RangeTypeTest extends PHPUnit_Framework_TestCase
             array('198.51.100.0/24', Type::T_RESERVED),
             array('198.51.100.1/24', Type::T_RESERVED),
             array('198.51.100.255/24', Type::T_RESERVED),
+            array('198.51.100.*', Type::T_RESERVED),
             // 203.0.113.0/24
             array('203.0.113.0/24', Type::T_RESERVED),
             array('203.0.113.1/24', Type::T_RESERVED),
             array('203.0.113.255/24', Type::T_RESERVED),
+            array('203.0.113.*', Type::T_RESERVED),
             // 224.0.0.0/4
             array('224.0.0.0/4', Type::T_MULTICAST),
             array('224.0.0.1/4', Type::T_MULTICAST),
@@ -193,13 +203,16 @@ class RangeTypeTest extends PHPUnit_Framework_TestCase
             array('00ff:0000:0000:0000:0000:0000:0000:0000/8', Type::T_RESERVED),
             array('00ff:0000:0000:0000:0000:0000:0000:ffff/8', Type::T_RESERVED),
             array('00ff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/8', Type::T_RESERVED),
+            array('00ff:*:*:*:*:*:*:*', Type::T_RESERVED),
             // 0100::/64
             array('0100:0000:0000:0000:0000:0000:0000:0000/64', Type::T_DISCARDONLY),
             array('0100:0000:0000:0000:ffff:ffff:ffff:ffff/64', Type::T_DISCARDONLY),
+            array('0100:0000:0000:0000:*:*:*:*', Type::T_DISCARDONLY),
             // 0100::/8
             array('0100:0000:0000:0001:0000:0000:0000:0000/8', Type::T_DISCARD),
             array('01ff:0000:0000:0000:0000:0000:0000:0000/8', Type::T_DISCARD),
             array('01ff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/8', Type::T_DISCARD),
+            array('0100:*:*:*:*:*:*:*', Type::T_DISCARD),
             // 0200::/7
             array('0200:0000:0000:0000:0000:0000:0000:0000/7', Type::T_RESERVED),
             array('0200:0000:0000:0000:0000:0000:0000:0009/7', Type::T_RESERVED),
@@ -217,10 +230,13 @@ class RangeTypeTest extends PHPUnit_Framework_TestCase
             // 2002::/48
             array('2002:0000:0000:0000:0000:0000:0000:0000/48', Type::T_UNSPECIFIED), //Assumed as 0.0.0.0 IPv4
             array('2002:0000:0000:ffff:ffff:ffff:ffff:ffff/48', Type::T_UNSPECIFIED), //Assumed as 0.0.0.0 IPv4
+            array('2002:0000:0000:*:*:*:*:*', Type::T_UNSPECIFIED), //Assumed as 0.0.0.0 IPv4
             array('2002:7f00:0001:0000:0000:0000:0000:0000/48', Type::T_LOOPBACK), //Assumed as 127.0.0.1 IPv4
             array('2002:7f00:0001:ffff:ffff:ffff:ffff:ffff/48', Type::T_LOOPBACK), //Assumed as 127.0.0.1 IPv4
+            array('2002:7f00:0001:*:*:*:*:*', Type::T_LOOPBACK), //Assumed as 127.0.0.1 IPv4
             array('2002:ffff:ffff:0000:0000:0000:0000:0000/48', Type::T_LIMITEDBROADCAST), //Assumed as 255.255.255.255 IPv4
             array('2002:ffff:ffff:ffff:ffff:ffff:ffff:ffff/48', Type::T_LIMITEDBROADCAST), //Assumed as 255.255.255.255 IPv4
+            array('2002:ffff:ffff:*:*:*:*:*', Type::T_LIMITEDBROADCAST), //Assumed as 255.255.255.255 IPv4
             // 2000::/3
             array('2000:0000:0000:0000:0000:0000:0000:0000/3', Type::T_PUBLIC),
             array('3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/3', Type::T_PUBLIC),

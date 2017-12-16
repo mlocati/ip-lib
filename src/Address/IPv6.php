@@ -50,37 +50,13 @@ class IPv6 implements AddressInterface
      */
     protected $rangeType;
 
-    /**
-     * The list of IPv6 RFC designated address ranges.
-     *
-     * @var mixed
-     */
-    public static $reservedRanges = array(
-        array('cidr' => '::/128',    'type' => RangeType::T_UNSPECIFIED),        //RFC 4291
-        array('cidr' => '::1/128',   'type' => RangeType::T_LOOPBACK),           //RFC 4291
-        array('cidr' => '100::/64',  'type' => RangeType::T_DISCARDONLY),        //RFC 4291
-        array('cidr' => '100::/8',   'type' => RangeType::T_DISCARD),            //RFC 4291
-        //['cidr' => '2002::/16', 'type' => RangeType::],                   //RFC 4291
-        array('cidr' => '2000::/3',  'type' => RangeType::T_PUBLIC),             //RFC 4291
-        array('cidr' => 'fc00::/7',  'type' => RangeType::T_PRIVATENETWORK),     //RFC 4193
-        array('cidr' => 'fe80::/10', 'type' => RangeType::T_LINKLOCAL_UNICAST),  //RFC 4291
-        array('cidr' => 'ff00::/8',  'type' => RangeType::T_MULTICAST),          //RFC 4291
-        //['cidr' => '::/8',      'type' => RangeType::T_RESERVED],         //RFC 4291
-        //['cidr' => '200::/7',   'type' => RangeType::T_RESERVED],         //RFC 4048
-        //['cidr' => '400::/6',   'type' => RangeType::T_RESERVED],         //RFC 4291
-        //['cidr' => '800::/5',   'type' => RangeType::T_RESERVED],         //RFC 4291
-        //['cidr' => '1000::/4',  'type' => RangeType::T_RESERVED],         //RFC 4291
-        //['cidr' => '4000::/3',  'type' => RangeType::T_RESERVED],         //RFC 4291
-        //['cidr' => '6000::/3',  'type' => RangeType::T_RESERVED],         //RFC 4291
-        //['cidr' => '8000::/3',  'type' => RangeType::T_RESERVED],         //RFC 4291
-        //['cidr' => 'a000::/3',  'type' => RangeType::T_RESERVED],         //RFC 4291
-        //['cidr' => 'c000::/3',  'type' => RangeType::T_RESERVED],         //RFC 4291
-        //['cidr' => 'e000::/4',  'type' => RangeType::T_RESERVED],         //RFC 4291
-        //['cidr' => 'f000::/5',  'type' => RangeType::T_RESERVED],         //RFC 4291
-        //['cidr' => 'f800::/6',  'type' => RangeType::T_RESERVED],         //RFC 4291
-        //['cidr' => 'fe00::/9',  'type' => RangeType::T_RESERVED],         //RFC 4291
-        //['cidr' => 'fec0::/10', 'type' => RangeType::T_RESERVED],         //RFC 3879
-    );
+      /**
+       * An array containing RFC designated address ranges.
+       *
+       * @var array|null
+       */
+      private static $reservedRanges = null;
+
 
     /**
      * Initializes the instance.
@@ -334,6 +310,48 @@ class IPv6 implements AddressInterface
     /**
      * {@inheritdoc}
      *
+     * @see AddressInterface::getReservedRanges()
+     */
+    public static function getReservedRanges()
+    {
+        if (self::$reservedRanges === null) {
+            $reservedRanges = array();
+            foreach(array(
+                '::/128'    => RangeType::T_UNSPECIFIED,        //RFC 4291
+                '::1/128'   => RangeType::T_LOOPBACK,           //RFC 4291
+                '100::/64'  => RangeType::T_DISCARDONLY,        //RFC 4291
+                '100::/8'   => RangeType::T_DISCARD,            //RFC 4291
+                //'2002::/16' => RangeType::,                   //RFC 4291
+                '2000::/3'  => RangeType::T_PUBLIC,             //RFC 4291
+                'fc00::/7'  => RangeType::T_PRIVATENETWORK,     //RFC 4193
+                'fe80::/10' => RangeType::T_LINKLOCAL_UNICAST,  //RFC 4291
+                'ff00::/8'  => RangeType::T_MULTICAST,          //RFC 4291
+                //'::/8'      => RangeType::T_RESERVED,         //RFC 4291
+                //'200::/7'   => RangeType::T_RESERVED,         //RFC 4048
+                //'400::/6'   => RangeType::T_RESERVED,         //RFC 4291
+                //'800::/5'   => RangeType::T_RESERVED,         //RFC 4291
+                //'1000::/4'  => RangeType::T_RESERVED,         //RFC 4291
+                //'4000::/3'  => RangeType::T_RESERVED,         //RFC 4291
+                //'6000::/3'  => RangeType::T_RESERVED,         //RFC 4291
+                //'8000::/3'  => RangeType::T_RESERVED,         //RFC 4291
+                //'a000::/3'  => RangeType::T_RESERVED,         //RFC 4291
+                //'c000::/3'  => RangeType::T_RESERVED,         //RFC 4291
+                //'e000::/4'  => RangeType::T_RESERVED,         //RFC 4291
+                //'f000::/5'  => RangeType::T_RESERVED,         //RFC 4291
+                //'f800::/6'  => RangeType::T_RESERVED,         //RFC 4291
+                //'fe00::/9'  => RangeType::T_RESERVED,         //RFC 4291
+                //'fec0::/10' => RangeType::T_RESERVED,         //RFC 3879
+            ) as $range => $type) {
+                $reservedRanges[] = array('range' => Subnet::fromString($range), 'type' => $type);
+            }
+            self::$reservedRanges = $reservedRanges;
+        }
+        return self::$reservedRanges;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see AddressInterface::getRangeType()
      */
     public function getRangeType()
@@ -349,8 +367,8 @@ class IPv6 implements AddressInterface
             }
 
             // Check if range is contained within an RFC subnet
-            foreach (static::$reservedRanges as $reservedRange) {
-                if ($this->matches(Subnet::fromString($reservedRange['cidr']))) {
+            foreach ($this->getReservedRanges() as $reservedRange) {
+                if ($this->matches($reservedRange['range'])) {
                     $this->rangeType = $reservedRange['type'];
                     break;
                 }

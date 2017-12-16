@@ -48,7 +48,16 @@ interface RangeInterface
      *
      * @return bool
      */
-    public function contains($address);
+    public function contains(AddressInterface $address);
+
+    /**
+     * Check if this range contains another range.
+     *
+     * @param RangeInterface $address
+     *
+     * @return bool
+     */
+    public function containsRange(RangeInterface $address);
 
     /**
      * Get the initial address contained in this range.

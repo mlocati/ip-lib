@@ -42,28 +42,11 @@ class IPv4 implements AddressInterface
     protected $comparableString;
 
     /**
-     * The list of IPv4 RFC designated address ranges.
+     * An array containing RFC designated address ranges.
      *
-     * @var mixed
+     * @var array|null
      */
-    public static $reservedRanges = array(
-        array('cidr' => '0.0.0.0/32',         'type' => RangeType::T_UNSPECIFIED),      //RFC 5735
-        array('cidr' => '0.0.0.0/8',          'type' => RangeType::T_THISNETWORK),      //RFC 5735
-        array('cidr' => '10.0.0.0/8',         'type' => RangeType::T_PRIVATENETWORK),   //RFC 5735
-        array('cidr' => '127.0.0.0/8',        'type' => RangeType::T_LOOPBACK),         //RFC 5735
-        array('cidr' => '169.254.0.0/16',     'type' => RangeType::T_LINKLOCAL),        //RFC 5735
-        array('cidr' => '172.16.0.0/12',      'type' => RangeType::T_PRIVATENETWORK),   //RFC 5735
-        array('cidr' => '192.0.0.0/24',       'type' => RangeType::T_RESERVED),         //RFC 5735
-        array('cidr' => '192.0.2.0/24',       'type' => RangeType::T_RESERVED),         //RFC 5735
-        array('cidr' => '192.88.99.0/24',     'type' => RangeType::T_ANYCASTRELAY),     //RFC 5735
-        array('cidr' => '192.168.0.0/16',     'type' => RangeType::T_PRIVATENETWORK),   //RFC 5735
-        array('cidr' => '198.18.0.0/15',      'type' => RangeType::T_RESERVED),         //RFC 5735
-        array('cidr' => '198.51.100.0/24',    'type' => RangeType::T_RESERVED),         //RFC 5735
-        array('cidr' => '203.0.113.0/24',     'type' => RangeType::T_RESERVED),         //RFC 5735
-        array('cidr' => '255.255.255.255/32', 'type' => RangeType::T_LIMITEDBROADCAST), //RFC 5735
-        array('cidr' => '224.0.0.0/4',        'type' => RangeType::T_MULTICAST),        //RFC 5735
-        array('cidr' => '240.0.0.0/4',        'type' => RangeType::T_RESERVED),         //RFC 5735
-    );
+    private static $reservedRanges = null;
 
     /**
      * Initializes the instance.
@@ -195,6 +178,40 @@ class IPv4 implements AddressInterface
     /**
      * {@inheritdoc}
      *
+     * @see AddressInterface::getReservedRanges()
+     */
+    public static function getReservedRanges()
+    {
+        if (self::$reservedRanges === null) {
+            $reservedRanges = array();
+            foreach(array(
+                  '0.0.0.0/32'         => RangeType::T_UNSPECIFIED,      //RFC 5735
+                  '0.0.0.0/8'          => RangeType::T_THISNETWORK,      //RFC 5735
+                  '10.0.0.0/8'         => RangeType::T_PRIVATENETWORK,   //RFC 5735
+                  '127.0.0.0/8'        => RangeType::T_LOOPBACK,         //RFC 5735
+                  '169.254.0.0/16'     => RangeType::T_LINKLOCAL,        //RFC 5735
+                  '172.16.0.0/12'      => RangeType::T_PRIVATENETWORK,   //RFC 5735
+                  '192.0.0.0/24'       => RangeType::T_RESERVED,         //RFC 5735
+                  '192.0.2.0/24'       => RangeType::T_RESERVED,         //RFC 5735
+                  '192.88.99.0/24'     => RangeType::T_ANYCASTRELAY,     //RFC 5735
+                  '192.168.0.0/16'     => RangeType::T_PRIVATENETWORK,   //RFC 5735
+                  '198.18.0.0/15'      => RangeType::T_RESERVED,         //RFC 5735
+                  '198.51.100.0/24'    => RangeType::T_RESERVED,         //RFC 5735
+                  '203.0.113.0/24'     => RangeType::T_RESERVED,         //RFC 5735
+                  '255.255.255.255/32' => RangeType::T_LIMITEDBROADCAST, //RFC 5735
+                  '224.0.0.0/4'        => RangeType::T_MULTICAST,        //RFC 5735
+                  '240.0.0.0/4'        => RangeType::T_RESERVED,         //RFC 5735
+            ) as $range => $type) {
+                $reservedRanges[] = array('range' => Subnet::fromString($range), 'type' => $type);
+            }
+            self::$reservedRanges = $reservedRanges;
+        }
+        return self::$reservedRanges;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see AddressInterface::getRangeType()
      */
     public function getRangeType()
@@ -204,8 +221,8 @@ class IPv4 implements AddressInterface
             $this->rangeType = RangeType::T_PUBLIC;
 
             // Check if range is contained within an RFC subnet
-            foreach (static::$reservedRanges as $reservedRange) {
-                if ($this->matches(Subnet::fromString($reservedRange['cidr']))) {
+            foreach ($this->getReservedRanges() as $reservedRange) {
+                if ($this->matches($reservedRange['range'])) {
                     $this->rangeType = $reservedRange['type'];
                     break;
                 }

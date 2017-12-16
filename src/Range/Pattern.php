@@ -165,17 +165,17 @@ class Pattern implements RangeInterface
                 case AddressType::T_IPv4:
                     // Default is public
                     $this->rangeType = RangeType::T_PUBLIC;
-                    $reservedRanges = IPv4::$reservedRanges;
+                    $reservedRanges = IPv4::getReservedRanges();
                     break;
                 case AddressType::T_IPv6:
-                    if (Subnet::fromString('2002::/16')->contains($this)) {
+                    if (Subnet::fromString('2002::/16')->containsRange($this)) {
                         $this->rangeType = Factory::rangeFromBoundaries($this->fromAddress->toIPv4(), $this->toAddress->toIPv4())->getRangeType();
 
                         return $this->rangeType;
                     } else {
                         // Default is public
                         $this->rangeType = RangeType::T_RESERVED;
-                        $reservedRanges = IPv6::$reservedRanges;
+                        $reservedRanges = IPv6::getReservedRanges();
                     }
                     break;
                 default:
@@ -184,7 +184,7 @@ class Pattern implements RangeInterface
 
             // Check if range is contained within an RFC subnet
             foreach ($reservedRanges as $reservedRange) {
-                if (Subnet::fromString($reservedRange['cidr'])->contains($this)) {
+                if ($reservedRange['range']->containsRange($this)) {
                     $this->rangeType = $reservedRange['type'];
                     break;
                 }
@@ -193,7 +193,7 @@ class Pattern implements RangeInterface
             // Check if public/reserved range contains an RFC subnet
             if ($this->rangeType === RangeType::T_PUBLIC || $this->rangeType === RangeType::T_RESERVED) {
                 foreach ($reservedRanges as $reservedRange) {
-                    if ($this->contains(Subnet::fromString($reservedRange['cidr']))) {
+                    if ($this->containsRange($reservedRange['range'])) {
                         if ($this->rangeType !== $reservedRange['type']) {
                             // RFC 5735 specifies that 255.255.255.255/32 is excluded from 240.0.0.0/4 and 224.0.0.0/4
                             if ($this->getAddressType() === AddressType::T_IPv4 &&
@@ -224,16 +224,19 @@ class Pattern implements RangeInterface
      *
      * @see RangeInterface::contains()
      */
-    public function contains($address)
+    public function contains(AddressInterface $address)
+    {
+        return $this->containsRange(Single::fromAddress($address));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see RangeInterface::containsRange()
+     */
+    public function containsRange(RangeInterface $range)
     {
         $result = false;
-        if ($address instanceof AddressInterface) {
-            $range = Single::fromAddress($address);
-        } elseif ($address instanceof RangeInterface) {
-            $range = $address;
-        } else {
-            throw new Exception('Unexpected object passed to RangeInterface::contains()');
-        }
         if ($range->getAddressType() === $this->getAddressType()) {
             $cmpLower = $range->getComparableStartString();
             $cmpHigher = $range->getComparableEndString();
