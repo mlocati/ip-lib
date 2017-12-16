@@ -57,7 +57,7 @@ interface RangeInterface
      *
      * @return bool
      */
-    public function containsRange(RangeInterface $address);
+    public function containsRange(self $address);
 
     /**
      * Get the initial address contained in this range.

@@ -50,13 +50,12 @@ class IPv6 implements AddressInterface
      */
     protected $rangeType;
 
-      /**
-       * An array containing RFC designated address ranges.
-       *
-       * @var array|null
-       */
-      private static $reservedRanges = null;
-
+    /**
+     * An array containing RFC designated address ranges.
+     *
+     * @var array|null
+     */
+    private static $reservedRanges = null;
 
     /**
      * Initializes the instance.
@@ -316,7 +315,7 @@ class IPv6 implements AddressInterface
     {
         if (self::$reservedRanges === null) {
             $reservedRanges = array();
-            foreach(array(
+            foreach (array(
                 '::/128'    => RangeType::T_UNSPECIFIED,        //RFC 4291
                 '::1/128'   => RangeType::T_LOOPBACK,           //RFC 4291
                 '100::/64'  => RangeType::T_DISCARDONLY,        //RFC 4291
@@ -346,6 +345,7 @@ class IPv6 implements AddressInterface
             }
             self::$reservedRanges = $reservedRanges;
         }
+
         return self::$reservedRanges;
     }
 

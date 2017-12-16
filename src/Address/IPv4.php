@@ -184,7 +184,7 @@ class IPv4 implements AddressInterface
     {
         if (self::$reservedRanges === null) {
             $reservedRanges = array();
-            foreach(array(
+            foreach (array(
                   '0.0.0.0/32'         => RangeType::T_UNSPECIFIED,      //RFC 5735
                   '0.0.0.0/8'          => RangeType::T_THISNETWORK,      //RFC 5735
                   '10.0.0.0/8'         => RangeType::T_PRIVATENETWORK,   //RFC 5735
@@ -206,6 +206,7 @@ class IPv4 implements AddressInterface
             }
             self::$reservedRanges = $reservedRanges;
         }
+
         return self::$reservedRanges;
     }
 

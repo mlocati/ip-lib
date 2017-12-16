@@ -48,7 +48,7 @@ interface AddressInterface
      *
      * @return array
      */
-     public static function getReservedRanges();
+    public static function getReservedRanges();
 
     /**
      * Get the type of range of the IP address.
