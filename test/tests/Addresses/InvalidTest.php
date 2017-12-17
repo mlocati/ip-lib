@@ -39,7 +39,14 @@ class InvalidTest extends \PHPUnit_Framework_TestCase
     public function testInvalidAddresses($address)
     {
         $str = @strval($address);
-        $this->assertNull(IPv4::fromString($address), "'$str' has been detected as a valid IPv4 address, but it shouldn't");
-        $this->assertNull(IPv6::fromString($address), "'$str' has been detected as a valid IPv6 address, but it shouldn't");
+        $arr = (array)$address;
+
+        $this->assertNull(IPv4::fromString($str), "'$str' has been detected as a valid IPv4 address, but it shouldn't");
+        $this->assertNull(IPv6::fromString($str), "'$str' has been detected as a valid IPv6 address, but it shouldn't");
+
+        $this->assertNull(IPv4::fromBytes($arr), "'$str' has been detected as a valid IPv4 address, but it shouldn't");
+        $this->assertNull(IPv6::fromBytes($arr), "'$str' has been detected as a valid IPv6 address, but it shouldn't");
+
+        $this->assertNull(IPv6::fromWords($arr), "'$str' has been detected as a valid IPv6 address, but it shouldn't");
     }
 }

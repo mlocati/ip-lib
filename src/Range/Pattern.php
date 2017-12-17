@@ -178,8 +178,6 @@ class Pattern implements RangeInterface
                         $reservedRanges = IPv6::getReservedRanges();
                     }
                     break;
-                default:
-                    return;
             }
 
             // Check if range is contained within an RFC subnet
