@@ -189,10 +189,10 @@ $typeName = \IPLib\Range\Type::getName();
 ```
 
 The most notable values of the range type ID are:
--  `\IPLib\Range\Type::T_UNSPECIFIED` if the address is all zeros (`0.0.0.0` or `::`)
--  `\IPLib\Range\Type::T_LOOPBACK` if the address is the localhost (usually `127.0.0.1` or `::1`)
--  `\IPLib\Range\Type::T_PRIVATENETWORK` if the address is in the local network (for instance `192.168.0.1` or `fc00::1`)
--  `\IPLib\Range\Type::T_PUBLIC` if the address is for public usage (for instance `104.25.25.33` or `2001:503:ba3e::2:30`)
+- `\IPLib\Range\Type::T_UNSPECIFIED` if the address is all zeros (`0.0.0.0` or `::`)
+- `\IPLib\Range\Type::T_LOOPBACK` if the address is the localhost (usually `127.0.0.1` or `::1`)
+- `\IPLib\Range\Type::T_PRIVATENETWORK` if the address is in the local network (for instance `192.168.0.1` or `fc00::1`)
+- `\IPLib\Range\Type::T_PUBLIC` if the address is for public usage (for instance `104.25.25.33` or `2001:503:ba3e::2:30`)
 
  
 ### Using a database
