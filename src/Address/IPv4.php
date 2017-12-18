@@ -80,7 +80,7 @@ class IPv4 implements AddressInterface
             if (preg_match('/^'.$rx.'$/', $address, $matches)) {
                 $ok = true;
                 $nums = array();
-                for ($i = 1; $ok && $i <= 4; $i++) {
+                for ($i = 1; $ok && $i <= 4; ++$i) {
                     $ok = false;
                     $n = (int) $matches[$i];
                     if ($n >= 0 && $n <= 255) {
@@ -178,6 +178,16 @@ class IPv4 implements AddressInterface
     /**
      * {@inheritdoc}
      *
+     * @see AddressInterface::getDefaultReservedRangeType()
+     */
+    public static function getDefaultReservedRangeType()
+    {
+        return RangeType::T_PUBLIC;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see AddressInterface::getReservedRanges()
      */
     public static function getReservedRanges()
@@ -185,24 +195,42 @@ class IPv4 implements AddressInterface
         if (self::$reservedRanges === null) {
             $reservedRanges = array();
             foreach (array(
-                  '0.0.0.0/32'         => RangeType::T_UNSPECIFIED,      //RFC 5735
-                  '0.0.0.0/8'          => RangeType::T_THISNETWORK,      //RFC 5735
-                  '10.0.0.0/8'         => RangeType::T_PRIVATENETWORK,   //RFC 5735
-                  '127.0.0.0/8'        => RangeType::T_LOOPBACK,         //RFC 5735
-                  '169.254.0.0/16'     => RangeType::T_LINKLOCAL,        //RFC 5735
-                  '172.16.0.0/12'      => RangeType::T_PRIVATENETWORK,   //RFC 5735
-                  '192.0.0.0/24'       => RangeType::T_RESERVED,         //RFC 5735
-                  '192.0.2.0/24'       => RangeType::T_RESERVED,         //RFC 5735
-                  '192.88.99.0/24'     => RangeType::T_ANYCASTRELAY,     //RFC 5735
-                  '192.168.0.0/16'     => RangeType::T_PRIVATENETWORK,   //RFC 5735
-                  '198.18.0.0/15'      => RangeType::T_RESERVED,         //RFC 5735
-                  '198.51.100.0/24'    => RangeType::T_RESERVED,         //RFC 5735
-                  '203.0.113.0/24'     => RangeType::T_RESERVED,         //RFC 5735
-                  '255.255.255.255/32' => RangeType::T_LIMITEDBROADCAST, //RFC 5735
-                  '224.0.0.0/4'        => RangeType::T_MULTICAST,        //RFC 5735
-                  '240.0.0.0/4'        => RangeType::T_RESERVED,         //RFC 5735
-            ) as $range => $type) {
-                $reservedRanges[] = array('range' => Subnet::fromString($range), 'type' => $type);
+                // RFC 5735
+                '0.0.0.0/8' => array(RangeType::T_THISNETWORK, array('0.0.0.0/32' => RangeType::T_UNSPECIFIED)),
+                // RFC 5735
+                '10.0.0.0/8' => array(RangeType::T_PRIVATENETWORK),
+                // RFC 5735
+                '127.0.0.0/8' => array(RangeType::T_LOOPBACK),
+                // RFC 5735
+                '169.254.0.0/16' => array(RangeType::T_LINKLOCAL),
+                // RFC 5735
+                '172.16.0.0/12' => array(RangeType::T_PRIVATENETWORK),
+                // RFC 5735
+                '192.0.0.0/24' => array(RangeType::T_RESERVED),
+                // RFC 5735
+                '192.0.2.0/24' => array(RangeType::T_RESERVED),
+                // RFC 5735
+                '192.88.99.0/24' => array(RangeType::T_ANYCASTRELAY),
+                // RFC 5735
+                '192.168.0.0/16' => array(RangeType::T_PRIVATENETWORK),
+                // RFC 5735
+                '198.18.0.0/15' => array(RangeType::T_RESERVED),
+                // RFC 5735
+                '198.51.100.0/24' => array(RangeType::T_RESERVED),
+                // RFC 5735
+                '203.0.113.0/24' => array(RangeType::T_RESERVED),
+                // RFC 5735
+                '224.0.0.0/4' => array(RangeType::T_MULTICAST),
+                // RFC 5735
+                '240.0.0.0/4' => array(RangeType::T_RESERVED, array('255.255.255.255/32' => RangeType::T_LIMITEDBROADCAST)),
+            ) as $range => $data) {
+                $exceptions = array();
+                if (isset($data[1])) {
+                    foreach ($data[1] as $exceptionRange => $exceptionType) {
+                        $exceptions[] = new AssignedRange(Subnet::fromString($exceptionRange), $exceptionType);
+                    }
+                }
+                $reservedRanges[] = new AssignedRange(Subnet::fromString($range), $data[0], $exceptions);
             }
             self::$reservedRanges = $reservedRanges;
         }
@@ -218,16 +246,14 @@ class IPv4 implements AddressInterface
     public function getRangeType()
     {
         if ($this->rangeType === null) {
-            // Default is T_PUBLIC
-            $this->rangeType = RangeType::T_PUBLIC;
-
-            // Check if range is contained within an RFC subnet
-            foreach ($this->getReservedRanges() as $reservedRange) {
-                if ($this->matches($reservedRange['range'])) {
-                    $this->rangeType = $reservedRange['type'];
+            $rangeType = null;
+            foreach (static::getReservedRanges() as $reservedRange) {
+                $rangeType = $reservedRange->getAddressType($this);
+                if ($rangeType !== null) {
                     break;
                 }
             }
+            $this->rangeType = $rangeType === null ? static::getDefaultReservedRangeType() : $rangeType;
         }
 
         return $this->rangeType;
@@ -282,7 +308,7 @@ class IPv4 implements AddressInterface
     {
         $overflow = false;
         $bytes = $this->getBytes();
-        for ($i = count($bytes) - 1; $i >= 0; $i--) {
+        for ($i = count($bytes) - 1; $i >= 0; --$i) {
             if ($bytes[$i] === 255) {
                 if ($i === 0) {
                     $overflow = true;
@@ -290,7 +316,7 @@ class IPv4 implements AddressInterface
                 }
                 $bytes[$i] = 0;
             } else {
-                $bytes[$i]++;
+                ++$bytes[$i];
                 break;
             }
         }
@@ -307,7 +333,7 @@ class IPv4 implements AddressInterface
     {
         $overflow = false;
         $bytes = $this->getBytes();
-        for ($i = count($bytes) - 1; $i >= 0; $i--) {
+        for ($i = count($bytes) - 1; $i >= 0; --$i) {
             if ($bytes[$i] === 0) {
                 if ($i === 0) {
                     $overflow = true;
@@ -315,7 +341,7 @@ class IPv4 implements AddressInterface
                 }
                 $bytes[$i] = 255;
             } else {
-                $bytes[$i]--;
+                --$bytes[$i];
                 break;
             }
         }

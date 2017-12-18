@@ -135,7 +135,7 @@ class Factory
                     $toBytes = $to->getBytes();
                     $numBytes = count($fromBytes);
                     $sameBits = 0;
-                    for ($byteIndex = 0; $byteIndex < $numBytes; $byteIndex++) {
+                    for ($byteIndex = 0; $byteIndex < $numBytes; ++$byteIndex) {
                         $fromByte = $fromBytes[$byteIndex];
                         $toByte = $toBytes[$byteIndex];
                         if ($fromByte === $toByte) {

@@ -7,7 +7,6 @@ use IPLib\Address\IPv4;
 use IPLib\Address\IPv6;
 use IPLib\Address\Type as AddressType;
 use IPLib\Factory;
-use IPLib\Range\Type as RangeType;
 
 /**
  * Represents an address range in pattern format (only ending asterisks are supported).
@@ -41,7 +40,7 @@ class Pattern implements RangeInterface
     /**
      * The type of the range of this IP range.
      *
-     * @var int|null
+     * @var int|null|false false if this range crosses multiple range types, null if yet to be determined
      */
     protected $rangeType;
 
@@ -127,7 +126,7 @@ class Pattern implements RangeInterface
                 }
                 break;
             default:
-                throw new \Exception('@todo');
+                throw new \Exception('@todo'); // @codeCoverageIgnore
         }
 
         return $result;
@@ -161,60 +160,34 @@ class Pattern implements RangeInterface
     public function getRangeType()
     {
         if ($this->rangeType === null) {
-            switch ($this->getAddressType()) {
-                case AddressType::T_IPv4:
-                    // Default is public
-                    $this->rangeType = RangeType::T_PUBLIC;
-                    $reservedRanges = IPv4::getReservedRanges();
-                    break;
-                case AddressType::T_IPv6:
-                    if (Subnet::fromString('2002::/16')->containsRange($this)) {
-                        $this->rangeType = Factory::rangeFromBoundaries($this->fromAddress->toIPv4(), $this->toAddress->toIPv4())->getRangeType();
-
-                        return $this->rangeType;
-                    } else {
-                        // Default is public
-                        $this->rangeType = RangeType::T_RESERVED;
+            $addressType = $this->getAddressType();
+            if ($addressType === AddressType::T_IPv6 && Subnet::get6to4()->containsRange($this)) {
+                $this->rangeType = Factory::rangeFromBoundaries($this->fromAddress->toIPv4(), $this->toAddress->toIPv4())->getRangeType();
+            } else {
+                switch ($addressType) {
+                    case AddressType::T_IPv4:
+                        $defaultType = IPv4::getDefaultReservedRangeType();
+                        $reservedRanges = IPv4::getReservedRanges();
+                        break;
+                    case AddressType::T_IPv6:
+                        $defaultType = IPv6::getDefaultReservedRangeType();
                         $reservedRanges = IPv6::getReservedRanges();
-                    }
-                    break;
-            }
-
-            // Check if range is contained within an RFC subnet
-            foreach ($reservedRanges as $reservedRange) {
-                if ($reservedRange['range']->containsRange($this)) {
-                    $this->rangeType = $reservedRange['type'];
-                    break;
+                        break;
+                    default:
+                        throw new \Exception('@todo'); // @codeCoverageIgnore
                 }
-            }
-
-            // Check if public/reserved range contains an RFC subnet
-            if ($this->rangeType === RangeType::T_PUBLIC || $this->rangeType === RangeType::T_RESERVED) {
+                $rangeType = null;
                 foreach ($reservedRanges as $reservedRange) {
-                    if ($this->containsRange($reservedRange['range'])) {
-                        if ($this->rangeType !== $reservedRange['type']) {
-                            // RFC 5735 specifies that 255.255.255.255/32 is excluded from 240.0.0.0/4 and 224.0.0.0/4
-                            if ($this->getAddressType() === AddressType::T_IPv4 &&
-                                ($reservedRange['type'] === RangeType::T_LIMITEDBROADCAST ||
-                                 $reservedRange['type'] === RangeType::T_UNSPECIFIED)) {
-                                continue;
-                            }
-
-                            // :: unspecified exists within ::/8 reserved
-                            // ::1/128 loopback exists within ::/8 reserved
-                            if ($this->getAddressType() === AddressType::T_IPv6 &&
-                                ($reservedRange['type'] === RangeType::T_UNSPECIFIED ||
-                                 $reservedRange['type'] === RangeType::T_LOOPBACK)) {
-                                continue;
-                            }
-                            $this->rangeType = null;
-                        }
+                    $rangeType = $reservedRange->getRangeType($this);
+                    if ($rangeType !== null) {
+                        break;
                     }
                 }
+                $this->rangeType = $rangeType === null ? $defaultType : $rangeType;
             }
         }
 
-        return $this->rangeType;
+        return $this->rangeType === false ? null : $this->rangeType;
     }
 
     /**
@@ -224,7 +197,19 @@ class Pattern implements RangeInterface
      */
     public function contains(AddressInterface $address)
     {
-        return $this->containsRange(Single::fromAddress($address));
+        $result = false;
+        if ($address->getAddressType() === $this->getAddressType()) {
+            $cmp = $address->getComparableString();
+            $from = $this->getComparableStartString();
+            if ($cmp >= $from) {
+                $to = $this->getComparableEndString();
+                if ($cmp <= $to) {
+                    $result = true;
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -236,12 +221,12 @@ class Pattern implements RangeInterface
     {
         $result = false;
         if ($range->getAddressType() === $this->getAddressType()) {
-            $cmpLower = $range->getComparableStartString();
-            $cmpHigher = $range->getComparableEndString();
-            $from = $this->getComparableStartString();
-            if (strcmp($cmpLower, $from) >= 0) {
-                $to = $this->getComparableEndString();
-                if (strcmp($cmpHigher, $to) <= 0) {
+            $myStart = $this->getComparableStartString();
+            $itsStart = $range->getComparableStartString();
+            if ($itsStart >= $myStart) {
+                $myEnd = $this->getComparableEndString();
+                $itsEnd = $range->getComparableEndString();
+                if ($itsEnd <= $myEnd) {
                     $result = true;
                 }
             }

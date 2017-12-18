@@ -6,7 +6,7 @@ use IPLib\Factory;
 use IPLib\Range\Type;
 use PHPUnit_Framework_TestCase;
 
-class AddressRangeTypeTest extends PHPUnit_Framework_TestCase
+class RangeTypeTest extends PHPUnit_Framework_TestCase
 {
     public function ipProvider()
     {
@@ -280,7 +280,7 @@ class AddressRangeTypeTest extends PHPUnit_Framework_TestCase
     public function rangeTypeNameProvider()
     {
         return array(
-            array(null, 'Unknown type ()'),
+            array(null, 'Unknown type'),
             array('x', 'Unknown type (x)'),
             array(-1, 'Unknown type (-1)'),
         );

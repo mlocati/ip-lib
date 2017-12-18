@@ -13,10 +13,11 @@ class RangeTypeTest extends PHPUnit_Framework_TestCase
         return array(
             // 0.0.0.0/32
             array('0.0.0.0/32', Type::T_UNSPECIFIED),
+            array('0.0.0.1/32', Type::T_THISNETWORK),
             // 0.0.0.0/8
-            array('0.1.0.0/8', Type::T_THISNETWORK),
-            array('0.255.255.255/8', Type::T_THISNETWORK),
-            array('0.*.*.*', Type::T_THISNETWORK),
+            array('0.1.0.0/8', null),
+            array('0.255.255.255/8', null),
+            array('0.*.*.*', null),
             // 10.0.0.0/8
             array('10.0.0.0/8', Type::T_PRIVATENETWORK),
             array('10.1.0.0/8', Type::T_PRIVATENETWORK),
@@ -179,17 +180,20 @@ class RangeTypeTest extends PHPUnit_Framework_TestCase
             // 255.255.255.255/32
             array('255.255.255.255/32', Type::T_LIMITEDBROADCAST),
             // 240.0.0.0/4
-            array('240.0.0.0/4', Type::T_RESERVED),
-            array('240.0.0.1/4', Type::T_RESERVED),
+            array('240.0.0.0/4', null),
+            array('240.0.0.0/32', Type::T_RESERVED),
+            array('240.0.0.1/4', null),
+            array('240.0.0.1/31', Type::T_RESERVED),
             array('240.*.*.*', Type::T_RESERVED),
-            array('247.127.127.127/4', Type::T_RESERVED),
+            array('247.127.127.127/4', null),
+            array('247.127.127.127/32', Type::T_RESERVED),
             array('247.*.*.*', Type::T_RESERVED),
-            array('248.128.128.128/4', Type::T_RESERVED),
+            array('248.128.128.128/28', Type::T_RESERVED),
             array('248.*.*.*', Type::T_RESERVED),
-            array('255.255.255.0/4', Type::T_RESERVED),
-            array('255.255.255.253/4', Type::T_RESERVED),
-            array('255.255.255.254/4', Type::T_RESERVED),
-            array('255.*.*.*', Type::T_RESERVED),
+            array('255.255.255.0/28', Type::T_RESERVED),
+            array('255.255.255.253/32', Type::T_RESERVED),
+            array('255.255.255.254/28', null),
+            array('255.*.*.*', null),
             // Public addresses
             array('2001:503:ba3e::2:30/32', Type::T_PUBLIC),
             array('216.58.212.68/32', Type::T_PUBLIC),
@@ -199,24 +203,34 @@ class RangeTypeTest extends PHPUnit_Framework_TestCase
             array('0000:0000:0000:0000:0000:0000:0000:0000/128', Type::T_UNSPECIFIED),
             // ::1/128
             array('0000:0000:0000:0000:0000:0000:0000:0001/128', Type::T_LOOPBACK),
-            // 0000::/8
-            array('0000:0000:0000:0000:0000:0000:0000:0002/8', Type::T_RESERVED),
-            array('0000:0000:0000:0000:0000:0000:0000:ffff/8', Type::T_RESERVED),
-            array('0001:0000:0000:0000:0000:0000:0000:0002/8', Type::T_RESERVED),
-            array('00ff:0000:0000:0000:0000:0000:0000:0000/8', Type::T_RESERVED),
-            array('00ff:0000:0000:0000:0000:0000:0000:0000/8', Type::T_RESERVED),
-            array('00ff:0000:0000:0000:0000:0000:0000:ffff/8', Type::T_RESERVED),
-            array('00ff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/8', Type::T_RESERVED),
+            // ::/127
+            array('0000:0000:0000:0000:0000:0000:0000:0000/127', null),
+            // 100::/8
+            array('0100:0000:0000:0000:0000:0000:0000:0000/8', null),
+            array('0100:0000:0000:0000:0000:0000:0000:0000/64', Type::T_DISCARDONLY),
+            array('01ff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/128', Type::T_DISCARD),
+            // 100::/64
+            array('0000:0000:0000:0000:0000:0000:0000:0002/8', null),
+            array('0000:0000:0000:0000:0000:0000:0000:ffff/8', null),
+            array('0001:0000:0000:0000:0000:0000:0000:0002/8', null),
+            array('00ff:0000:0000:0000:0000:0000:0000:0000/8', null),
+            array('00ff:0000:0000:0000:0000:0000:0000:0000/8', null),
+            array('00ff:0000:0000:0000:0000:0000:0000:ffff/8', null),
+            array('00ff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/8', null),
+            // 00ff::/16
+            array('00ff:0000:0000:0000:0000:0000:0000:ffff/16', Type::T_RESERVED),
             array('00ff:*:*:*:*:*:*:*', Type::T_RESERVED),
             // 0100::/64
             array('0100:0000:0000:0000:0000:0000:0000:0000/64', Type::T_DISCARDONLY),
             array('0100:0000:0000:0000:ffff:ffff:ffff:ffff/64', Type::T_DISCARDONLY),
             array('0100:0000:0000:0000:*:*:*:*', Type::T_DISCARDONLY),
             // 0100::/8
-            array('0100:0000:0000:0001:0000:0000:0000:0000/8', Type::T_DISCARD),
-            array('01ff:0000:0000:0000:0000:0000:0000:0000/8', Type::T_DISCARD),
-            array('01ff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/8', Type::T_DISCARD),
-            array('0100:*:*:*:*:*:*:*', Type::T_DISCARD),
+            array('0100:0000:0000:0001:0000:0000:0000:0000/8', null),
+            array('01ff:0000:0000:0000:0000:0000:0000:0000/8', null),
+            array('01ff:0000:0000:0000:0000:0000:0000:0000/9', Type::T_DISCARD),
+            array('01ff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/8', null),
+            array('01ff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/9', Type::T_DISCARD),
+            array('0100:*:*:*:*:*:*:*', null),
             // 0200::/7
             array('0200:0000:0000:0000:0000:0000:0000:0000/7', Type::T_RESERVED),
             array('0200:0000:0000:0000:0000:0000:0000:0009/7', Type::T_RESERVED),
@@ -289,18 +303,18 @@ class RangeTypeTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider ipProvider
      */
-    public function testRangeTypes($range, $expectedType)
+    public function testRangeTypes($rangeString, $expectedType)
     {
-        $ip = Factory::rangeFromString($range);
-        $this->assertNotNull($ip, "'$range' has been detected as an invalid subnet, but it should be valid");
-        $detectedType = $ip->getRangeType();
-        $this->assertSame($expectedType, $detectedType, sprintf("'%s' has been detected as\n%s\ninstead of\n%s", $ip->toString(), Type::getName($detectedType), Type::getName($expectedType)));
+        $range = Factory::rangeFromString($rangeString);
+        $this->assertNotNull($range, "'$rangeString' has been detected as an invalid subnet, but it should be valid");
+        $detectedType = $range->getRangeType();
+        $this->assertSame($expectedType, $detectedType, sprintf("'%s' has been detected as\n%s\ninstead of\n%s", $range->toString(), Type::getName($detectedType), Type::getName($expectedType)));
     }
 
     public function rangeTypeNameProvider()
     {
         return array(
-            array(null, 'Unknown type ()'),
+            array(null, 'Unknown type'),
             array('x', 'Unknown type (x)'),
             array(-1, 'Unknown type (-1)'),
         );
