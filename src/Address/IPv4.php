@@ -178,6 +178,16 @@ class IPv4 implements AddressInterface
     /**
      * {@inheritdoc}
      *
+     * @see AddressInterface::getDefaultReservedRangeType()
+     */
+    public static function getDefaultReservedRangeType()
+    {
+        return RangeType::T_PUBLIC;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see AddressInterface::getReservedRanges()
      */
     public static function getReservedRanges()
@@ -218,15 +228,14 @@ class IPv4 implements AddressInterface
     public function getRangeType()
     {
         if ($this->rangeType === null) {
-            // Default is T_PUBLIC
-            $this->rangeType = RangeType::T_PUBLIC;
-
-            // Check if range is contained within an RFC subnet
-            foreach ($this->getReservedRanges() as $reservedRange) {
+            foreach (static::getReservedRanges() as $reservedRange) {
                 if ($this->matches($reservedRange['range'])) {
                     $this->rangeType = $reservedRange['type'];
                     break;
                 }
+            }
+            if ($this->rangeType === null) {
+                $this->rangeType = static::getDefaultReservedRangeType();
             }
         }
 

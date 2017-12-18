@@ -309,6 +309,16 @@ class IPv6 implements AddressInterface
     /**
      * {@inheritdoc}
      *
+     * @see AddressInterface::getDefaultReservedRangeType()
+     */
+    public static function getDefaultReservedRangeType()
+    {
+        return RangeType::T_RESERVED;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see AddressInterface::getReservedRanges()
      */
     public static function getReservedRanges()
@@ -357,20 +367,17 @@ class IPv6 implements AddressInterface
     public function getRangeType()
     {
         if ($this->rangeType === null) {
-            // Default is T_RESERVED
-            $this->rangeType = RangeType::T_RESERVED;
-
             if ($this->matches(Subnet::fromString('2002::/16'))) {
                 $this->rangeType = $this->toIPv4()->getRangeType();
-
-                return $this->rangeType;
-            }
-
-            // Check if range is contained within an RFC subnet
-            foreach ($this->getReservedRanges() as $reservedRange) {
-                if ($this->matches($reservedRange['range'])) {
-                    $this->rangeType = $reservedRange['type'];
-                    break;
+            } else {
+                foreach (static::getReservedRanges() as $reservedRange) {
+                    if ($this->matches($reservedRange['range'])) {
+                        $this->rangeType = $reservedRange['type'];
+                        break;
+                    }
+                }
+                if ($this->rangeType === null) {
+                    $this->rangeType = static::getDefaultReservedRangeType();
                 }
             }
         }
