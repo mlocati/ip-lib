@@ -117,7 +117,7 @@ class Single implements RangeInterface
     {
         $result = false;
         if ($range->getAddressType() === $this->getAddressType()) {
-            if ($range->address->toString(false) === $this->address->toString(false)) {
+            if ($range->toString(false) === $this->toString(false)) {
                 $result = true;
             }
         }
