@@ -5,6 +5,10 @@ language: php
 env:
   - COMPOSER_DISABLE_XDEBUG_WARN=1
 
+branches:
+  only:
+    - master
+
 php:
   - 5.4
   - 5.5
