@@ -50,6 +50,7 @@ class SingleTest extends \PHPUnit_Framework_TestCase
         $ex = Factory::rangeFromString($range);
         $this->assertNotNull($ex, "'$str' has not been recognized as a range, but it should");
         $this->assertInstanceOf('IPLib\Range\Single', $ex, "'$str' has been recognized as a range, but not a single range");
+        $this->assertSame($ex->containsRange($ex), true);
         $this->assertSame($short, $ex->toString(false));
         $this->assertSame($long, $ex->toString(true));
     }
