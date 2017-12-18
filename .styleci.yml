@@ -4,10 +4,13 @@ risky: true
 
 enabled:
   - long_array_syntax
+  - pre_increment
 
 disabled:
   - short_array_syntax
-  - phpdoc_align
+  - align_double_arrow
+  - align_phpdoc
+  - post_increment
 
 finder:
   exclude:

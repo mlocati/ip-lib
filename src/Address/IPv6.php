@@ -161,7 +161,7 @@ class IPv6 implements AddressInterface
         $result = null;
         if (count($bytes) === 16) {
             $address = '';
-            for ($i = 0; $i < 16; $i++) {
+            for ($i = 0; $i < 16; ++$i) {
                 if ($i !== 0 && $i % 2 === 0) {
                     $address .= ':';
                 }
@@ -193,7 +193,7 @@ class IPv6 implements AddressInterface
         $result = null;
         if (count($words) === 8) {
             $chunks = array();
-            for ($i = 0; $i < 8; $i++) {
+            for ($i = 0; $i < 8; ++$i) {
                 $word = $words[$i];
                 if (is_int($word) && $word >= 0 && $word <= 0xffff) {
                     $chunks[] = sprintf('%04x', $word);
@@ -232,7 +232,7 @@ class IPv6 implements AddressInterface
                         $this->getWords()
                     );
                     $shortAddress = implode(':', $chunks);
-                    for ($i = 8; $i > 1; $i--) {
+                    for ($i = 8; $i > 1; --$i) {
                         $search = '(?:^|:)'.rtrim(str_repeat('0:', $i), ':').'(?:$|:)';
                         if (preg_match('/^(.*?)'.$search.'(.*)$/', $shortAddress, $matches)) {
                             $shortAddress = $matches[1].'::'.$matches[2];
@@ -316,30 +316,30 @@ class IPv6 implements AddressInterface
         if (self::$reservedRanges === null) {
             $reservedRanges = array();
             foreach (array(
-                '::/128'    => RangeType::T_UNSPECIFIED,        //RFC 4291
-                '::1/128'   => RangeType::T_LOOPBACK,           //RFC 4291
-                '100::/64'  => RangeType::T_DISCARDONLY,        //RFC 4291
-                '100::/8'   => RangeType::T_DISCARD,            //RFC 4291
-                //'2002::/16' => RangeType::,                   //RFC 4291
-                '2000::/3'  => RangeType::T_PUBLIC,             //RFC 4291
-                'fc00::/7'  => RangeType::T_PRIVATENETWORK,     //RFC 4193
-                'fe80::/10' => RangeType::T_LINKLOCAL_UNICAST,  //RFC 4291
-                'ff00::/8'  => RangeType::T_MULTICAST,          //RFC 4291
-                //'::/8'      => RangeType::T_RESERVED,         //RFC 4291
-                //'200::/7'   => RangeType::T_RESERVED,         //RFC 4048
-                //'400::/6'   => RangeType::T_RESERVED,         //RFC 4291
-                //'800::/5'   => RangeType::T_RESERVED,         //RFC 4291
-                //'1000::/4'  => RangeType::T_RESERVED,         //RFC 4291
-                //'4000::/3'  => RangeType::T_RESERVED,         //RFC 4291
-                //'6000::/3'  => RangeType::T_RESERVED,         //RFC 4291
-                //'8000::/3'  => RangeType::T_RESERVED,         //RFC 4291
-                //'a000::/3'  => RangeType::T_RESERVED,         //RFC 4291
-                //'c000::/3'  => RangeType::T_RESERVED,         //RFC 4291
-                //'e000::/4'  => RangeType::T_RESERVED,         //RFC 4291
-                //'f000::/5'  => RangeType::T_RESERVED,         //RFC 4291
-                //'f800::/6'  => RangeType::T_RESERVED,         //RFC 4291
-                //'fe00::/9'  => RangeType::T_RESERVED,         //RFC 4291
-                //'fec0::/10' => RangeType::T_RESERVED,         //RFC 3879
+                '::/128' => RangeType::T_UNSPECIFIED, //RFC 4291
+                '::1/128' => RangeType::T_LOOPBACK, //RFC 4291
+                '100::/64' => RangeType::T_DISCARDONLY, //RFC 4291
+                '100::/8' => RangeType::T_DISCARD, //RFC 4291
+                //'2002::/16' => RangeType::, //RFC 4291
+                '2000::/3' => RangeType::T_PUBLIC, //RFC 4291
+                'fc00::/7' => RangeType::T_PRIVATENETWORK, //RFC 4193
+                'fe80::/10' => RangeType::T_LINKLOCAL_UNICAST, //RFC 4291
+                'ff00::/8' => RangeType::T_MULTICAST, //RFC 4291
+                //'::/8' => RangeType::T_RESERVED, //RFC 4291
+                //'200::/7' => RangeType::T_RESERVED, //RFC 4048
+                //'400::/6' => RangeType::T_RESERVED, //RFC 4291
+                //'800::/5' => RangeType::T_RESERVED, //RFC 4291
+                //'1000::/4' => RangeType::T_RESERVED, //RFC 4291
+                //'4000::/3' => RangeType::T_RESERVED, //RFC 4291
+                //'6000::/3' => RangeType::T_RESERVED, //RFC 4291
+                //'8000::/3' => RangeType::T_RESERVED, //RFC 4291
+                //'a000::/3' => RangeType::T_RESERVED, //RFC 4291
+                //'c000::/3' => RangeType::T_RESERVED, //RFC 4291
+                //'e000::/4' => RangeType::T_RESERVED, //RFC 4291
+                //'f000::/5' => RangeType::T_RESERVED, //RFC 4291
+                //'f800::/6' => RangeType::T_RESERVED, //RFC 4291
+                //'fe00::/9' => RangeType::T_RESERVED, //RFC 4291
+                //'fec0::/10' => RangeType::T_RESERVED, //RFC 3879
             ) as $range => $type) {
                 $reservedRanges[] = array('range' => Subnet::fromString($range), 'type' => $type);
             }
@@ -422,7 +422,7 @@ class IPv6 implements AddressInterface
     {
         $overflow = false;
         $words = $this->getWords();
-        for ($i = count($words) - 1; $i >= 0; $i--) {
+        for ($i = count($words) - 1; $i >= 0; --$i) {
             if ($words[$i] === 0xffff) {
                 if ($i === 0) {
                     $overflow = true;
@@ -430,7 +430,7 @@ class IPv6 implements AddressInterface
                 }
                 $words[$i] = 0;
             } else {
-                $words[$i]++;
+                ++$words[$i];
                 break;
             }
         }
@@ -447,7 +447,7 @@ class IPv6 implements AddressInterface
     {
         $overflow = false;
         $words = $this->getWords();
-        for ($i = count($words) - 1; $i >= 0; $i--) {
+        for ($i = count($words) - 1; $i >= 0; --$i) {
             if ($words[$i] === 0) {
                 if ($i === 0) {
                     $overflow = true;
@@ -455,7 +455,7 @@ class IPv6 implements AddressInterface
                 }
                 $words[$i] = 0xffff;
             } else {
-                $words[$i]--;
+                --$words[$i];
                 break;
             }
         }
