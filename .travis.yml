@@ -46,9 +46,8 @@ matrix:
     - php: nightly
 
 before_script:
-  - mv -f -v composer-travis-ci-coverage-$GET_COVERAGE.json composer.json
   - composer self-update
-  - travis_retry composer install --no-interaction
+  - COMPOSER=composer-travis-ci-coverage-${GET_COVERAGE}.json travis_retry composer install --no-interaction
 
 script:
   - mkdir -p build/logs
