@@ -10,7 +10,7 @@ if (!class_exists('IPLib\Test\SQLiteDatabase')) {
 
 class MembershipTest extends \IPLib\Test\SQLiteDatabase
 {
-    public function membershipProvider()
+    public function addressMembershipProvider()
     {
         return array(
             array('0.0.0.0', '0.0.0.0', true),
@@ -41,9 +41,9 @@ class MembershipTest extends \IPLib\Test\SQLiteDatabase
     }
 
     /**
-     * @dataProvider membershipProvider
+     * @dataProvider addressMembershipProvider
      */
-    public function testMembership($address, $range, $contained)
+    public function testAddressMembership($address, $range, $contained)
     {
         $addressStr = @strval($address);
         $rangeStr = @strval($range);
@@ -83,5 +83,43 @@ class MembershipTest extends \IPLib\Test\SQLiteDatabase
         } else {
             $this->assertFalse($foundRow, "Failed to check that '$rangeStr' does not contain '$addressStr' using database comparison");
         }
+    }
+
+    public function rangeMembershipProvider()
+    {
+        return array(
+            array('0.0.0.0', '0.0.0.0', true),
+            array('0.0.0.*', '0.0.0.0', true),
+            array('0.0.0.0', '0.0.0.*', false),
+            array('0.0.0.127', '0.0.0.0', false),
+            array('0.0.0.127', '0.0.0.127', true),
+            array('0.0.0.127', '0.0.0.255', false),
+            array('0::/32', '0::/32', true),
+            array('0::/32', '0::/64', true),
+            array('0::/32', '0::/16', false),
+            array('0:0:*:*:*:*:*:*', '0:0:*:*:*:*:*:*', true),
+            array('0:0:*:*:*:*:*:*', '0:0:0:*:*:*:*:*', true),
+            array('0:0:*:*:*:*:*:*', '0:*:*:*:*:*:*:*', false),
+        );
+    }
+    
+    /**
+     * @dataProvider rangeMembershipProvider
+     */
+    public function testRangeMembership($rangeString, $otherRangeString, $contained)
+    {
+        $range = Factory::rangeFromString($rangeString);
+        $this->assertNotNull($range, "'$rangeString' has not been recognized as a range");
+        $otherRange = Factory::rangeFromString($otherRangeString);
+        $this->assertNotNull($range, "'$otherRangeString' has not been recognized as a range");
+        $this->assertSame(
+            $contained,
+            $range->containsRange($otherRange),
+            sprintf(
+                $contained ? '%1$s should contain %2$s' : '%1$s should not contain %2$s',
+                $rangeString,
+                $otherRangeString
+            )
+        );
     }
 }
