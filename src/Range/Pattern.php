@@ -127,7 +127,7 @@ class Pattern implements RangeInterface
                 }
                 break;
             default:
-                throw new \Exception('@todo');
+                throw new \Exception('@todo'); // @codeCoverageIgnore
         }
 
         return $result;

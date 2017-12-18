@@ -1,18 +1,17 @@
 sudo: false
 
 language: php
-dist: precise
 
 env:
   - COMPOSER_DISABLE_XDEBUG_WARN=1
 
 php:
-  - 5.3
   - 5.4
   - 5.5
   - 5.6
   - 7.0
   - 7.1
+  - 7.2
   - nightly
 
 env:
@@ -21,6 +20,10 @@ env:
 
 matrix:
   include:
+    - php: 5.3
+      dist: precise
+      env:
+        - GET_COVERAGE=no
     - php: hhvm
       dist: trusty
       env:
@@ -37,6 +40,8 @@ matrix:
     - php: 7.0
       env: GET_COVERAGE=yes
     - php: 7.1
+      env: GET_COVERAGE=yes
+    - php: 7.2
       env: GET_COVERAGE=no
     - php: hhvm
       env: GET_COVERAGE=yes

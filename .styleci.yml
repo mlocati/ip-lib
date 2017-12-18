@@ -4,10 +4,16 @@ risky: true
 
 enabled:
   - long_array_syntax
+  - pre_increment
 
 disabled:
   - short_array_syntax
+  - align_double_arrow
+  - align_phpdoc
+  - post_increment
   - phpdoc_align
+  # Because problems with PHP 5.3.* and PHP 5.4.0 - see https://3v4l.org/imgo9
+  - self_accessor
 
 finder:
   exclude:
