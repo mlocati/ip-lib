@@ -73,6 +73,13 @@ class Pattern implements RangeInterface
                 $result = new static(IPv4::fromString('0.0.0.0'), IPv4::fromString('255.255.255.255'), 4);
             } elseif (strpos($range, '.') !== false && preg_match('/^[^*]+((?:\.\*)+)$/', $range, $matches)) {
                 $asterisksCount = strlen($matches[1]) >> 1;
+                if ($asterisksCount > 0) {
+                    $missingDots = 3 - substr_count($range, '.');
+                    if ($missingDots > 0) {
+                        $range .= str_repeat('.*', $missingDots);
+                        $asterisksCount += $missingDots;
+                    }
+                }
                 $fromAddress = IPv4::fromString(str_replace('*', '0', $range));
                 if ($fromAddress !== null) {
                     $fixedBytes = array_slice($fromAddress->getBytes(), 0, -$asterisksCount);
