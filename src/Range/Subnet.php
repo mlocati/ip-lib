@@ -19,14 +19,14 @@ class Subnet implements RangeInterface
     /**
      * Starting address of the range.
      *
-     * @var AddressInterface
+     * @var \IPLib\Address\AddressInterface
      */
     protected $fromAddress;
 
     /**
      * Final address of the range.
      *
-     * @var AddressInterface
+     * @var \IPLib\Address\AddressInterface
      */
     protected $toAddress;
 
@@ -54,8 +54,8 @@ class Subnet implements RangeInterface
     /**
      * Initializes the instance.
      *
-     * @param AddressInterface $fromAddress
-     * @param AddressInterface $toAddress
+     * @param \IPLib\Address\AddressInterface $fromAddress
+     * @param \IPLib\Address\AddressInterface $toAddress
      * @param int $networkPrefix
      */
     protected function __construct(AddressInterface $fromAddress, AddressInterface $toAddress, $networkPrefix)
@@ -115,7 +115,7 @@ class Subnet implements RangeInterface
     /**
      * {@inheritdoc}
      *
-     * @see RangeInterface::toString()
+     * @see \IPLib\Range\RangeInterface::toString()
      */
     public function toString($long = false)
     {
@@ -125,7 +125,7 @@ class Subnet implements RangeInterface
     /**
      * {@inheritdoc}
      *
-     * @see RangeInterface::__toString()
+     * @see \IPLib\Range\RangeInterface::__toString()
      */
     public function __toString()
     {
@@ -135,7 +135,7 @@ class Subnet implements RangeInterface
     /**
      * {@inheritdoc}
      *
-     * @see RangeInterface::getAddressType()
+     * @see \IPLib\Range\RangeInterface::getAddressType()
      */
     public function getAddressType()
     {
@@ -145,7 +145,7 @@ class Subnet implements RangeInterface
     /**
      * {@inheritdoc}
      *
-     * @see RangeInterface::getRangeType()
+     * @see \IPLib\Range\RangeInterface::getRangeType()
      */
     public function getRangeType()
     {
@@ -183,7 +183,7 @@ class Subnet implements RangeInterface
     /**
      * {@inheritdoc}
      *
-     * @see RangeInterface::contains()
+     * @see \IPLib\Range\RangeInterface::contains()
      */
     public function contains(AddressInterface $address)
     {
@@ -205,7 +205,7 @@ class Subnet implements RangeInterface
     /**
      * {@inheritdoc}
      *
-     * @see RangeInterface::containsRange()
+     * @see \IPLib\Range\RangeInterface::containsRange()
      */
     public function containsRange(RangeInterface $range)
     {
@@ -228,7 +228,7 @@ class Subnet implements RangeInterface
     /**
      * {@inheritdoc}
      *
-     * @see RangeInterface::getStartAddress()
+     * @see \IPLib\Range\RangeInterface::getStartAddress()
      */
     public function getStartAddress()
     {
@@ -238,7 +238,7 @@ class Subnet implements RangeInterface
     /**
      * {@inheritdoc}
      *
-     * @see RangeInterface::getEndAddress()
+     * @see \IPLib\Range\RangeInterface::getEndAddress()
      */
     public function getEndAddress()
     {
@@ -248,7 +248,7 @@ class Subnet implements RangeInterface
     /**
      * {@inheritdoc}
      *
-     * @see RangeInterface::getComparableStartString()
+     * @see \IPLib\Range\RangeInterface::getComparableStartString()
      */
     public function getComparableStartString()
     {
@@ -258,7 +258,7 @@ class Subnet implements RangeInterface
     /**
      * {@inheritdoc}
      *
-     * @see RangeInterface::getComparableEndString()
+     * @see \IPLib\Range\RangeInterface::getComparableEndString()
      */
     public function getComparableEndString()
     {

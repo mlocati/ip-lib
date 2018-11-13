@@ -77,6 +77,7 @@ class IPv4 implements AddressInterface
             if ($mayIncludePort) {
                 $rx .= '(?::\d+)?';
             }
+            $matches = null;
             if (preg_match('/^'.$rx.'$/', $address, $matches)) {
                 $ok = true;
                 $nums = array();
@@ -125,7 +126,7 @@ class IPv4 implements AddressInterface
     /**
      * {@inheritdoc}
      *
-     * @see AddressInterface::toString()
+     * @see \IPLib\Address\AddressInterface::toString()
      */
     public function toString($long = false)
     {
@@ -139,7 +140,7 @@ class IPv4 implements AddressInterface
     /**
      * {@inheritdoc}
      *
-     * @see AddressInterface::__toString()
+     * @see \IPLib\Address\AddressInterface::__toString()
      */
     public function __toString()
     {
@@ -149,7 +150,7 @@ class IPv4 implements AddressInterface
     /**
      * {@inheritdoc}
      *
-     * @see AddressInterface::getBytes()
+     * @see \IPLib\Address\AddressInterface::getBytes()
      */
     public function getBytes()
     {
@@ -168,7 +169,7 @@ class IPv4 implements AddressInterface
     /**
      * {@inheritdoc}
      *
-     * @see AddressInterface::getAddressType()
+     * @see \IPLib\Address\AddressInterface::getAddressType()
      */
     public function getAddressType()
     {
@@ -178,7 +179,7 @@ class IPv4 implements AddressInterface
     /**
      * {@inheritdoc}
      *
-     * @see AddressInterface::getDefaultReservedRangeType()
+     * @see \IPLib\Address\AddressInterface::getDefaultReservedRangeType()
      */
     public static function getDefaultReservedRangeType()
     {
@@ -188,7 +189,7 @@ class IPv4 implements AddressInterface
     /**
      * {@inheritdoc}
      *
-     * @see AddressInterface::getReservedRanges()
+     * @see \IPLib\Address\AddressInterface::getReservedRanges()
      */
     public static function getReservedRanges()
     {
@@ -241,7 +242,7 @@ class IPv4 implements AddressInterface
     /**
      * {@inheritdoc}
      *
-     * @see AddressInterface::getRangeType()
+     * @see \IPLib\Address\AddressInterface::getRangeType()
      */
     public function getRangeType()
     {
@@ -262,7 +263,7 @@ class IPv4 implements AddressInterface
     /**
      * Create an IPv6 representation of this address.
      *
-     * @return IPv6
+     * @return \IPLib\Address\IPv6
      */
     public function toIPv6()
     {
@@ -274,7 +275,7 @@ class IPv4 implements AddressInterface
     /**
      * {@inheritdoc}
      *
-     * @see AddressInterface::getComparableString()
+     * @see \IPLib\Address\AddressInterface::getComparableString()
      */
     public function getComparableString()
     {
@@ -292,7 +293,7 @@ class IPv4 implements AddressInterface
     /**
      * {@inheritdoc}
      *
-     * @see AddressInterface::matches()
+     * @see \IPLib\Address\AddressInterface::matches()
      */
     public function matches(RangeInterface $range)
     {
@@ -302,7 +303,7 @@ class IPv4 implements AddressInterface
     /**
      * {@inheritdoc}
      *
-     * @see AddressInterface::getNextAddress()
+     * @see \IPLib\Address\AddressInterface::getNextAddress()
      */
     public function getNextAddress()
     {
@@ -327,7 +328,7 @@ class IPv4 implements AddressInterface
     /**
      * {@inheritdoc}
      *
-     * @see AddressInterface::getPreviousAddress()
+     * @see \IPLib\Address\AddressInterface::getPreviousAddress()
      */
     public function getPreviousAddress()
     {

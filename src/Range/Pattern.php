@@ -19,14 +19,14 @@ class Pattern implements RangeInterface
     /**
      * Starting address of the range.
      *
-     * @var AddressInterface
+     * @var \IPLib\Address\AddressInterface
      */
     protected $fromAddress;
 
     /**
      * Final address of the range.
      *
-     * @var AddressInterface
+     * @var \IPLib\Address\AddressInterface
      */
     protected $toAddress;
 
@@ -47,8 +47,8 @@ class Pattern implements RangeInterface
     /**
      * Initializes the instance.
      *
-     * @param AddressInterface $fromAddress
-     * @param AddressInterface $toAddress
+     * @param \IPLib\Address\AddressInterface $fromAddress
+     * @param \IPLib\Address\AddressInterface $toAddress
      * @param int $asterisksCount
      */
     public function __construct(AddressInterface $fromAddress, AddressInterface $toAddress, $asterisksCount)
@@ -69,6 +69,7 @@ class Pattern implements RangeInterface
     {
         $result = null;
         if (is_string($range) && strpos($range, '*') !== false) {
+            $matches = null;
             if ($range === '*.*.*.*') {
                 $result = new static(IPv4::fromString('0.0.0.0'), IPv4::fromString('255.255.255.255'), 4);
             } elseif (strpos($range, '.') !== false && preg_match('/^[^*]+((?:\.\*)+)$/', $range, $matches)) {
@@ -142,7 +143,7 @@ class Pattern implements RangeInterface
     /**
      * {@inheritdoc}
      *
-     * @see RangeInterface::__toString()
+     * @see \IPLib\Range\RangeInterface::__toString()
      */
     public function __toString()
     {
@@ -152,7 +153,7 @@ class Pattern implements RangeInterface
     /**
      * {@inheritdoc}
      *
-     * @see RangeInterface::getAddressType()
+     * @see \IPLib\Range\RangeInterface::getAddressType()
      */
     public function getAddressType()
     {
@@ -162,7 +163,7 @@ class Pattern implements RangeInterface
     /**
      * {@inheritdoc}
      *
-     * @see RangeInterface::getRangeType()
+     * @see \IPLib\Range\RangeInterface::getRangeType()
      */
     public function getRangeType()
     {
@@ -200,7 +201,7 @@ class Pattern implements RangeInterface
     /**
      * {@inheritdoc}
      *
-     * @see RangeInterface::contains()
+     * @see \IPLib\Range\RangeInterface::contains()
      */
     public function contains(AddressInterface $address)
     {
@@ -222,7 +223,7 @@ class Pattern implements RangeInterface
     /**
      * {@inheritdoc}
      *
-     * @see RangeInterface::containsRange()
+     * @see \IPLib\Range\RangeInterface::containsRange()
      */
     public function containsRange(RangeInterface $range)
     {
@@ -245,7 +246,7 @@ class Pattern implements RangeInterface
     /**
      * {@inheritdoc}
      *
-     * @see RangeInterface::getStartAddress()
+     * @see \IPLib\Range\RangeInterface::getStartAddress()
      */
     public function getStartAddress()
     {
@@ -255,7 +256,7 @@ class Pattern implements RangeInterface
     /**
      * {@inheritdoc}
      *
-     * @see RangeInterface::getEndAddress()
+     * @see \IPLib\Range\RangeInterface::getEndAddress()
      */
     public function getEndAddress()
     {
@@ -265,7 +266,7 @@ class Pattern implements RangeInterface
     /**
      * {@inheritdoc}
      *
-     * @see RangeInterface::getComparableStartString()
+     * @see \IPLib\Range\RangeInterface::getComparableStartString()
      */
     public function getComparableStartString()
     {
@@ -275,7 +276,7 @@ class Pattern implements RangeInterface
     /**
      * {@inheritdoc}
      *
-     * @see RangeInterface::getComparableEndString()
+     * @see \IPLib\Range\RangeInterface::getComparableEndString()
      */
     public function getComparableEndString()
     {

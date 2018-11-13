@@ -74,7 +74,7 @@ interface AddressInterface
     /**
      * Check if this address is contained in an range.
      *
-     * @param RangeInterface $range
+     * @param \IPLib\Range\RangeInterface $range
      *
      * @return bool
      */
@@ -83,14 +83,14 @@ interface AddressInterface
     /**
      * Get the address right after this IP address (if available).
      *
-     * @return AddressInterface|null
+     * @return \IPLib\Address\AddressInterface|null
      */
     public function getNextAddress();
 
     /**
      * Get the address right before this IP address (if available).
      *
-     * @return AddressInterface|null
+     * @return \IPLib\Address\AddressInterface|null
      */
     public function getPreviousAddress();
 }

@@ -16,7 +16,7 @@ class Factory
      * @param bool $mayIncludePort set to false to avoid parsing addresses with ports
      * @param bool $mayIncludeZoneID set to false to avoid parsing IPv6 addresses with zone IDs (see RFC 4007)
      *
-     * @return Address\AddressInterface|null
+     * @return \IPLib\Address\AddressInterface|null
      */
     public static function addressFromString($address, $mayIncludePort = true, $mayIncludeZoneID = true)
     {
@@ -36,7 +36,7 @@ class Factory
      *
      * @param int[]|array $bytes
      *
-     * @return Address\AddressInterface|null
+     * @return \IPLib\Address\AddressInterface|null
      */
     public static function addressFromBytes(array $bytes)
     {
@@ -56,7 +56,7 @@ class Factory
      *
      * @param string $range
      *
-     * @return Range\RangeInterface|null
+     * @return \IPLib\Range\RangeInterface|null
      */
     public static function rangeFromString($range)
     {
@@ -77,10 +77,10 @@ class Factory
     /**
      * Create a Range instance starting from its boundaries.
      *
-     * @param string|Address\AddressInterface $from
-     * @param string|Address\AddressInterface $to
+     * @param string|\IPLib\Address\AddressInterface $from
+     * @param string|\IPLib\Address\AddressInterface $to
      *
-     * @return Range\RangeInterface|null
+     * @return \IPLib\Range\RangeInterface|null
      */
     public static function rangeFromBoundaries($from, $to)
     {
@@ -107,10 +107,10 @@ class Factory
     }
 
     /**
-     * @param Address\AddressInterface $from
-     * @param Address\AddressInterface $to
+     * @param \IPLib\Address\AddressInterface $from
+     * @param \IPLib\Address\AddressInterface $to
      *
-     * @return Range\RangeInterface|null
+     * @return \IPLib\Range\RangeInterface|null
      */
     protected static function rangeFromBoundaryAddresses(AddressInterface $from = null, AddressInterface $to = null)
     {
