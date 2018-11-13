@@ -4,7 +4,7 @@ namespace IPLib\Test\Ranges;
 
 use IPLib\Factory;
 use IPLib\Range\Pattern;
-use PHPUnit\Framework\TestCase;
+use IPLib\Test\TestCase;
 
 class PatternTest extends TestCase
 {

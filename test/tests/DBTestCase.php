@@ -2,9 +2,10 @@
 
 namespace IPLib\Test;
 
+use PHPUnit\DbUnit\TestCase as PHPUnitTestCase;
 use PDO;
 
-abstract class SQLiteDatabase extends \PHPUnit_Extensions_Database_TestCase
+abstract class DBTestCase extends PHPUnitTestCase
 {
     /**
      * @var PDO|null
@@ -12,14 +13,14 @@ abstract class SQLiteDatabase extends \PHPUnit_Extensions_Database_TestCase
     private static $pdo = null;
 
     /**
-     * @var PHPUnit_Extensions_Database_DB_DefaultDatabaseConnection|null
+     * @var \PHPUnit\DbUnit\Database\Connection|null
      */
     private $connection = null;
 
     /**
      * {@inheritdoc}
      *
-     * @see PHPUnit_Extensions_Database_TestCase::getConnection()
+     * @see \PHPUnit\DbUnit\TestCase::getConnection()
      */
     public function getConnection()
     {
@@ -48,7 +49,7 @@ abstract class SQLiteDatabase extends \PHPUnit_Extensions_Database_TestCase
     /**
      * {@inheritdoc}
      *
-     * @see PHPUnit_Extensions_Database_TestCase::getDataSet()
+     * @see \PHPUnit\DbUnit\TestCase::getDataSet()
      */
     public function getDataSet()
     {

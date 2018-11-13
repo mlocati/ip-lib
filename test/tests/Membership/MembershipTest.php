@@ -3,12 +3,9 @@
 namespace IPLib\Test\Membership;
 
 use IPLib\Factory;
+use IPLib\Test\DBTestCase;
 
-if (!class_exists('IPLib\Test\SQLiteDatabase')) {
-    require_once __DIR__.'/../SQLiteDatabase.php';
-}
-
-class MembershipTest extends \IPLib\Test\SQLiteDatabase
+class MembershipTest extends DBTestCase
 {
     public function addressMembershipProvider()
     {
@@ -102,7 +99,7 @@ class MembershipTest extends \IPLib\Test\SQLiteDatabase
             array('0:0:*:*:*:*:*:*', '0:*:*:*:*:*:*:*', false),
         );
     }
-    
+
     /**
      * @dataProvider rangeMembershipProvider
      */

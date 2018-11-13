@@ -4,7 +4,7 @@ namespace IPLib\Test\Addresses;
 
 use IPLib\Address\IPv4;
 use IPLib\Address\IPv6;
-use PHPUnit\Framework\TestCase;
+use IPLib\Test\TestCase;
 
 class InvalidTest extends TestCase
 {

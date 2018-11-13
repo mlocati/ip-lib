@@ -2,72 +2,50 @@ sudo: false
 
 language: php
 
-env:
-  - COMPOSER_DISABLE_XDEBUG_WARN=1
+notifications:
+  email: false
 
 branches:
   only:
-    - master
-
-php:
-  - 5.4
-  - 5.5
-  - 5.6
-  - 7.0
-  - 7.1
-  - 7.2
-  - nightly
-
-env:
-  - GET_COVERAGE=yes
-  - GET_COVERAGE=no
-
-matrix:
-  include:
-    - php: 5.3
-      dist: precise
-      env:
-        - GET_COVERAGE=no
-    - php: hhvm
-      dist: trusty
-      env:
-        - GET_COVERAGE=no
-  exclude:
-    - php: 5.3
-      env: GET_COVERAGE=yes
-    - php: 5.4
-      env: GET_COVERAGE=yes
-    - php: 5.5
-      env: GET_COVERAGE=yes
-    - php: 5.6
-      env: GET_COVERAGE=yes
-    - php: 7.0
-      env: GET_COVERAGE=yes
-    - php: 7.1
-      env: GET_COVERAGE=yes
-    - php: 7.2
-      env: GET_COVERAGE=no
-    - php: hhvm
-      env: GET_COVERAGE=yes
-    - php: nightly
-      env: GET_COVERAGE=yes
-  allow_failures:
-    - php: nightly
-
-before_script:
-  - COMPOSER=composer-travis-ci-coverage-${GET_COVERAGE}.json travis_retry composer install --no-interaction
-
-script:
-  - mkdir -p build/logs
-  - if [[ "$GET_COVERAGE" == "yes" ]]; then ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml; else ./vendor/bin/phpunit; fi
+  - master
 
 cache:
   directories:
-    - vendor
-    - $HOME/.composer/cache
+  - $HOME/.composer/cache
+
+php:
+- 5.4
+- 5.5
+- 5.6
+- 7.0
+- 7.2
+- 7.3
+- hhvm
+- nightly
+
+env:
+  global:
+  - GET_COVERAGE=0
+
+matrix:
+  include:
+  - php: 5.3
+    dist: precise
+  - php: 7.1
+    env:
+    - GET_COVERAGE=1
+  allow_failures:
+  - php: nightly
+
+before_script:
+- ./.travis/configure.sh
+- travis_retry composer --no-interaction install
+
+script:
+- |
+  CMD='composer --no-interaction run-script test --'
+  if test $GET_COVERAGE -eq 1; then CMD="$CMD --coverage-clover coverage-clover.xml"; fi
+  $CMD
 
 after_script:
-  - if [[ "$GET_COVERAGE" == "yes" ]]; then php vendor/bin/coveralls -v && wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml; fi
-
-notifications:
-  email: false
+- ./.travis/after-success.sh

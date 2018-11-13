@@ -4,7 +4,7 @@ namespace IPLib\Test\Addresses;
 
 use IPLib\Factory;
 use IPLib\Address\Type;
-use PHPUnit\Framework\TestCase;
+use IPLib\Test\TestCase;
 
 class AddressTypeTest extends TestCase
 {

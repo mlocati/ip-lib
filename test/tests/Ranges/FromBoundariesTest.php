@@ -3,7 +3,7 @@
 namespace IPLib\Test\Ranges;
 
 use IPLib\Factory;
-use PHPUnit\Framework\TestCase;
+use IPLib\Test\TestCase;
 
 class FromBoundariesTest extends TestCase
 {

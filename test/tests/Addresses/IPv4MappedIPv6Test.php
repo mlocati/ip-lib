@@ -3,7 +3,7 @@
 namespace IPLib\Test\Addresses;
 
 use IPLib\Factory;
-use PHPUnit\Framework\TestCase;
+use IPLib\Test\TestCase;
 
 class IPv4MappedIPv6Test extends TestCase
 {
