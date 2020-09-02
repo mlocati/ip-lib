@@ -3,6 +3,7 @@
 namespace IPLib\Test;
 
 use PDO;
+use PHPUnit\DbUnit\Database\Connection;
 use PHPUnit\DbUnit\TestCase as PHPUnitTestCase;
 
 abstract class DBTestCase extends PHPUnitTestCase
@@ -13,7 +14,7 @@ abstract class DBTestCase extends PHPUnitTestCase
     private static $pdo = null;
 
     /**
-     * @var \PHPUnit\DbUnit\Database\Connection|null
+     * @var Connection|null
      */
     private $connection;
 

@@ -27,6 +27,12 @@
     "require": {
         "php": ">=5.3.3"
     },
+    "require-dev": {
+            "ext-pdo": "*",
+            "ext-pdo_sqlite": "*",
+            "phpunit/dbunit": "^1.4 || ^2 || ^3 || ^4",
+            "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5"
+        },
     "autoload": {
         "psr-4": {
             "IPLib\\": "src/"
@@ -36,11 +42,6 @@
         "psr-4": {
             "IPLib\\Test\\": "test/tests/"
         }
-    },
-    "require-dev": {
-        "ext-pdo_sqlite": "*",
-        "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5",
-        "phpunit/dbunit": "^1.4 || ^2 || ^3 || ^4"
     },
     "scripts": {
         "test": "phpunit"
