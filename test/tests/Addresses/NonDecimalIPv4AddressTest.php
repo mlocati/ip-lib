@@ -199,7 +199,7 @@ class NonDecimalIPv4AddressTest extends TestCase
      */
     public function testCases($input, $parseNonDecimal, array $expected = null)
     {
-        /** @var $ip IPv4 */
+        /** @var IPv4 $ip */
         $ip = Factory::addressFromString($input, true, true, $parseNonDecimal);
         if ($expected === null) {
             $this->assertNull($ip);

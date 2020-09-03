@@ -81,7 +81,7 @@ class ConversionTest extends TestCase
      */
     public function testRangeConversion($subnet, $pattern, $subnet2 = null)
     {
-        /** @var $subnetRange Subnet */
+        /** @var Subnet $subnetRange */
         $subnetRange = Factory::rangeFromString($subnet);
         $this->assertInstanceOf('IPLib\Range\Subnet', $subnetRange);
         $patternRange = $subnetRange->asPattern();

@@ -33,7 +33,7 @@ class SubnetPrefixTest extends TestCase
      */
     public function testSubnetPrefix($rangeString, $expectedPrefix)
     {
-        /** @var $range Subnet */
+        /** @var Subnet $range */
         $range = Factory::rangeFromString($rangeString);
         $this->assertNotNull($range, "'{$rangeString}' has been detected as an invalid subnet, but it should be valid");
         $detectedPrefix = $range->getNetworkPrefix();
