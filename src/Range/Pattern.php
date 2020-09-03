@@ -6,7 +6,6 @@ use IPLib\Address\AddressInterface;
 use IPLib\Address\IPv4;
 use IPLib\Address\IPv6;
 use IPLib\Address\Type as AddressType;
-use LogicException;
 use RuntimeException;
 
 /**
@@ -226,9 +225,8 @@ class Pattern extends AbstractRange
             case AddressType::IPv4:
                 return new Subnet($this->getStartAddress(), $this->getEndAddress(), 8 * (4 - $this->asterisksCount));
             case AddressType::IPv6:
-                return new Subnet($this->getStartAddress(), $this->getEndAddress(), 16 * (8 - $this->asterisksCount));
             default:
-                throw new LogicException(sprintf('Unknown "%s" address type.', $this->getAddressType()));
+                return new Subnet($this->getStartAddress(), $this->getEndAddress(), 16 * (8 - $this->asterisksCount));
         }
     }
 

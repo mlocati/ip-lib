@@ -341,6 +341,7 @@ class IPv4 implements AddressInterface
 
     /**
      * @inheritDoc
+     * @codeCoverageIgnore
      */
     public function toIPv4()
     {

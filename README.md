@@ -273,13 +273,14 @@ $range = Factory::rangeFromString('2000:0::1/64');
 $type = $range->getRangeType();
 
 // prints "Public address"
-echo \IPLib\Range\Type::getName($type);
+echo Type::getName($type);
 ```
 
 Please note that if a range spans across multiple range types, you'll get NULL as the range type:
 
 ```php
 use IPLib\Factory;
+use IPLib\Range\Type;
 
 $range = Factory::rangeFromString('::/127');
 
@@ -287,7 +288,7 @@ $range = Factory::rangeFromString('::/127');
 $type = $range->getRangeType();
 
 // prints "Unknown type"
-echo \IPLib\Range\Type::getName($type);
+echo Type::getName($type);
 ```
 
 

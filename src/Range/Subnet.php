@@ -6,7 +6,6 @@ use IPLib\Address\AddressInterface;
 use IPLib\Address\IPv4;
 use IPLib\Address\Type as AddressType;
 use IPLib\Factory;
-use LogicException;
 
 /**
  * Represents an address range in subnet format (eg CIDR).
@@ -224,9 +223,8 @@ class Subnet extends AbstractRange
             case AddressType::IPv4:
                 return $networkPrefix % 8 === 0 ? new Pattern($address, $address, 4 - $networkPrefix / 8) : null;
             case AddressType::IPv6:
-                return $networkPrefix % 16 === 0 ? new Pattern($address, $address, 8 - $networkPrefix / 16) : null;
             default:
-                throw new LogicException(sprintf('Unexpected address type: "%s".', $address->getAddressType()));
+                return $networkPrefix % 16 === 0 ? new Pattern($address, $address, 8 - $networkPrefix / 16) : null;
         }
     }
 

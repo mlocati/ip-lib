@@ -434,6 +434,7 @@ class IPv6 implements AddressInterface
 
     /**
      * @inheritDoc
+     * @codeCoverageIgnore
      */
     public function toIPv6()
     {
