@@ -9,12 +9,15 @@
 
 ## Introduction
 
-This library can handle IPv4, IPv6 addresses, as well as IP ranges, in CIDR formats (like `::1/128` or `127.0.0.1/32`) and in pattern format (like `::*:*` or `127.0.*.*`).
+IPLib is a modern, PSR-compliant, test-driven IP addresses and subnets manipulation library. It implements primiteves to handle IPv4 and IPv6 addresses, as well as IP ranges (subnets), in CIDR formats (like `::1/128` or `127.0.0.1/32`) and in pattern format (like `::*:*` or `127.0.*.*`).
 
 ## Requirements
 
-The only requirement is PHP 5.3.3.
-__No external dependencies__ and __no special PHP configuration__ are needed (yes, it will __always work__ even if PHP has not been built with IPv6 support!).
+IPLib has very basic requirements as:
+
+- Works with any PHP version greater than 5.3.3 (**PHP 7.3.x is fully supported**).
+- **No external dependencies**
+- **No special PHP configuration needed** (yes, it will __always work__ even if PHP has not been built with IPv6 support!).
 
 ## Manual installation
 
@@ -26,7 +29,13 @@ require_once 'path/to/iplib/ip-lib.php';
 
 ## Installation with Composer
 
-Simply run `composer require mlocati/ip-lib`, or add these lines to your `composer.json` file:
+Simply run 
+
+```bash
+composer require mlocati/ip-lib
+```
+
+or add these lines to your `composer.json` file:
 
 ```json
 "require": {
@@ -36,127 +45,173 @@ Simply run `composer require mlocati/ip-lib`, or add these lines to your `compos
 
 ## Sample usage
 
+
+
 ### Parse an address
 
 To parse an IPv4 address:
 
 ```php
-$address = \IPLib\Address\IPv4::fromString('127.0.0.1');
+$address = IPv4::fromString('127.0.0.1');
 ```
 
 To parse an IPv6 address:
 
 ```php
-$address = \IPLib\Address\IPv6::fromString('::1');
+$address = IPv6::fromString('::1');
 ```
 
 To parse an address in any format (IPv4 or IPv6):
 
 ```php
-$address = \IPLib\Factory::addressFromString('::1');
-$address = \IPLib\Factory::addressFromString('127.0.0.1');
+use IPLib\Factory;
+
+$address = Factory::addressFromString('::1');
+$address = Factory::addressFromString('127.0.0.1');
 ```
+
+
 
 ### Get the next/previous addresses
 
 ```php
-$address = \IPLib\Factory::addressFromString('::1');
+$address = Factory::addressFromString('::1');
 echo (string) $address->getPreviousAddress();
 // prints ::
 echo (string) $address->getNextAddress();
 // prints ::2
 ```
 
+
+
 ### Parse an IP address range
 
 To parse a subnet (CIDR) range:
 
 ```php
-$range = \IPLib\Range\Subnet::fromString('127.0.0.1/24');
-$range = \IPLib\Range\Subnet::fromString('::1/128');
+use IPLib\Range\Subnet;
+
+$range = Subnet::fromString('127.0.0.1/24');
+$range = Subnet::fromString('::1/128');
 ```
 
 To parse a pattern (asterisk notation) range:
 
 ```php
-$range = \IPLib\Range\Pattern::fromString('127.0.0.*');
-$range = \IPLib\Range\Pattern::fromString('::*');
+use IPLib\Range\Pattern;
+
+$range = Pattern::fromString('127.0.0.*');
+$range = Pattern::fromString('::*');
 ```
 
 To parse an andress as a range:
 
 ```php
-$range = \IPLib\Range\Single::fromString('127.0.0.1');
-$range = \IPLib\Range\Single::fromString('::1');
+use IPLib\Range\Single;
+
+$range = Single::fromString('127.0.0.1');
+$range = Single::fromString('::1');
 ```
 
 To parse a range in any format:
 
 ```php
-$range = \IPLib\Factory::rangeFromString('127.0.0.*');
-$range = \IPLib\Factory::rangeFromString('::1/128');
-$range = \IPLib\Factory::rangeFromString('::');
+use IPLib\Factory;
+
+$range = Factory::rangeFromString('127.0.0.*');
+$range = Factory::rangeFromString('::1/128');
+$range = Factory::rangeFromString('::');
 ```
 
-### Retrive a range from its boundaries
+
+
+### Retrieve a range from its boundaries
 
 ```php
-$range = \IPLib\Factory::rangeFromBoundaries('192.168.0.1', '192.168.255.255');
-echo (string) $range;
+use IPLib\Factory;
+
+$range = Factory::rangeFromBoundaries('192.168.0.1', '192.168.255.255');
+
 // prints 192.168.0.0/16
+echo (string) $range;
 ```
 
-### Retrive the boundaries of a range
+
+
+### Retrieve the boundaries of a range
 
 ```php
-$range = \IPLib\Factory::rangeFromString('127.0.0.*');
-echo (string) $range->getStartAddress();
+use IPLib\Factory;
+
+$range = Factory::rangeFromString('127.0.0.*');
+
 // prints 127.0.0.0
-echo (string) $range->getEndAddress();
+echo (string) $range->getStartAddress();
+
 // prints 127.0.0.255
+echo (string) $range->getEndAddress();
 ```
+
+
 
 ### Format addresses and ranges
 
 Both IP addresses and ranges have a `toString` method that you can use to retrieve a textual representation:
- 
+
 ```php
-echo \IPLib\Factory::addressFromString('127.0.0.1')->toString();
+use IPLib\Factory;
+
 // prints 127.0.0.1
-echo \IPLib\Factory::addressFromString('127.000.000.001')->toString();
+echo Factory::addressFromString('127.0.0.1')->toString();
+
 // prints 127.0.0.1
-echo \IPLib\Factory::addressFromString('::1')->toString();
+echo Factory::addressFromString('127.000.000.001')->toString();
+
 // prints ::1
-echo \IPLib\Factory::addressFromString('0:0::1')->toString();
+echo Factory::addressFromString('::1')->toString();
+
 // prints ::1
-echo \IPLib\Factory::rangeFromString('0:0::1/64')->toString();
+echo Factory::addressFromString('0:0::1')->toString();
+
 // prints ::1/64
+echo Factory::rangeFromString('0:0::1/64')->toString();
 ```
 
 When working with IPv6, you may want the full (expanded) representation of the addresses. In this case, simply use a `true` parameter for the `toString` method:
 
 ```php
-echo \IPLib\Factory::addressFromString('::')->toString(true);
+use IPLib\Factory;
+
 // prints 0000:0000:0000:0000:0000:0000:0000:0000
-echo \IPLib\Factory::addressFromString('::1')->toString(true);
+echo Factory::addressFromString('::')->toString(true);
+
 // prints 0000:0000:0000:0000:0000:0000:0000:0001
-echo \IPLib\Factory::addressFromString('fff::')->toString(true);
+echo Factory::addressFromString('::1')->toString(true);
+
 // prints 0fff:0000:0000:0000:0000:0000:0000:0000
-echo \IPLib\Factory::addressFromString('::0:0')->toString(true);
+echo Factory::addressFromString('fff::')->toString(true);
+
 // prints 0000:0000:0000:0000:0000:0000:0000:0000
-echo \IPLib\Factory::addressFromString('1:2:3:4:5:6:7:8')->toString(true);
+echo Factory::addressFromString('::0:0')->toString(true);
+
 // prints 0001:0002:0003:0004:0005:0006:0007:0008
-echo \IPLib\Factory::rangeFromString('0:0::1/64')->toString();
+echo Factory::addressFromString('1:2:3:4:5:6:7:8')->toString(true);
+
 // prints 0000:0000:0000:0000:0000:0000:0000:0001/64
+echo Factory::rangeFromString('0:0::1/64')->toString();
 ```
+
+
 
 ### Check if an address is contained in a range
 
 All the range types offer a `contains` method, and all the IP address types offer a `matches` method: you can call them to check if an address is contained in a range:
 
 ```php
-$address = \IPLib\Factory::addressFromString('1:2:3:4:5:6:7:8');
-$range = \IPLib\Factory::rangeFromString('0:0::1/64');
+use IPLib\Factory;
+
+$address = Factory::addressFromString('1:2:3:4:5:6:7:8');
+$range = Factory::rangeFromString('0:0::1/64');
 
 $contained = $address->matches($range);
 // that's equivalent to
@@ -165,94 +220,126 @@ $contained = $range->contains($address);
 
 Please remark that if the address is IPv4 and the range is IPv6 (or vice-versa), the result will always be `false`.
 
+
+
 ### Check if a range contains another range
 
 All the range types offer a `containsRange` method: you can call them to check if an address range fully contains another range:
 
 ```php
-$range1 = \IPLib\Factory::rangeFromString('0:0::1/64');
-$range2 = \IPLib\Factory::rangeFromString('0:0::1/65');
+use IPLib\Factory;
+
+$range1 = Factory::rangeFromString('0:0::1/64');
+$range2 = Factory::rangeFromString('0:0::1/65');
+
 $contained = $range1->containsRange($range2);
 ```
+
+
 
 ### Getting the type of an IP address
 
 If you want to know if an address is within a private network, or if it's a public IP, or whatever you want, you can use the `getRangeType` method:
 
 ```php
-$address = \IPLib\Factory::addressFromString('::');
+use IPLib\Factory;
 
-$typeID = $address->getRangeType();
+$address = Factory::addressFromString('::');
 
-$typeName = \IPLib\Range\Type::getName();
+$type = $address->getRangeType();
+
+$typeName = Type::getName();
 ```
 
-The most notable values of the range type ID are:
-- `\IPLib\Range\Type::T_UNSPECIFIED` if the address is all zeros (`0.0.0.0` or `::`)
-- `\IPLib\Range\Type::T_LOOPBACK` if the address is the localhost (usually `127.0.0.1` or `::1`)
-- `\IPLib\Range\Type::T_PRIVATENETWORK` if the address is in the local network (for instance `192.168.0.1` or `fc00::1`)
-- `\IPLib\Range\Type::T_PUBLIC` if the address is for public usage (for instance `104.25.25.33` or `2001:503:ba3e::2:30`)
+The most notable values of the ``\IPLib\Range\Type` range type are:
+- `Type:UNSPECIFIED` if the address is all zeros (`0.0.0.0` or `::`)
+- `Type::LOOPBACK` if the address is the localhost (usually `127.0.0.1` or `::1`)
+- `Type::PRIVATE_NETWORK` if the address is in the local network (for instance `192.168.0.1` or `fc00::1`)
+- `Type::PUBLIC_NETWORK` if the address is for public usage (for instance `104.25.25.33` or `2001:503:ba3e::2:30`)
+
+
 
 ### Getting the type of an IP address range
 
 If you want to know the type of an address range, you can use the `getRangeType` method:
 
 ```php
-$range = \IPLib\Factory::rangeFromString('2000:0::1/64');
+use IPLib\Factory;
+use IPLib\Range\Type;
+
+$range = Factory::rangeFromString('2000:0::1/64');
+
+// $type will contain Type::PUBLIC
 $type = $range->getRangeType();
-// $type is \IPLib\Range\Type::T_PUBLIC
+
+// prints "Public address"
 echo \IPLib\Range\Type::getName($type);
-// 'Public address'
 ```
 
-Please remark that if a range spans across multiple range types, you'll get NULL as the range type:
+Please note that if a range spans across multiple range types, you'll get NULL as the range type:
 
 ```php
-$range = \IPLib\Factory::rangeFromString('::/127');
+use IPLib\Factory;
+
+$range = Factory::rangeFromString('::/127');
+
+// $type will contains null
 $type = $range->getRangeType();
-// $type is null
+
+// prints "Unknown type"
 echo \IPLib\Range\Type::getName($type);
-// 'Unknown type'
 ```
+
+
 
 ### Converting IP addresses
 
 This library supports converting IPv4 to/from IPv6 addresses using the [6to4 notation](https://tools.ietf.org/html/rfc3056) or the [IPv4-mapped notation](https://tools.ietf.org/html/rfc4291#section-2.5.5.2):
 
 ```php
-$ipv4 = \IPLib\Factory::addressFromString('1.2.3.4');
+use IPLib\Factory;
+
+$ipv4 = Factory::addressFromString('1.2.3.4');
 
 // 6to4 notation
 $ipv6 = $ipv4->toIPv6();
+
 // This will print "2002:102:304::"
 echo (string) $ipv6;
+
 // This will print "1.2.3.4"
 echo $ipv6->toIPv4();
 
 // IPv4-mapped notation
 $ipv6 = $ipv4->toIPv6IPv4Mapped();
+
 // This will print "::ffff:1.2.3.4"
 echo (string) $ipv6;
+
 // This will print "1.2.3.4"
 echo $ipv6_6to4->toIPv4();
 ```
+
+
 
 ### Converting IP ranges
 
 This library supports IPv4/IPv6 ranges in pattern format (eg. `192.168.*.*`) and in CIDR/subnet format (eg. `192.168.0.0/16`), and it offers a way to convert between the two formats:
 
 ```php
+use IPLib\Factory;
+
 // This will print ::*:*:*:*
-echo \IPLib\Factory::rangeFromString('::/64')->asPattern()->toString();
+echo Factory::rangeFromString('::/64')->asPattern()->toString();
 
 // This will print 1:2::/96
-echo \IPLib\Factory::rangeFromString('1:2::*:*')->asSubnet()->toString();
+echo Factory::rangeFromString('1:2::*:*')->asSubnet()->toString();
 
 // This will print 192.168.0.0/24
-echo \IPLib\Factory::rangeFromString('192.168.0.*')->asSubnet()->toString();
+echo Factory::rangeFromString('192.168.0.*')->asSubnet()->toString();
 
 // This will print 10.*.*.*
-echo \IPLib\Factory::rangeFromString('10.0.0.0/8')->asPattern()->toString();
+echo Factory::rangeFromString('10.0.0.0/8')->asPattern()->toString();
 ```
 
 ### Getting the subnet mask for IPv4 ranges
@@ -260,29 +347,37 @@ echo \IPLib\Factory::rangeFromString('10.0.0.0/8')->asPattern()->toString();
 You can use the `getSubnetMask()` to get the subnet mask for IPv4 ranges:
 
 ```php
+use IPLib\Factory;
+
 // This will print 255.255.255.0
-echo \IPLib\Factory::rangeFromString('192.168.0.*')->getSubnetMask()->toString();
+echo Factory::rangeFromString('192.168.0.*')->getSubnetMask()->toString();
 
 // This will print 255.255.255.252
-echo \IPLib\Factory::rangeFromString('192.168.0.12/30')->getSubnetMask()->toString();
+echo Factory::rangeFromString('192.168.0.12/30')->getSubnetMask()->toString();
 ```
+
+
 
 ### Getting the reverse DNS lookup address
 
-In order to perform reverse DNS queries, you need to use a special format of the IP addresses.
+To perform reverse DNS queries, you need to use a special format of the IP addresses.
 
-You can use the `getReverseDNSLookupName()` method of the IP address instances to easily retrieve it:
+You can use the `getReverseDNSLookupName()` method of the IP address instancesto retrieve it easily:
 
 ```php
+use IPLib\Factory;
 
-$ipv4 = \IPLib\Factory::addressFromString('1.2.3.255');
+$ipv4 = Factory::addressFromString('1.2.3.255');
+$ipv6 = Factory::addressFromString('1234:abcd::cafe:babe');
+
 // This will print 255.3.2.1.in-addr.arpa
 echo $ipv4->getReverseDNSLookupName();
 
-$ipv6 = \IPLib\Factory::addressFromString('1234:abcd::cafe:babe');
 // This will print e.b.a.b.e.f.a.c.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.d.c.b.a.4.3.2.1.ip6.arpa
 echo $ipv6->getReverseDNSLookupName();
 ```
+
+
 
 ### Using a database
 
@@ -303,7 +398,7 @@ When you want to check if an address is within a stored range, simply use the `g
 Here's a sample code:
 
 ```php
-/*
+/**
  * Let's assume that:
  * - $pdo is a PDO instance
  * - $range is a range object
@@ -315,6 +410,7 @@ $insertQuery = $pdo->prepare('
     insert into ranges (addressType, rangeFrom, rangeTo)
     values (:addressType, :rangeFrom, :rangeTo)
 ');
+
 $insertQuery->execute(array(
     ':addressType' => $range->getAddressType(),
     ':rangeFrom' => $range->getComparableStartString(),
@@ -327,17 +423,21 @@ $searchQuery = $pdo->prepare('
     where addressType = :addressType
     and :address between rangeFrom and rangeTo
 ');
+
 $searchQuery->execute(array(
     ':addressType' => $address->getAddressType(),
     ':address' => $address->getComparableString(),
 ));
+
 $rows = $searchQuery->fetchAll();
 $searchQuery->closeCursor();
 ```
 
-## Non decimal notation
 
-IPv4 addresses are usually expresses in decimal notation, for example `192.168.0.1`.
+
+### Non-decimal notation
+
+IPv4 addresses are usually expressed in decimal notation, for example, `192.168.0.1`.
 
 By the way, for historical reasons, widely used libraries (and browsers) accept IPv4 addresses with numbers in octal and/or hexadecimal format.
 So, for example, these addresses are all equivalent to `192.168.0.1`:
@@ -351,25 +451,29 @@ So, for example, these addresses are all equivalent to `192.168.0.1`:
 This library optionally accepts those alternative syntaxes:
 
 ```php
-var_export(\IPLib\Factory::addressFromString('0177.0.0.0x1'));
-// Prints NULL since by default the library doesn't accept non-decimal addresses
+use IPLib\Factory;
 
-var_export(\IPLib\Factory::addressFromString('0177.0.0.0x1', true, true, false));
+// Prints NULL since by default the library doesn't accept non-decimal addresses
+var_export(Factory::addressFromString('0177.0.0.0x1'));
+
 // Prints NULL since the fourth argument is false
+var_export(Factory::addressFromString('0177.0.0.0x1', true, true, false));
 
-var_export((string) \IPLib\Factory::addressFromString('0177.0.0.0x1', true, true, true));
 // Prints '127.0.0.1' since the fourth argument is true
+var_export((string) Factory::addressFromString('0177.0.0.0x1', true, true, true));
 
-var_export(\IPLib\Factory::rangeFromString('0177.0.0.0x1/32'));
 // Prints NULL since by default the library doesn't accept non-decimal addresses
+var_export(Factory::rangeFromString('0177.0.0.0x1/32'));
 
-var_export(\IPLib\Factory::rangeFromString('0177.0.0.0x1/32', false));
 // Prints NULL since the second argument is false
+var_export(Factory::rangeFromString('0177.0.0.0x1/32', false));
 
-var_export((string) \IPLib\Factory::rangeFromString('0177.0.0.0x1/32', true));
 // Prints '127.0.0.1/32' since the second argument is true
+var_export((string) Factory::rangeFromString('0177.0.0.0x1/32', true));
 ```
 
-## Do you want to really say thank you?
+
+
+## Do you want to say thank you?
 
 You can offer me a [monthly coffee](https://github.com/sponsors/mlocati) or a [one-time coffee](https://paypal.me/mlocati) :wink:
