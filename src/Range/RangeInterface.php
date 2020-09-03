@@ -30,14 +30,14 @@ interface RangeInterface
     /**
      * Get the type of the IP addresses contained in this range.
      *
-     * @return int One of the \IPLib\Address\Type::T_... constants
+     * @return int One of the \IPLib\Address\Type constants
      */
     public function getAddressType();
 
     /**
      * Get the type of range of the IP address.
      *
-     * @return int One of the \IPLib\Range\Type::T_... constants
+     * @return int One of the \IPLib\Range\Type constants
      */
     public function getRangeType();
 

@@ -183,15 +183,15 @@ class Pattern implements RangeInterface
     {
         if ($this->rangeType === null) {
             $addressType = $this->getAddressType();
-            if ($addressType === AddressType::T_IPv6 && Subnet::get6to4()->containsRange($this)) {
+            if ($addressType === AddressType::IPv6 && Subnet::get6to4()->containsRange($this)) {
                 $this->rangeType = Factory::rangeFromBoundaries($this->fromAddress->toIPv4(), $this->toAddress->toIPv4())->getRangeType();
             } else {
                 switch ($addressType) {
-                    case AddressType::T_IPv4:
+                    case AddressType::IPv4:
                         $defaultType = IPv4::getDefaultReservedRangeType();
                         $reservedRanges = IPv4::getReservedRanges();
                         break;
-                    case AddressType::T_IPv6:
+                    case AddressType::IPv6:
                         $defaultType = IPv6::getDefaultReservedRangeType();
                         $reservedRanges = IPv6::getReservedRanges();
                         break;
@@ -305,9 +305,9 @@ class Pattern implements RangeInterface
     public function asSubnet()
     {
         switch ($this->getAddressType()) {
-            case AddressType::T_IPv4:
+            case AddressType::IPv4:
                 return new Subnet($this->getStartAddress(), $this->getEndAddress(), 8 * (4 - $this->asterisksCount));
-            case AddressType::T_IPv6:
+            case AddressType::IPv6:
                 return new Subnet($this->getStartAddress(), $this->getEndAddress(), 16 * (8 - $this->asterisksCount));
         }
     }
@@ -319,7 +319,7 @@ class Pattern implements RangeInterface
      */
     public function getSubnetMask()
     {
-        if ($this->getAddressType() !== AddressType::T_IPv4) {
+        if ($this->getAddressType() !== AddressType::IPv4) {
             return null;
         }
         switch ($this->asterisksCount) {

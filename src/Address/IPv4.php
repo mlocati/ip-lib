@@ -236,7 +236,7 @@ class IPv4 implements AddressInterface
      */
     public function getAddressType()
     {
-        return Type::T_IPv4;
+        return Type::IPv4;
     }
 
     /**
@@ -246,7 +246,7 @@ class IPv4 implements AddressInterface
      */
     public static function getDefaultReservedRangeType()
     {
-        return RangeType::T_PUBLIC;
+        return RangeType::PUBLIC_NETWORK;
     }
 
     /**
@@ -260,35 +260,35 @@ class IPv4 implements AddressInterface
             $reservedRanges = array();
             foreach (array(
                 // RFC 5735
-                '0.0.0.0/8' => array(RangeType::T_THISNETWORK, array('0.0.0.0/32' => RangeType::T_UNSPECIFIED)),
+                '0.0.0.0/8' => array(RangeType::THIS_NETWORK, array('0.0.0.0/32' => RangeType::UNSPECIFIED)),
                 // RFC 5735
-                '10.0.0.0/8' => array(RangeType::T_PRIVATENETWORK),
+                '10.0.0.0/8' => array(RangeType::PRIVATE_NETWORK),
                 // RFC 6598
-                '100.64.0.0/10' => array(RangeType::T_CGNAT),
+                '100.64.0.0/10' => array(RangeType::CARRIER_GRADE_NAT),
                 // RFC 5735
-                '127.0.0.0/8' => array(RangeType::T_LOOPBACK),
+                '127.0.0.0/8' => array(RangeType::LOOPBACK),
                 // RFC 5735
-                '169.254.0.0/16' => array(RangeType::T_LINKLOCAL),
+                '169.254.0.0/16' => array(RangeType::LINK_LOCAL),
                 // RFC 5735
-                '172.16.0.0/12' => array(RangeType::T_PRIVATENETWORK),
+                '172.16.0.0/12' => array(RangeType::PRIVATE_NETWORK),
                 // RFC 5735
-                '192.0.0.0/24' => array(RangeType::T_RESERVED),
+                '192.0.0.0/24' => array(RangeType::RESERVED),
                 // RFC 5735
-                '192.0.2.0/24' => array(RangeType::T_RESERVED),
+                '192.0.2.0/24' => array(RangeType::RESERVED),
                 // RFC 5735
-                '192.88.99.0/24' => array(RangeType::T_ANYCASTRELAY),
+                '192.88.99.0/24' => array(RangeType::ANYCAST_RELAY),
                 // RFC 5735
-                '192.168.0.0/16' => array(RangeType::T_PRIVATENETWORK),
+                '192.168.0.0/16' => array(RangeType::PRIVATE_NETWORK),
                 // RFC 5735
-                '198.18.0.0/15' => array(RangeType::T_RESERVED),
+                '198.18.0.0/15' => array(RangeType::RESERVED),
                 // RFC 5735
-                '198.51.100.0/24' => array(RangeType::T_RESERVED),
+                '198.51.100.0/24' => array(RangeType::RESERVED),
                 // RFC 5735
-                '203.0.113.0/24' => array(RangeType::T_RESERVED),
+                '203.0.113.0/24' => array(RangeType::RESERVED),
                 // RFC 5735
-                '224.0.0.0/4' => array(RangeType::T_MULTICAST),
+                '224.0.0.0/4' => array(RangeType::MULTICAST),
                 // RFC 5735
-                '240.0.0.0/4' => array(RangeType::T_RESERVED, array('255.255.255.255/32' => RangeType::T_LIMITEDBROADCAST)),
+                '240.0.0.0/4' => array(RangeType::RESERVED, array('255.255.255.255/32' => RangeType::LIMITED_BROADCAST)),
             ) as $range => $data) {
                 $exceptions = array();
                 if (isset($data[1])) {

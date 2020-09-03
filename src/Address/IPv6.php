@@ -304,7 +304,7 @@ class IPv6 implements AddressInterface
      */
     public function getAddressType()
     {
-        return Type::T_IPv6;
+        return Type::IPv6;
     }
 
     /**
@@ -314,7 +314,7 @@ class IPv6 implements AddressInterface
      */
     public static function getDefaultReservedRangeType()
     {
-        return RangeType::T_RESERVED;
+        return RangeType::RESERVED;
     }
 
     /**
@@ -328,50 +328,50 @@ class IPv6 implements AddressInterface
             $reservedRanges = array();
             foreach (array(
                 // RFC 4291
-                '::/128' => array(RangeType::T_UNSPECIFIED),
+                '::/128' => array(RangeType::UNSPECIFIED),
                 // RFC 4291
-                '::1/128' => array(RangeType::T_LOOPBACK),
+                '::1/128' => array(RangeType::LOOPBACK),
                 // RFC 4291
-                '100::/8' => array(RangeType::T_DISCARD, array('100::/64' => RangeType::T_DISCARDONLY)),
+                '100::/8' => array(RangeType::DISCARD, array('100::/64' => RangeType::DISCARD_ONLY)),
                 //'2002::/16' => array(RangeType::),
                 // RFC 4291
-                '2000::/3' => array(RangeType::T_PUBLIC),
+                '2000::/3' => array(RangeType::PUBLIC_NETWORK),
                 // RFC 4193
-                'fc00::/7' => array(RangeType::T_PRIVATENETWORK),
+                'fc00::/7' => array(RangeType::PRIVATE_NETWORK),
                 // RFC 4291
-                'fe80::/10' => array(RangeType::T_LINKLOCAL_UNICAST),
+                'fe80::/10' => array(RangeType::LINK_LOCAL_UNICAST),
                 // RFC 4291
-                'ff00::/8' => array(RangeType::T_MULTICAST),
+                'ff00::/8' => array(RangeType::MULTICAST),
                 // RFC 4291
-                //'::/8' => array(RangeType::T_RESERVED),
+                //'::/8' => array(RangeType::RESERVED),
                 // RFC 4048
-                //'200::/7' => array(RangeType::T_RESERVED),
+                //'200::/7' => array(RangeType::RESERVED),
                 // RFC 4291
-                //'400::/6' => array(RangeType::T_RESERVED),
+                //'400::/6' => array(RangeType::RESERVED),
                 // RFC 4291
-                //'800::/5' => array(RangeType::T_RESERVED),
+                //'800::/5' => array(RangeType::RESERVED),
                 // RFC 4291
-                //'1000::/4' => array(RangeType::T_RESERVED),
+                //'1000::/4' => array(RangeType::RESERVED),
                 // RFC 4291
-                //'4000::/3' => array(RangeType::T_RESERVED),
+                //'4000::/3' => array(RangeType::RESERVED),
                 // RFC 4291
-                //'6000::/3' => array(RangeType::T_RESERVED),
+                //'6000::/3' => array(RangeType::RESERVED),
                 // RFC 4291
-                //'8000::/3' => array(RangeType::T_RESERVED),
+                //'8000::/3' => array(RangeType::RESERVED),
                 // RFC 4291
-                //'a000::/3' => array(RangeType::T_RESERVED),
+                //'a000::/3' => array(RangeType::RESERVED),
                 // RFC 4291
-                //'c000::/3' => array(RangeType::T_RESERVED),
+                //'c000::/3' => array(RangeType::RESERVED),
                 // RFC 4291
-                //'e000::/4' => array(RangeType::T_RESERVED),
+                //'e000::/4' => array(RangeType::RESERVED),
                 // RFC 4291
-                //'f000::/5' => array(RangeType::T_RESERVED),
+                //'f000::/5' => array(RangeType::RESERVED),
                 // RFC 4291
-                //'f800::/6' => array(RangeType::T_RESERVED),
+                //'f800::/6' => array(RangeType::RESERVED),
                 // RFC 4291
-                //'fe00::/9' => array(RangeType::T_RESERVED),
+                //'fe00::/9' => array(RangeType::RESERVED),
                 // RFC 3879
-                //'fec0::/10' => array(RangeType::T_RESERVED),
+                //'fec0::/10' => array(RangeType::RESERVED),
             ) as $range => $data) {
                 $exceptions = array();
                 if (isset($data[1])) {

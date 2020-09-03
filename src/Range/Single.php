@@ -16,14 +16,14 @@ use IPLib\Factory;
 class Single implements RangeInterface
 {
     /**
-     * @var \IPLib\Address\AddressInterface
+     * @var AddressInterface
      */
     protected $address;
 
     /**
      * Initializes the instance.
      *
-     * @param \IPLib\Address\AddressInterface $address
+     * @param AddressInterface $address
      */
     protected function __construct(AddressInterface $address)
     {
@@ -62,7 +62,7 @@ class Single implements RangeInterface
     /**
      * Create the range instance starting from an address instance.
      *
-     * @param \IPLib\Address\AddressInterface $address
+     * @param AddressInterface $address
      *
      * @return static
      */
@@ -182,7 +182,7 @@ class Single implements RangeInterface
      */
     public function getSubnetMask()
     {
-        if ($this->getAddressType() !== AddressType::T_IPv4) {
+        if ($this->getAddressType() !== AddressType::IPv4) {
             return null;
         }
 

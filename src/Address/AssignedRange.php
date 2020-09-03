@@ -19,7 +19,7 @@ class AssignedRange
     /**
      * The range type.
      *
-     * @var int one of the \IPLib\Range\Type::T_ constants
+     * @var int one of the \IPLib\Range\Type constants
      */
     protected $type;
 
@@ -34,7 +34,7 @@ class AssignedRange
      * Initialize the instance.
      *
      * @param \IPLib\Range\RangeInterface $range the range definition
-     * @param int $type The range type (one of the \IPLib\Range\Type::T_ constants)
+     * @param int $type The range type (one of the \IPLib\Range\Type constants)
      * @param \IPLib\Address\AssignedRange[] $exceptions the list of exceptions for this range type
      */
     public function __construct(RangeInterface $range, $type, array $exceptions = array())
@@ -57,7 +57,7 @@ class AssignedRange
     /**
      * Get the range type.
      *
-     * @return int one of the \IPLib\Range\Type::T_ constants
+     * @return int one of the \IPLib\Range\Type constants
      */
     public function getType()
     {
@@ -79,7 +79,7 @@ class AssignedRange
      *
      * @param \IPLib\Address\AddressInterface $address
      *
-     * @return int|null return NULL of the address is outside this address; a \IPLib\Range\Type::T_ constant otherwise
+     * @return int|null return NULL of the address is outside this address; a \IPLib\Range\Type constant otherwise
      */
     public function getAddressType(AddressInterface $address)
     {
@@ -104,7 +104,7 @@ class AssignedRange
      *
      * @param \IPLib\Range\RangeInterface $range
      *
-     * @return int|false|null return NULL of the range is fully outside this range; false if it's partly crosses this range (or it contains mixed types); a \IPLib\Range\Type::T_ constant otherwise
+     * @return int|false|null return NULL of the range is fully outside this range; false if it's partly crosses this range (or it contains mixed types); a \IPLib\Range\Type constant otherwise
      */
     public function getRangeType(RangeInterface $range)
     {

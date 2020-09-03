@@ -7,6 +7,7 @@ use IPLib\Address\IPv4;
 use IPLib\Address\IPv6;
 use IPLib\Address\Type as AddressType;
 use IPLib\Factory;
+use LogicException;
 
 /**
  * Represents an address range in subnet format (eg CIDR).
@@ -56,7 +57,7 @@ class Subnet implements RangeInterface
      *
      * @param \IPLib\Address\AddressInterface $fromAddress
      * @param \IPLib\Address\AddressInterface $toAddress
-     * @param int $networkPrefix
+     * @param int                             $networkPrefix
      *
      * @internal
      */
@@ -81,7 +82,8 @@ class Subnet implements RangeInterface
      * Try get the range instance starting from its string representation.
      *
      * @param string|mixed $range
-     * @param bool $supportNonDecimalIPv4 set to true to support parsing non decimal (that is, octal and hexadecimal) IPv4 addresses
+     * @param bool         $supportNonDecimalIPv4 set to true to support parsing non decimal (that is, octal and
+     *                                            hexadecimal) IPv4 addresses
      *
      * @return static|null
      */
@@ -101,7 +103,7 @@ class Subnet implements RangeInterface
         if (!preg_match('/^[0-9]{1,9}$/', $parts[1])) {
             return null;
         }
-        $networkPrefix = (int) $parts[1];
+        $networkPrefix = (int)$parts[1];
         $addressBytes = $address->getBytes();
         $totalBytes = count($addressBytes);
         $numDifferentBits = $totalBytes * 8 - $networkPrefix;
@@ -155,15 +157,15 @@ class Subnet implements RangeInterface
     {
         if ($this->rangeType === null) {
             $addressType = $this->getAddressType();
-            if ($addressType === AddressType::T_IPv6 && static::get6to4()->containsRange($this)) {
+            if ($addressType === AddressType::IPv6 && static::get6to4()->containsRange($this)) {
                 $this->rangeType = Factory::rangeFromBoundaries($this->fromAddress->toIPv4(), $this->toAddress->toIPv4())->getRangeType();
             } else {
                 switch ($addressType) {
-                    case AddressType::T_IPv4:
+                    case AddressType::IPv4:
                         $defaultType = IPv4::getDefaultReservedRangeType();
                         $reservedRanges = IPv4::getReservedRanges();
                         break;
-                    case AddressType::T_IPv6:
+                    case AddressType::IPv6:
                         $defaultType = IPv6::getDefaultReservedRangeType();
                         $reservedRanges = IPv6::getReservedRanges();
                         break;
@@ -303,10 +305,12 @@ class Subnet implements RangeInterface
         $address = $this->getStartAddress();
         $networkPrefix = $this->getNetworkPrefix();
         switch ($address->getAddressType()) {
-            case AddressType::T_IPv4:
+            case AddressType::IPv4:
                 return $networkPrefix % 8 === 0 ? new Pattern($address, $address, 4 - $networkPrefix / 8) : null;
-            case AddressType::T_IPv6:
+            case AddressType::IPv6:
                 return $networkPrefix % 16 === 0 ? new Pattern($address, $address, 8 - $networkPrefix / 16) : null;
+            default:
+                throw new LogicException(sprintf('Unexpected address type: "%s".', $address->getAddressType()));
         }
     }
 
@@ -317,7 +321,7 @@ class Subnet implements RangeInterface
      */
     public function getSubnetMask()
     {
-        if ($this->getAddressType() !== AddressType::T_IPv4) {
+        if ($this->getAddressType() !== AddressType::IPv4) {
             return null;
         }
         $bytes = array();
