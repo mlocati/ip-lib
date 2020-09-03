@@ -55,7 +55,7 @@ class Subnet extends AbstractRange
      *
      * @param AddressInterface $fromAddress
      * @param AddressInterface $toAddress
-     * @param int              $networkPrefix
+     * @param int $networkPrefix
      *
      * @internal
      */
@@ -80,8 +80,7 @@ class Subnet extends AbstractRange
      * Try get the range instance starting from its string representation.
      *
      * @param string|mixed $range
-     * @param bool         $supportNonDecimalIPv4 set to true to support parsing non decimal (that is, octal and
-     *                                            hexadecimal) IPv4 addresses
+     * @param bool $supportNonDecimalIPv4 set to true to support parsing non decimal (that is, octal and hexadecimal) IPv4 addresses
      *
      * @return static|null
      */
