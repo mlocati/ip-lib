@@ -106,63 +106,76 @@ class Type
     const CARRIER_GRADE_NAT = 14;
 
     /**
-     * The following constants are kept only for backward compatibility
+     * The following constants are kept only for backward compatibility.
      */
 
     /**
-     * @deprecated use UNSPECIFIED instead.
+     * @deprecated use UNSPECIFIED instead
      */
     const T_UNSPECIFIED = 1;
+
     /**
-     * @deprecated use RESERVED instead.
+     * @deprecated use RESERVED instead
      */
     const T_RESERVED = 2;
+
     /**
-     * @deprecated use THIS_NETWORK instead.
+     * @deprecated use THIS_NETWORK instead
      */
     const T_THISNETWORK = 3;
+
     /**
-     * @deprecated use LOOPBACK instead.
+     * @deprecated use LOOPBACK instead
      */
     const T_LOOPBACK = 4;
+
     /**
-     * @deprecated use ANYCAST_RELAY instead.
+     * @deprecated use ANYCAST_RELAY instead
      */
     const T_ANYCASTRELAY = 5;
+
     /**
-     * @deprecated use LIMITED_BROADCAST instead.
+     * @deprecated use LIMITED_BROADCAST instead
      */
     const T_LIMITEDBROADCAST = 6;
+
     /**
-     * @deprecated use MULTICAST instead.
+     * @deprecated use MULTICAST instead
      */
     const T_MULTICAST = 7;
+
     /**
-     * @deprecated use LINK_LOCAL_UNICAST instead.
+     * @deprecated use LINK_LOCAL_UNICAST instead
      */
     const T_LINKLOCAL = 8;
+
     /**
-     * @deprecated use UNSPECIFIED instead.
+     * @deprecated use UNSPECIFIED instead
      */
     const T_LINKLOCAL_UNICAST = 9;
+
     /**
-     * @deprecated use DISCARD_ONLY instead.
+     * @deprecated use DISCARD_ONLY instead
      */
     const T_DISCARDONLY = 10;
+
     /**
-     * @deprecated use DISCARD instead.
+     * @deprecated use DISCARD instead
      */
     const T_DISCARD = 11;
+
     /**
-     * @deprecated use PRIVATE_NETWORK instead.
+     * @deprecated use PRIVATE_NETWORK instead
      */
     const T_PRIVATENETWORK = 12;
+
     /**
-     * @deprecated use PUBLIC_NETWORK instead.
+     * @deprecated use PUBLIC_NETWORK instead
      */
     const T_PUBLIC = 13;
+
     /**
-     * @deprecated use CARRIER_GRADE_NAT instead.
+     * @deprecated use CARRIER_GRADE_NAT instead
      */
     const T_CGNAT = 14;
 

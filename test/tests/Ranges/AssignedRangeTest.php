@@ -2,7 +2,6 @@
 
 namespace IPLib\Test\Ranges;
 
-
 use IPLib\Address\AssignedRange;
 use IPLib\Factory;
 use IPLib\Range\Type;
@@ -11,7 +10,7 @@ use IPLib\Test\TestCase;
 class AssignedRangeTest extends TestCase
 {
     /**
-     * A minor function to test class getters
+     * A minor function to test class getters.
      */
     public function testGetters()
     {

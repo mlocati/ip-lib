@@ -49,7 +49,7 @@ class Pattern extends AbstractRange
      *
      * @param AddressInterface $fromAddress
      * @param AddressInterface $toAddress
-     * @param int              $asterisksCount
+     * @param int $asterisksCount
      */
     public function __construct(AddressInterface $fromAddress, AddressInterface $toAddress, $asterisksCount)
     {

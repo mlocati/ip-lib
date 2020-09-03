@@ -22,16 +22,16 @@ class Type
     const IPv6 = 6;
 
     /**
-     * The following constants are kept only for backward compatibility
+     * The following constants are kept only for backward compatibility.
      */
 
     /**
-     * @deprecated use IPv4 instead.
+     * @deprecated use IPv4 instead
      */
     const T_IPv4 = 4;
 
     /**
-     * @deprecated use IPv6 instead.
+     * @deprecated use IPv6 instead
      */
     const T_IPv6 = 6;
 

@@ -82,7 +82,7 @@ class Factory
      *
      * @param string|AddressInterface $from
      * @param string|AddressInterface $to
-     * @param bool  $supportNonDecimalIPv4 set to true to support parsing non decimal (that is, octal and hexadecimal) IPv4 addresses
+     * @param bool $supportNonDecimalIPv4 set to true to support parsing non decimal (that is, octal and hexadecimal) IPv4 addresses
      *
      * @return RangeInterface|null
      */

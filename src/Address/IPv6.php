@@ -110,9 +110,13 @@ class IPv6 implements AddressInterface
                     $address4 = IPv4::fromString($matches[2], false);
                     if ($address4 !== null) {
                         $bytes4 = $address4->getBytes();
-                        $address6->longAddress = substr($address6->longAddress, 0, -9) . sprintf('%02x%02x:%02x%02x',
-                                $bytes4[0], $bytes4[1], $bytes4[2], $bytes4[3]
-                            );
+                        $address6->longAddress = substr($address6->longAddress, 0, -9) . sprintf(
+                            '%02x%02x:%02x%02x',
+                            $bytes4[0],
+                            $bytes4[1],
+                            $bytes4[2],
+                            $bytes4[3]
+                        );
                         $result = $address6;
                     }
                 }
@@ -416,7 +420,7 @@ class IPv6 implements AddressInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function toIPv4()
     {
@@ -433,7 +437,8 @@ class IPv6 implements AddressInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
+     *
      * @codeCoverageIgnore
      */
     public function toIPv6()

@@ -96,5 +96,4 @@ abstract class AbstractRange implements RangeInterface
 
         return $result;
     }
-
 }

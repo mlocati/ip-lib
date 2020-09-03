@@ -74,10 +74,10 @@ class IPv4 implements AddressInterface
     /**
      * Parse a string and returns an IPv4 instance if the string is valid, or null otherwise.
      *
-     * @param string|mixed $address               the address to parse
-     * @param bool         $mayIncludePort        set to false to avoid parsing addresses with ports
-     * @param bool         $supportNonDecimalIPv4 set to true to support parsing non decimal (that is, octal and
-     *                                             hexadecimal) IPv4 addresses
+     * @param string|mixed $address the address to parse
+     * @param bool $mayIncludePort set to false to avoid parsing addresses with ports
+     * @param bool $supportNonDecimalIPv4 set to true to support parsing non decimal (that is, octal and
+     *                                    hexadecimal) IPv4 addresses
      *
      * @return static|null
      */
@@ -327,7 +327,7 @@ class IPv4 implements AddressInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function toIPv6()
     {
@@ -340,7 +340,8 @@ class IPv4 implements AddressInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
+     *
      * @codeCoverageIgnore
      */
     public function toIPv4()
@@ -355,9 +356,11 @@ class IPv4 implements AddressInterface
      */
     public function toIPv6IPv4Mapped()
     {
-        return IPv6::fromBytes(array_merge(
-            array(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff),
-            $this->getBytes())
+        return IPv6::fromBytes(
+            array_merge(
+                array(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff),
+                $this->getBytes()
+            )
         );
     }
 
@@ -451,5 +454,4 @@ class IPv4 implements AddressInterface
             array_reverse($this->getBytes())
         ) . '.in-addr.arpa';
     }
-
 }
