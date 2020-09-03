@@ -2,6 +2,7 @@
 
 namespace IPLib\Test\Addresses;
 
+use IPLib\Address\IPv4;
 use IPLib\Factory;
 use IPLib\Test\TestCase;
 
@@ -52,6 +53,7 @@ class ConversionTest extends TestCase
      */
     public function testIPv4MappedAddress($address)
     {
+        /* @var $ipV4 IPv4 */
         $ipV4 = Factory::addressFromString($address);
         $this->assertNotNull($ipV4, "'{$address}' has been detected as an invalid IP, but it should be valid");
         $this->assertInstanceOf('IPLib\Address\IPv4', $ipV4);

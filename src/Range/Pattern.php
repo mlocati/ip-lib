@@ -7,6 +7,8 @@ use IPLib\Address\IPv4;
 use IPLib\Address\IPv6;
 use IPLib\Address\Type as AddressType;
 use IPLib\Factory;
+use LogicException;
+use RuntimeException;
 
 /**
  * Represents an address range in pattern format (only ending asterisks are supported).
@@ -19,14 +21,14 @@ class Pattern implements RangeInterface
     /**
      * Starting address of the range.
      *
-     * @var \IPLib\Address\AddressInterface
+     * @var AddressInterface
      */
     protected $fromAddress;
 
     /**
      * Final address of the range.
      *
-     * @var \IPLib\Address\AddressInterface
+     * @var AddressInterface
      */
     protected $toAddress;
 
@@ -47,9 +49,9 @@ class Pattern implements RangeInterface
     /**
      * Initializes the instance.
      *
-     * @param \IPLib\Address\AddressInterface $fromAddress
-     * @param \IPLib\Address\AddressInterface $toAddress
-     * @param int $asterisksCount
+     * @param AddressInterface $fromAddress
+     * @param AddressInterface $toAddress
+     * @param int              $asterisksCount
      */
     public function __construct(AddressInterface $fromAddress, AddressInterface $toAddress, $asterisksCount)
     {
@@ -134,13 +136,13 @@ class Pattern implements RangeInterface
             return $this->fromAddress->toString($long);
         }
         switch (true) {
-            case $this->fromAddress instanceof \IPLib\Address\IPv4:
+            case $this->fromAddress instanceof IPv4:
                 $chunks = explode('.', $this->fromAddress->toString());
                 $chunks = array_slice($chunks, 0, -$this->asterisksCount);
                 $chunks = array_pad($chunks, 4, '*');
                 $result = implode('.', $chunks);
                 break;
-            case $this->fromAddress instanceof \IPLib\Address\IPv6:
+            case $this->fromAddress instanceof IPv6:
                 if ($long) {
                     $chunks = explode(':', $this->fromAddress->toString(true));
                     $chunks = array_slice($chunks, 0, -$this->asterisksCount);
@@ -158,7 +160,7 @@ class Pattern implements RangeInterface
                 }
                 break;
             default:
-                throw new \Exception('@todo'); // @codeCoverageIgnore
+                throw new RuntimeException('@todo'); // @codeCoverageIgnore
         }
 
         return $result;
@@ -184,7 +186,10 @@ class Pattern implements RangeInterface
         if ($this->rangeType === null) {
             $addressType = $this->getAddressType();
             if ($addressType === AddressType::IPv6 && Subnet::get6to4()->containsRange($this)) {
-                $this->rangeType = Factory::rangeFromBoundaries($this->fromAddress->toIPv4(), $this->toAddress->toIPv4())->getRangeType();
+                $this->rangeType = Factory::rangeFromBoundaries(
+                    $this->fromAddress->toIPv4(),
+                    $this->toAddress->toIPv4()
+                )->getRangeType();
             } else {
                 switch ($addressType) {
                     case AddressType::IPv4:
@@ -196,7 +201,7 @@ class Pattern implements RangeInterface
                         $reservedRanges = IPv6::getReservedRanges();
                         break;
                     default:
-                        throw new \Exception('@todo'); // @codeCoverageIgnore
+                        throw new RuntimeException('@todo'); // @codeCoverageIgnore
                 }
                 $rangeType = null;
                 foreach ($reservedRanges as $reservedRange) {
@@ -300,7 +305,7 @@ class Pattern implements RangeInterface
     /**
      * Get the subnet/CIDR representation of this range.
      *
-     * @return \IPLib\Range\Subnet
+     * @return Subnet
      */
     public function asSubnet()
     {
@@ -309,6 +314,8 @@ class Pattern implements RangeInterface
                 return new Subnet($this->getStartAddress(), $this->getEndAddress(), 8 * (4 - $this->asterisksCount));
             case AddressType::IPv6:
                 return new Subnet($this->getStartAddress(), $this->getEndAddress(), 16 * (8 - $this->asterisksCount));
+            default:
+                throw new LogicException(sprintf('Unknown "%s" address type.', $this->getAddressType()));
         }
     }
 

@@ -3,6 +3,7 @@
 namespace IPLib\Test\Ranges;
 
 use IPLib\Factory;
+use IPLib\Range\Subnet;
 use IPLib\Test\TestCase;
 
 class SubnetPrefixTest extends TestCase
@@ -32,6 +33,7 @@ class SubnetPrefixTest extends TestCase
      */
     public function testSubnetPrefix($rangeString, $expectedPrefix)
     {
+        /* @var $range Subnet */
         $range = Factory::rangeFromString($rangeString);
         $this->assertNotNull($range, "'{$rangeString}' has been detected as an invalid subnet, but it should be valid");
         $detectedPrefix = $range->getNetworkPrefix();

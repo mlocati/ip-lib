@@ -3,6 +3,7 @@
 namespace IPLib\Test\Ranges;
 
 use IPLib\Factory;
+use IPLib\Range\Subnet;
 use IPLib\Test\TestCase;
 
 class ConversionTest extends TestCase
@@ -80,6 +81,7 @@ class ConversionTest extends TestCase
      */
     public function testRangeConversion($subnet, $pattern, $subnet2 = null)
     {
+        /* @var $subnetRange Subnet */
         $subnetRange = Factory::rangeFromString($subnet);
         $this->assertInstanceOf('IPLib\Range\Subnet', $subnetRange);
         $patternRange = $subnetRange->asPattern();

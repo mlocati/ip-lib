@@ -2,6 +2,7 @@
 
 namespace IPLib\Test\Addresses;
 
+use IPLib\Address\IPv4;
 use IPLib\Factory;
 use IPLib\Test\TestCase;
 
@@ -192,11 +193,13 @@ class NonDecimalIPv4AddressTest extends TestCase
     /**
      * @dataProvider casesProvider
      *
-     * @param string $input
-     * @param bool $parseNonDecimal
+     * @param string     $input
+     * @param bool       $parseNonDecimal
+     * @param array|null $expected
      */
     public function testCases($input, $parseNonDecimal, array $expected = null)
     {
+        /* @var $ip IPv4 */
         $ip = Factory::addressFromString($input, true, true, $parseNonDecimal);
         if ($expected === null) {
             $this->assertNull($ip);

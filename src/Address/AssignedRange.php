@@ -12,7 +12,7 @@ class AssignedRange
     /**
      * The range definition.
      *
-     * @var \IPLib\Range\RangeInterface
+     * @var RangeInterface
      */
     protected $range;
 
@@ -26,16 +26,16 @@ class AssignedRange
     /**
      * The list of exceptions for this range type.
      *
-     * @var \IPLib\Address\AssignedRange[]
+     * @var AssignedRange[]
      */
     protected $exceptions;
 
     /**
      * Initialize the instance.
      *
-     * @param \IPLib\Range\RangeInterface $range the range definition
-     * @param int $type The range type (one of the \IPLib\Range\Type constants)
-     * @param \IPLib\Address\AssignedRange[] $exceptions the list of exceptions for this range type
+     * @param RangeInterface  $range      the range definition
+     * @param int             $type       The range type (one of the \IPLib\Range\Type constants)
+     * @param AssignedRange[] $exceptions the list of exceptions for this range type
      */
     public function __construct(RangeInterface $range, $type, array $exceptions = array())
     {
@@ -47,7 +47,7 @@ class AssignedRange
     /**
      * Get the range definition.
      *
-     * @return \IPLib\Range\RangeInterface
+     * @return RangeInterface
      */
     public function getRange()
     {
@@ -67,7 +67,7 @@ class AssignedRange
     /**
      * Get the list of exceptions for this range type.
      *
-     * @return \IPLib\Address\AssignedRange[]
+     * @return AssignedRange[]
      */
     public function getExceptions()
     {
@@ -77,7 +77,7 @@ class AssignedRange
     /**
      * Get the assigned type for a specific address.
      *
-     * @param \IPLib\Address\AddressInterface $address
+     * @param AddressInterface $address
      *
      * @return int|null return NULL of the address is outside this address; a \IPLib\Range\Type constant otherwise
      */
@@ -102,7 +102,7 @@ class AssignedRange
     /**
      * Get the assigned type for a specific address range.
      *
-     * @param \IPLib\Range\RangeInterface $range
+     * @param RangeInterface $range
      *
      * @return int|false|null return NULL of the range is fully outside this range; false if it's partly crosses this range (or it contains mixed types); a \IPLib\Range\Type constant otherwise
      */

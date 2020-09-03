@@ -2,6 +2,7 @@
 
 namespace IPLib\Test\Addresses;
 
+use IPLib\Address\IPv6;
 use IPLib\Factory;
 use IPLib\Test\TestCase;
 
@@ -76,6 +77,7 @@ class MixedSyntaxTest extends TestCase
      */
     public function testValidMixedSyntax($mixedRepresentation, $expectedShortIPv6Representation, $normalizedMixedRepresentationSS, $normalizedMixedRepresentationLS, $normalizedMixedRepresentationSL, $normalizedMixedRepresentationLL)
     {
+        /* @var $ip IPv6 */
         $ip = Factory::addressFromString($mixedRepresentation);
         $this->assertNotNull($ip, "Unable to parse the IPv6+IPv4 mixed syntax '{$mixedRepresentation}'");
         $calculatedShortSyntax = $ip->toString(false);

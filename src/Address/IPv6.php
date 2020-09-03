@@ -95,7 +95,7 @@ class IPv6 implements AddressInterface
         $result = null;
         if (is_string($address) && strpos($address, ':') !== false && strpos($address, ':::') === false) {
             $matches = null;
-            if ($mayIncludePort && $address[0] === '[' && preg_match('/^\[(.+)\]:\d+$/', $address, $matches)) {
+            if ($mayIncludePort && $address[0] === '[' && preg_match('/^\[(.+)]:\d+$/', $address, $matches)) {
                 $address = $matches[1];
             }
             if ($mayIncludeZoneID) {
@@ -110,7 +110,9 @@ class IPv6 implements AddressInterface
                     $address4 = IPv4::fromString($matches[2], false);
                     if ($address4 !== null) {
                         $bytes4 = $address4->getBytes();
-                        $address6->longAddress = substr($address6->longAddress, 0, -9) . sprintf('%02x%02x:%02x%02x', $bytes4[0], $bytes4[1], $bytes4[2], $bytes4[3]);
+                        $address6->longAddress = substr($address6->longAddress, 0, -9) . sprintf('%02x%02x:%02x%02x',
+                                $bytes4[0], $bytes4[1], $bytes4[2], $bytes4[3]
+                            );
                         $result = $address6;
                     }
                 }
@@ -414,9 +416,7 @@ class IPv6 implements AddressInterface
     }
 
     /**
-     * Create an IPv4 representation of this address (if possible, otherwise returns null).
-     *
-     * @return \IPLib\Address\IPv4|null
+     * @inheritDoc
      */
     public function toIPv4()
     {
@@ -430,6 +430,14 @@ class IPv6 implements AddressInterface
         }
 
         return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function toIPv6()
+    {
+        return $this;
     }
 
     /**

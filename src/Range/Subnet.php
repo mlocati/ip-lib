@@ -8,6 +8,7 @@ use IPLib\Address\IPv6;
 use IPLib\Address\Type as AddressType;
 use IPLib\Factory;
 use LogicException;
+use RuntimeException;
 
 /**
  * Represents an address range in subnet format (eg CIDR).
@@ -20,14 +21,14 @@ class Subnet implements RangeInterface
     /**
      * Starting address of the range.
      *
-     * @var \IPLib\Address\AddressInterface
+     * @var AddressInterface
      */
     protected $fromAddress;
 
     /**
      * Final address of the range.
      *
-     * @var \IPLib\Address\AddressInterface
+     * @var AddressInterface
      */
     protected $toAddress;
 
@@ -55,9 +56,9 @@ class Subnet implements RangeInterface
     /**
      * Initializes the instance.
      *
-     * @param \IPLib\Address\AddressInterface $fromAddress
-     * @param \IPLib\Address\AddressInterface $toAddress
-     * @param int                             $networkPrefix
+     * @param AddressInterface $fromAddress
+     * @param AddressInterface $toAddress
+     * @param int              $networkPrefix
      *
      * @internal
      */
@@ -170,7 +171,7 @@ class Subnet implements RangeInterface
                         $reservedRanges = IPv6::getReservedRanges();
                         break;
                     default:
-                        throw new \Exception('@todo'); // @codeCoverageIgnore
+                        throw new RuntimeException('@todo'); // @codeCoverageIgnore
                 }
                 $rangeType = null;
                 foreach ($reservedRanges as $reservedRange) {
@@ -298,7 +299,7 @@ class Subnet implements RangeInterface
     /**
      * Get the pattern representation (if applicable) of this range.
      *
-     * @return \IPLib\Range\Pattern|null return NULL if this range can't be represented by a pattern notation
+     * @return Pattern|null return NULL if this range can't be represented by a pattern notation
      */
     public function asPattern()
     {

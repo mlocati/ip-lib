@@ -74,9 +74,10 @@ class IPv4 implements AddressInterface
     /**
      * Parse a string and returns an IPv4 instance if the string is valid, or null otherwise.
      *
-     * @param string|mixed $address the address to parse
-     * @param bool $mayIncludePort set to false to avoid parsing addresses with ports
-     * @param bool $supportNonDecimalIPv4 set to true to support parsing non decimal (that is, octal and hexadecimal) IPv4 addresses
+     * @param string|mixed $address               the address to parse
+     * @param bool         $mayIncludePort        set to false to avoid parsing addresses with ports
+     * @param bool         $supportNonDecimalIPv4 set to true to support parsing non decimal (that is, octal and
+     *                                             hexadecimal) IPv4 addresses
      *
      * @return static|null
      */
@@ -326,25 +327,37 @@ class IPv4 implements AddressInterface
     }
 
     /**
-     * Create an IPv6 representation of this address (in 6to4 notation).
-     *
-     * @return \IPLib\Address\IPv6
+     * @inheritDoc
      */
     public function toIPv6()
     {
         $myBytes = $this->getBytes();
 
-        return IPv6::fromString('2002:' . sprintf('%02x', $myBytes[0]) . sprintf('%02x', $myBytes[1]) . ':' . sprintf('%02x', $myBytes[2]) . sprintf('%02x', $myBytes[3]) . '::');
+        return IPv6::fromString(
+            '2002:' . sprintf('%02x', $myBytes[0]) . sprintf('%02x', $myBytes[1]) . ':' .
+            sprintf('%02x', $myBytes[2]) . sprintf('%02x', $myBytes[3]) . '::'
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function toIPv4()
+    {
+        return $this;
     }
 
     /**
      * Create an IPv6 representation of this address (in IPv6 IPv4-mapped notation).
      *
-     * @return \IPLib\Address\IPv6
+     * @return IPv6
      */
     public function toIPv6IPv4Mapped()
     {
-        return IPv6::fromBytes(array_merge(array(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff), $this->getBytes()));
+        return IPv6::fromBytes(array_merge(
+            array(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff),
+            $this->getBytes())
+        );
     }
 
     /**
@@ -437,4 +450,5 @@ class IPv4 implements AddressInterface
             array_reverse($this->getBytes())
         ) . '.in-addr.arpa';
     }
+
 }
