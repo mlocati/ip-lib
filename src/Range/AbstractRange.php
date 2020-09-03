@@ -25,8 +25,7 @@ abstract class AbstractRange implements RangeInterface
                     $this->fromAddress->toIPv4(),
                     $this->toAddress->toIPv4()
                 )->getRangeType();
-            }
-            else {
+            } else {
                 switch ($addressType) {
                     case AddressType::IPv4:
                         $defaultType = IPv4::getDefaultReservedRangeType();

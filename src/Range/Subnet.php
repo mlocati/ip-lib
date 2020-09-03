@@ -100,7 +100,7 @@ class Subnet extends AbstractRange
         if (!preg_match('/^[0-9]{1,9}$/', $parts[1])) {
             return null;
         }
-        $networkPrefix = (int)$parts[1];
+        $networkPrefix = (int) $parts[1];
         $addressBytes = $address->getBytes();
         $totalBytes = count($addressBytes);
         $numDifferentBits = $totalBytes * 8 - $networkPrefix;
