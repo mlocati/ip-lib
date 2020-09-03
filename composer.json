@@ -33,7 +33,6 @@
         "ext-json": "*",
         "ext-pdo": "*",
         "ext-pdo_sqlite": "*",
-        "friendsofphp/php-cs-fixer": "*",
         "phpunit/dbunit": "^1.4 || ^2 || ^3 || ^4",
         "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5"
     },
@@ -49,7 +48,6 @@
     },
     "scripts": {
         "test": "phpunit",
-        "php-cs-fixer": "php-cs-fixer fix --config=./.php_cs.dist --verbose --using-cache=no"
     },
     "funding": [
         {
