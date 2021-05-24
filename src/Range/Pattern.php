@@ -124,14 +124,20 @@ class Pattern extends AbstractRange
             if ($missingDots > 0) {
                 $range .= str_repeat('.0', $missingDots);
             }
-            $fromAddress = IPv4::fromString($range, true, $supportNonDecimalIPv4);
-            if ($fromAddress === null) {
+            $originalAddress = IPv4::fromString($range, true, $supportNonDecimalIPv4);
+            if ($originalAddress === null) {
                 return null;
             }
-            $maskCount = floor((32 - $maskBits) / 8);
-            $fixedBytes = array_slice($fromAddress->getBytes(), 0, -$maskCount);
-            $otherBytes = array_fill(0, $maskCount, 255);
-            $toAddress = IPv4::fromBytes(array_merge($fixedBytes, $otherBytes));
+            $fromBytes = $toBytes = $originalAddress->getBytes();
+            $maskBits = 32 - (int) $maskBits;
+            $mask = (0xFFFFFFFF >> $maskBits << $maskBits);
+            for ($index = 3; $index >= 0; $index--) {
+                $fromBytes[$index] = $fromBytes[$index] & $mask;
+                $toBytes[$index] = $toBytes[$index] | (~$mask & 0xFF);
+                $mask = $mask >> 8;
+            }
+            $fromAddress = IPv4::fromBytes($fromBytes);
+            $toAddress = IPv4::fromBytes($toBytes);
 
             return new static($fromAddress, $toAddress, 0);
         }
