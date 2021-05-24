@@ -77,7 +77,7 @@ class Pattern extends AbstractRange
      */
     public static function fromString($range, $supportNonDecimalIPv4 = false)
     {
-        if (!is_string($range) || strpos($range, '*') === false) {
+        if (!is_string($range)) {
             return null;
         }
         if ($range === '*.*.*.*') {
@@ -117,6 +117,23 @@ class Pattern extends AbstractRange
             $toAddress = IPv6::fromWords(array_merge($fixedWords, $otherWords));
 
             return new static($fromAddress, $toAddress, $asterisksCount);
+        }
+        if (strpos($range, '/') !== false) {
+            list($range, $maskBits) = explode('/', $range);
+            $missingDots = 3 - substr_count($range, '.');
+            if ($missingDots > 0) {
+                $range .= str_repeat('.0', $missingDots);
+            }
+            $fromAddress = IPv4::fromString($range, true, $supportNonDecimalIPv4);
+            if ($fromAddress === null) {
+                return null;
+            }
+            $maskCount = floor((32 - $maskBits) / 8);
+            $fixedBytes = array_slice($fromAddress->getBytes(), 0, -$maskCount);
+            $otherBytes = array_fill(0, $maskCount, 255);
+            $toAddress = IPv4::fromBytes(array_merge($fixedBytes, $otherBytes));
+
+            return new static($fromAddress, $toAddress, 0);
         }
 
         return null;
