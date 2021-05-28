@@ -93,6 +93,12 @@ class Subnet extends AbstractRange
         if (count($parts) !== 2) {
             return null;
         }
+        if (strpos($parts[0], ':') === false) {
+            $missingDots = 3 - substr_count($parts[0], '.');
+            if ($missingDots > 0) {
+                $parts[0] .= str_repeat('.0', $missingDots);
+            }
+        }
         $address = Factory::addressFromString($parts[0], true, true, $supportNonDecimalIPv4);
         if ($address === null) {
             return null;
