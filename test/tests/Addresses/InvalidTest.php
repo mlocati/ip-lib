@@ -12,13 +12,9 @@ class InvalidTest extends TestCase
     {
         return array(
             array(''),
-            array(0),
             array(null),
             array(false),
             array(array()),
-            array('127'),
-            array('127.0'),
-            array('127.0.0'),
             array('127.0.0.0.0'),
             array('127.0.0.300'),
             array('127.0.00 .1'),

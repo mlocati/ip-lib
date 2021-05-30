@@ -5,6 +5,9 @@ namespace IPLib\Test\Ranges;
 use IPLib\Factory;
 use IPLib\Test\TestCase;
 
+/**
+ * @see http://publibn.boulder.ibm.com/doc_link/en_US/a_doc_lib/libs/commtrf2/inet_addr.htm
+ */
 class AbbreviationTest extends TestCase
 {
     public function boundariesProvider()
@@ -12,11 +15,11 @@ class AbbreviationTest extends TestCase
         return array(
             array('1.2.3.4/32', '1.2.3.4', '1.2.3.4'),
             array('1.2.3.4/28', '1.2.3.0', '1.2.3.15'),
-            array('1.2.3/24', '1.2.3.0', '1.2.3.255'),
+            array('1.2.3/24', '1.2.0.0', '1.2.0.255'),
             array('1.2.3/20', '1.2.0.0', '1.2.15.255'),
-            array('1.2/16', '1.2.0.0', '1.2.255.255'),
+            array('1.2/16', '1.0.0.0', '1.0.255.255'),
             array('1.2/12', '1.0.0.0', '1.15.255.255'),
-            array('1/8', '1.0.0.0', '1.255.255.255'),
+            array('1/8', '0.0.0.0', '0.255.255.255'),
             array('1/4', '0.0.0.0', '15.255.255.255'),
             array('0/0', '0.0.0.0', '255.255.255.255'),
         );
