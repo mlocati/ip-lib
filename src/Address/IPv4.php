@@ -92,8 +92,16 @@ class IPv4 implements AddressInterface
      */
     public static function fromString($address, $mayIncludePort = true, $supportNonDecimalIPv4 = false)
     {
-        if (!is_string($address) || !strpos($address, '.')) {
+        if (!is_string($address) || (strpos($address, ':') !== false && strpos($address, '.') === false)) {
             return null;
+        }
+        $missingDots = 3 - substr_count($address, '.');
+        if ($missingDots > 0) {
+            $parts = explode('.', $address);
+            $last = array_pop($parts);
+            $parts = array_merge($parts, array_fill(1, $missingDots, '0'));
+            $parts[3] = $last;
+            $address = implode('.', $parts);
         }
         $rxChunk = '0?[0-9]{1,3}';
         if ($supportNonDecimalIPv4) {
