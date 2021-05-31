@@ -99,13 +99,15 @@ class IPv4 implements AddressInterface
         if ($missingDots > 0) {
             $parts = explode('.', $address);
             $last = array_pop($parts);
-            $parts = array_merge($parts, array_fill(1, $missingDots, '0'));
+            $parts = array_merge($parts, array_fill(3 - $missingDots, $missingDots, '0'));
             $parts[3] = $last;
             $address = implode('.', $parts);
         }
-        $rxChunk = '0?[0-9]{1,3}';
+        $rxChunk = '0?[0-9]';
         if ($supportNonDecimalIPv4) {
-            $rxChunk = "(?:0[Xx]0*[0-9A-Fa-f]{1,2})|(?:{$rxChunk})";
+            $rxChunk = "(?:0[Xx]0*[0-9A-Fa-f]{1,8})|(?:{$rxChunk}{1,12})";
+        } else {
+            $rxChunk .= '{1,10}';
         }
         $rx = "0*?({$rxChunk})\.0*?({$rxChunk})\.0*?({$rxChunk})\.0*?({$rxChunk})";
         if ($mayIncludePort) {
@@ -117,8 +119,12 @@ class IPv4 implements AddressInterface
         }
         $nums = array();
         for ($i = 1; $i <= 4; $i++) {
-            $s = $matches[$i];
-            if ($supportNonDecimalIPv4) {
+            // if missing dots could affect the current index, parse the last index instead
+            $getsReplaced = (3 - $i < $missingDots);
+            $s = $matches[$getsReplaced ? 4 : $i];
+            if (is_int($s)) {
+                $n = $s;
+            } elseif ($supportNonDecimalIPv4) {
                 if (stripos($s, '0x') === 0) {
                     $n = hexdec(substr($s, 2));
                 } elseif ($s[0] === '0') {
@@ -132,7 +138,14 @@ class IPv4 implements AddressInterface
             } else {
                 $n = (int) $s;
             }
-            if ($n < 0 || $n > 255) {
+            // depending on the number of missing dots, the last part is allowed to be up to 2^32, 2^24, 2^16 or only 2^8
+            $max = $getsReplaced ? 2 ** ((5 - $i) * 8) - 1 : 255;
+            if ($getsReplaced && $i < 4 && $n <= $max) {
+                $divisor = 2 ** ((4 - $i) * 8); // one byte less then $max
+                $matches[4] = $n % $divisor; // store the remainder
+                $n = floor($n / $divisor); // adjust the current part
+            }
+            if ($n < 0 || $n > $max) {
                 return null;
             }
             $nums[] = (string) $n;

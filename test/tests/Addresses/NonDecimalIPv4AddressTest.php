@@ -47,6 +47,18 @@ class NonDecimalIPv4AddressTest extends TestCase
                 ),
             ),
             array(
+                '00.00.0377',
+                true,
+                array(
+                    self::OCT_SHORT => '00.00.00.0377',
+                    self::OCT_LONG => '0000.0000.0000.0377',
+                    self::DEC_SHORT => '0.0.0.255',
+                    self::DEC_LONG => '000.000.000.255',
+                    self::HEX_SHORT => '0x0.0x0.0x0.0xff',
+                    self::HEX_LONG => '0x00.0x00.0x00.0xff',
+                ),
+            ),
+            array(
                 '0.0.0.0000000000000000000000000000377',
                 false,
             ),
@@ -172,6 +184,18 @@ class NonDecimalIPv4AddressTest extends TestCase
                     self::DEC_LONG => '008.016.024.064',
                     self::HEX_SHORT => '0x8.0x10.0x18.0x40',
                     self::HEX_LONG => '0x08.0x10.0x18.0x40',
+                ),
+            ),
+            array(
+                '0x1010101',
+                true,
+                array(
+                    self::OCT_SHORT => '01.01.01.01',
+                    self::OCT_LONG => '0001.0001.0001.0001',
+                    self::DEC_SHORT => '1.1.1.1',
+                    self::DEC_LONG => '001.001.001.001',
+                    self::HEX_SHORT => '0x1.0x1.0x1.0x1',
+                    self::HEX_LONG => '0x01.0x01.0x01.0x01',
                 ),
             ),
             array(
