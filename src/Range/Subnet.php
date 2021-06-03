@@ -93,6 +93,13 @@ class Subnet extends AbstractRange
         if (count($parts) !== 2) {
             return null;
         }
+        $missingDots = 0;
+        if (strpos($parts[0], ':') === false) {
+            $missingDots = 3 - substr_count($parts[0], '.');
+            if ($missingDots > 0) {
+                $parts[0] .= str_repeat('.0', $missingDots);
+            }
+        }
         $address = Factory::addressFromString($parts[0], true, true, $supportNonDecimalIPv4);
         if ($address === null) {
             return null;
@@ -103,7 +110,7 @@ class Subnet extends AbstractRange
         $networkPrefix = (int) $parts[1];
         $addressBytes = $address->getBytes();
         $totalBytes = count($addressBytes);
-        $numDifferentBits = $totalBytes * 8 - $networkPrefix;
+        $numDifferentBits = ($missingDots > 0 ? 4 - $missingDots : $totalBytes) * 8 - $networkPrefix;
         if ($numDifferentBits < 0) {
             return null;
         }
