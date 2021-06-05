@@ -20,6 +20,8 @@ jobs:
           extensions: mbstring, openssl, zip
           tools: composer:v2
           coverage: none
+      - name: Print int size
+        run: php -r "echo PHP_INT_SIZE;"
       - name: Install PHP-CS-Fixer
         run: composer global require --optimize-autoloader --ansi --no-interaction --no-cache friendsofphp/php-cs-fixer:^2.18.0
       - name: Checkout
