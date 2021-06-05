@@ -69,6 +69,8 @@ jobs:
           tools: composer:v2
           extensions: pdo_sqlite
           coverage: ${{ env.CODE_COVERAGE_TOOL }}
+      - name: Print int size
+        run: php -r "echo PHP_INT_SIZE;"
       - name: Checkout
         uses: actions/checkout@v2
         with:
