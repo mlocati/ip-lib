@@ -141,7 +141,7 @@ class IPv4 implements AddressInterface
             // depending on the number of missing dots, the last part is allowed to be up to 2^32, 2^24, 2^16 or only 2^8
             $max = $getsReplaced ? pow(2, (5 - $i) * 8) - 1 : 255;
             if ($getsReplaced && $i < 4 && $n <= $max) {
-                $divisor = 2 ** ((4 - $i) * 8); // one byte less then $max
+                $divisor = pow(2, (4 - $i) * 8); // one byte less then $max
                 $matches[4] = $n % $divisor; // store the remainder
                 $n = floor($n / $divisor); // adjust the current part
             }
