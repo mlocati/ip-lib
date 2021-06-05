@@ -95,7 +95,7 @@ class IPv4 implements AddressInterface
         if (!is_string($address) || (strpos($address, ':') !== false && strpos($address, '.') === false)) {
             return null;
         }
-        $missingDots = 3 - substr_count($address, '.');
+        $missingDots = $supportNonDecimalIPv4 ? 3 - substr_count($address, '.') : 0;
         if ($missingDots > 0) {
             $parts = explode('.', $address);
             $last = array_pop($parts);
@@ -139,7 +139,7 @@ class IPv4 implements AddressInterface
                 $n = (int) $s;
             }
             // depending on the number of missing dots, the last part is allowed to be up to 2^32, 2^24, 2^16 or only 2^8
-            $max = $getsReplaced ? 2 ** ((5 - $i) * 8) - 1 : 255;
+            $max = $getsReplaced ? pow(2, (5 - $i) * 8) - 1 : 255;
             if ($getsReplaced && $i < 4 && $n <= $max) {
                 $divisor = 2 ** ((4 - $i) * 8); // one byte less then $max
                 $matches[4] = $n % $divisor; // store the remainder

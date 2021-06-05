@@ -94,7 +94,7 @@ class Subnet extends AbstractRange
             return null;
         }
         $missingDots = 0;
-        if (strpos($parts[0], ':') === false) {
+        if ($supportNonDecimalIPv4 && strpos($parts[0], ':') === false) {
             $missingDots = 3 - substr_count($parts[0], '.');
             if ($missingDots > 0) {
                 $parts[0] .= str_repeat('.0', $missingDots);

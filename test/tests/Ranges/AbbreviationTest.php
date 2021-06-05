@@ -34,7 +34,7 @@ class AbbreviationTest extends TestCase
      */
     public function testBoundaries($rangeString, $startAddressString, $endAddressString)
     {
-        $range = Factory::rangeFromString($rangeString);
+        $range = Factory::rangeFromString($rangeString, true);
         $this->assertInstanceOf('IPLib\Range\RangeInterface', $range);
         $this->assertSame((string) $range->getStartAddress(), $startAddressString, "Checking start address of {$rangeString}");
         $this->assertSame((string) $range->getEndAddress(), $endAddressString, "Checking end address of {$rangeString}");

@@ -15,6 +15,7 @@ class RangeFromBoundariesTest extends TestCase
             array(null, null),
             array('127.0.0.1', 'a'),
             array(' ', '127.0.0.1'),
+            array('127.0.0.1', 0),
         );
     }
 
@@ -51,7 +52,6 @@ class RangeFromBoundariesTest extends TestCase
             array('1.2.0.0', '1.2.0.2', '1.2.0.0/30'),
             array('1.2.0.0', '1.2.0.3', '1.2.0.0/30'),
             array('1.2.0.0', '1.2.1.0', '1.2.0.0/23'),
-            array('127.0.0.1', 0, '0.0.0.0/1'),
             array('128.0.0.0', '127.0.0.0', '0.0.0.0/0'),
             array('::1', null, '::1'),
             array('::', '::1', '::/127'),
