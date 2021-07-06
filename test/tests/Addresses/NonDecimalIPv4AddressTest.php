@@ -210,6 +210,42 @@ class NonDecimalIPv4AddressTest extends TestCase
                     self::HEX_LONG => '0x08.0x10.0x18.0x40',
                 ),
             ),
+            array(
+                '00000x00000000',
+                true,
+                array(
+                    self::OCT_SHORT => '00.00.00.00',
+                    self::OCT_LONG => '0000.0000.0000.0000',
+                    self::DEC_SHORT => '0.0.0.0',
+                    self::DEC_LONG => '000.000.000.000',
+                    self::HEX_SHORT => '0x0.0x0.0x0.0x0',
+                    self::HEX_LONG => '0x00.0x00.0x00.0x00',
+                ),
+            ),
+            array(
+                '0xFFFFFFFF',
+                true,
+                array(
+                    self::OCT_SHORT => '0377.0377.0377.0377',
+                    self::OCT_LONG => '0377.0377.0377.0377',
+                    self::DEC_SHORT => '255.255.255.255',
+                    self::DEC_LONG => '255.255.255.255',
+                    self::HEX_SHORT => '0xff.0xff.0xff.0xff',
+                    self::HEX_LONG => '0xff.0xff.0xff.0xff',
+                ),
+            ),
+            array(
+                '0x100000000',
+                true,
+            ),
+            array(
+                '0.0xFFFFFFFF',
+                true,
+            ),
+            array(
+                '0xFFFFFFFF.0',
+                true,
+            ),
         );
     }
 
