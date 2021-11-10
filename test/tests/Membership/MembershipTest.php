@@ -124,4 +124,27 @@ class MembershipTest extends DBTestCase
             )
         );
     }
+
+    public function sameRangeProvider()
+    {
+        return array(
+            array('1.2.3.4', '1.2.3.4/32'),
+        );
+    }
+
+    /**
+     * @dataProvider sameRangeProvider
+     *
+     * @param string $range1
+     * @param string $range2
+     */
+    public function testSameRange($range1, $range2)
+    {
+        $rangeObject1 = Factory::rangeFromString($range1);
+        $rangeObject2 = Factory::rangeFromString($range2);
+        $this->assertTrue($rangeObject1->containsRange($rangeObject1), "{$range1} should contain {$range1}");
+        $this->assertTrue($rangeObject2->containsRange($rangeObject2), "{$range2} should contain {$range2}");
+        $this->assertTrue($rangeObject1->containsRange($rangeObject2), "{$range1} should contain {$range2}");
+        $this->assertTrue($rangeObject2->containsRange($rangeObject1), "{$range2} should contain {$range1}");
+    }
 }
