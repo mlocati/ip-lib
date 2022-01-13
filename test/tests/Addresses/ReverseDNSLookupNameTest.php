@@ -3,6 +3,7 @@
 namespace IPLib\Test\Addresses;
 
 use IPLib\Factory;
+use IPLib\ParseStringFlag;
 use IPLib\Test\TestCase;
 
 class ReverseDNSLookupNameTest extends TestCase
@@ -33,5 +34,8 @@ class ReverseDNSLookupNameTest extends TestCase
         $address = Factory::addressFromString($addressString);
         $actualReverseDNSAddress = $address->getReverseDNSLookupName();
         $this->assertSame($expectedReverseDNSAddress, $actualReverseDNSAddress);
+        $address2 = Factory::parseAddressString($actualReverseDNSAddress, ParseStringFlag::ADDRESS_MAYBE_RDNS);
+        $this->assertNotNull($address2);
+        $this->assertSame((string) $address, (string) $address2);
     }
 }
