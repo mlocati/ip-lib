@@ -5,7 +5,7 @@ USER root
 # Update APT Database
 ### base ###
 RUN sudo apt-get update -q \
-    && sudo apt-get install -y php-dev
+    && sudo apt-get install -y php-dev php7.4-sqlite3
 
 # Install XDebug
 RUN wget http://xdebug.org/files/xdebug-2.9.1.tgz \
