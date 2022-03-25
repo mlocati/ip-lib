@@ -3,6 +3,8 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mlocati/ip-lib/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mlocati/ip-lib/?branch=master)
 ![Packagist Downloads](https://img.shields.io/packagist/dm/mlocati/ip-lib)
 
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/mlocati/ip-lib)
+
 # IPLib - Handle IPv4, IPv6 and IP ranges
 
 ## Introduction
@@ -642,6 +644,26 @@ var_export((string) Factory::parseAddressString('127.0.0.0xff:80', ParseStringFl
 // This will print ::
 var_export((string) Factory::parseAddressString('[::%11]:80', ParseStringFlag::MAY_INCLUDE_PORT | ParseStringFlag::MAY_INCLUDE_ZONEID));
 ```
+
+Gitpod Environment Variables
+==========
+
+The following features can be enabled through environment variables that have been set in your [Gitpod preferences](https://gitpod.io/variables).:
+<br />
+\* _Please note that storing sensitive data in environment variables is not ultimately secure but should be OK for most development situations._
+- ### Sign Git commits with a GPG key
+   - `GPG_KEY_ID` (required)
+     - The ID of the GPG key you want to use to sign your git commits
+   - `GPG_KEY` (required)
+     - Base64 encoded private GPG key that corresponds to your `GPG_KEY_ID`
+   - `GPG_MATCH_GIT_TO_EMAIL` (optional)
+     - Sets your git user.email in `~/.gitconfig` to the value provided
+   - `GPG_AUTO_ULTIMATE_TRUST` (optional)
+     - If the value is set to `yes` or `YES` then your `GPG_KEY` will be automatically ultimately trusted
+- ### Activate an Intelliphense License Key
+  - `INTELEPHENSE_LICENSEKEY`
+    - Creates `~/intelephense/licence.txt` and will contain the value provided
+    - This will activate [Intelliphense](https://intelephense.com/) for you each time the workspace is created or restarted
 
 ## Do you really want to say thank you?
 

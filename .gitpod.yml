@@ -1,0 +1,17 @@
+image:
+  file: .gitpod.Dockerfile
+
+ports:
+  - port: 8000
+    onOpen: open-browser
+
+# List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
+tasks:
+  - before: bash .gp/bash/before-tasks.sh
+    init: |
+      composer install -o -n
+    name: Main Terminal
+
+vscode:
+  extensions:
+    - felixfbecker.php-debug
