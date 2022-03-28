@@ -2,8 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/mlocati/ip-lib/badge.svg?branch=master)](https://coveralls.io/github/mlocati/ip-lib?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mlocati/ip-lib/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mlocati/ip-lib/?branch=master)
 ![Packagist Downloads](https://img.shields.io/packagist/dm/mlocati/ip-lib)
-
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/mlocati/ip-lib)
+[![Open in Gitpod](https://img.shields.io/badge/Open%20in-Gitpod-%232cb64c?logo=gitpod)](https://gitpod.io/#https://github.com/mlocati/ip-lib)
 
 # IPLib - Handle IPv4, IPv6 and IP ranges
 
@@ -645,11 +644,10 @@ var_export((string) Factory::parseAddressString('127.0.0.0xff:80', ParseStringFl
 var_export((string) Factory::parseAddressString('[::%11]:80', ParseStringFlag::MAY_INCLUDE_PORT | ParseStringFlag::MAY_INCLUDE_ZONEID));
 ```
 
-Gitpod Environment Variables
-==========
+## Gitpod Environment Variables
 
 The following features can be enabled through environment variables that have been set in your [Gitpod preferences](https://gitpod.io/variables).:
-<br />
+
 \* _Please note that storing sensitive data in environment variables is not ultimately secure but should be OK for most development situations._
 - ### Sign Git commits with a GPG key
    - `GPG_KEY_ID` (required)

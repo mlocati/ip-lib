@@ -4,6 +4,10 @@ image:
 ports:
   - port: 8000
     onOpen: open-browser
+  - port: 3306
+    onOpen: ignore
+  - port: 33060
+    onOpen: ignore
 
 # List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
 tasks:
