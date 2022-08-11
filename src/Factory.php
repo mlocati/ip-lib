@@ -84,17 +84,17 @@ class Factory
      * For upgrading:
      * - if $supportNonDecimalIPv4 is true, use the ParseStringFlag::IPV4_MAYBE_NON_DECIMAL flag
      *
-     * @param string|mixed $address
+     * @param string|mixed $range
      * @param bool $supportNonDecimalIPv4
      *
-     * @return \IPLib\Address\AddressInterface|null
+     * @return \IPLib\Range\RangeInterface|null
      *
      * @see \IPLib\Factory::parseRangeString()
      * @since 1.10.0 added the $supportNonDecimalIPv4 argument
      */
-    public static function rangeFromString($address, $supportNonDecimalIPv4 = false)
+    public static function rangeFromString($range, $supportNonDecimalIPv4 = false)
     {
-        return static::parseRangeString($address, $supportNonDecimalIPv4 ? ParseStringFlag::IPV4_MAYBE_NON_DECIMAL : 0);
+        return static::parseRangeString($range, $supportNonDecimalIPv4 ? ParseStringFlag::IPV4_MAYBE_NON_DECIMAL : 0);
     }
 
     /**
