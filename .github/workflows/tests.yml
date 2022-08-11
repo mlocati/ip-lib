@@ -48,6 +48,7 @@ jobs:
           - "7.4"
           - "8.0"
           - "8.1"
+          - "8.2"
         include:
           - os: windows-latest
             php-version: "5.5"
@@ -71,13 +72,17 @@ jobs:
         with:
           fetch-depth: 1
       - name: Install Composer dependencies
-        run: composer update --no-progress --no-suggest --optimize-autoloader --no-ansi --no-interaction
+        if: matrix.php-version != '8.2'
+        run: composer --ansi --no-interaction --no-progress --optimize-autoloader update
+      - name: Install Composer dependencies (ignore platform reqs)
+        if: matrix.php-version == '8.2'
+        run: composer --ansi --no-interaction --no-progress --optimize-autoloader --ignore-platform-reqs update
       - name: Run PHPUnit (without code coverage)
         if: ${{ env.CODE_COVERAGE_TOOL == 'none' }}
-        run: composer --no-interaction run-script test
+        run: composer --ansi --no-interaction run-script test
       - name: Run PHPUnit (with code coverage)
         if: ${{ env.CODE_COVERAGE_TOOL != 'none' }}
-        run: composer --no-interaction run-script test -- --coverage-clover coverage-clover.xml
+        run: composer --ansi --no-interaction run-script test -- --coverage-clover coverage-clover.xml
       - name: Download Coveralls
         if: ${{ env.CODE_COVERAGE_TOOL != 'none' }}
         run: curl -sSLf -o php-coveralls.phar https://github.com/php-coveralls/php-coveralls/releases/latest/download/php-coveralls.phar
