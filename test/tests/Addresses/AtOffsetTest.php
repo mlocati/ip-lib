@@ -53,7 +53,7 @@ class AtOffsetTest extends TestCase
      * @dataProvider atOffsetProvider
      *
      * @param string $addressString
-     * @param int $n
+     * @param int|mixed $n
      * @param string $expected
      */
     public function testAtOffset($addressString, $n, $expected)
@@ -70,10 +70,10 @@ class AtOffsetTest extends TestCase
         $this->assertSame(
             $expected,
             (string) $next,
-            "Checking the address {$addressString} " . ($n > 0 ? '+' : '-') . ' ' . abs($n)
+            "Checking the address {$addressString} " . (is_int($n) ? (($n > 0 ? '+' : '-') . ' ' . abs($n)) : gettype($n))
         );
 
-        if ($next !== null) {
+        if ($next !== null && is_int($n)) {
             $this->assertSame(
                 $addressString,
                 (string) $next->getAddressAtOffset(-$n),
