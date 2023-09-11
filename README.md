@@ -341,10 +341,10 @@ echo (string) $ipv6;
 echo $ipv6->toIPv4();
 
 // IPv4-mapped notation
-$ipv6 = $ipv4->toIPv6IPv4Mapped();
+$ipv6_6to4 = $ipv4->toIPv6IPv4Mapped();
 
 // This will print ::ffff:1.2.3.4
-echo (string) $ipv6;
+echo (string) $ipv6_6to4;
 
 // This will print 1.2.3.4
 echo $ipv6_6to4->toIPv4();
