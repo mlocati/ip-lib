@@ -85,7 +85,7 @@ jobs:
         run: composer --ansi --no-interaction run-script test -- --coverage-clover coverage-clover.xml
       - name: Download Coveralls
         if: ${{ env.CODE_COVERAGE_TOOL != 'none' }}
-        run: curl -sSLf -o php-coveralls.phar https://github.com/php-coveralls/php-coveralls/releases/latest/download/php-coveralls.phar
+        run: curl -sSLf -o php-coveralls.phar https://github.com/php-coveralls/php-coveralls/releases/download/v2.5.3/php-coveralls.phar
       - name: Upload Coveralls data
         if: ${{ env.CODE_COVERAGE_TOOL != 'none' }}
         env:
