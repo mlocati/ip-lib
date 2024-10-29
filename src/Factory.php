@@ -215,20 +215,20 @@ class Factory
     }
 
     /**
-     * @param \IPLib\Address\AddressInterface $from
-     * @param \IPLib\Address\AddressInterface $to
+     * @param \IPLib\Address\AddressInterface|null $from
+     * @param \IPLib\Address\AddressInterface|null $to
      *
      * @return \IPLib\Range\RangeInterface|null
      *
      * @since 1.2.0
      */
-    protected static function rangeFromBoundaryAddresses(AddressInterface $from = null, AddressInterface $to = null)
+    protected static function rangeFromBoundaryAddresses($from = null, $to = null)
     {
-        if ($from === null && $to === null) {
+        if (!$from instanceof AddressInterface && !$to instanceof AddressInterface) {
             $result = null;
-        } elseif ($to === null) {
+        } elseif (!$to instanceof AddressInterface) {
             $result = Range\Single::fromAddress($from);
-        } elseif ($from === null) {
+        } elseif (!$from instanceof AddressInterface) {
             $result = Range\Single::fromAddress($to);
         } else {
             $result = null;

@@ -78,7 +78,7 @@ class UnsignedIntegerMathTest extends TestCase
      * @param int[]|null $expectedResult
      * @param bool $onlyDecimal
      */
-    public function testGetBytes($value, $numBytes, array $expectedResult = null, $onlyDecimal = false)
+    public function testGetBytes($value, $numBytes, $expectedResult = null, $onlyDecimal = false)
     {
         $maxSignedIntegers = PHP_INT_SIZE === 4 ? array(null) : array(null, 0x7FFFFFFF);
         foreach ($maxSignedIntegers as $maxSignedInteger) {
