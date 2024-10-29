@@ -160,7 +160,44 @@ class Factory
     {
         list($from, $to) = self::parseBoundaries($from, $to, $flags);
 
-        return $from === false || $to === false ? null : static::rangeFromBoundaryAddresses($from, $to);
+        if ($from === false || $to === false || ($from === null && $to === null)) {
+            $result = null;
+        } elseif ($to === null) {
+            $result = Range\Single::fromAddress($from);
+        } elseif ($from === null) {
+            $result = Range\Single::fromAddress($to);
+        } else {
+            $result = null;
+            $addressType = $from->getAddressType();
+            if ($addressType === $to->getAddressType()) {
+                $cmp = strcmp($from->getComparableString(), $to->getComparableString());
+                if ($cmp === 0) {
+                    $result = Range\Single::fromAddress($from);
+                } else {
+                    if ($cmp > 0) {
+                        list($from, $to) = array($to, $from);
+                    }
+                    $fromBytes = $from->getBytes();
+                    $toBytes = $to->getBytes();
+                    $numBytes = count($fromBytes);
+                    $sameBits = 0;
+                    for ($byteIndex = 0; $byteIndex < $numBytes; $byteIndex++) {
+                        $fromByte = $fromBytes[$byteIndex];
+                        $toByte = $toBytes[$byteIndex];
+                        if ($fromByte === $toByte) {
+                            $sameBits += 8;
+                        } else {
+                            $differentBitsInByte = decbin($fromByte ^ $toByte);
+                            $sameBits += 8 - strlen($differentBitsInByte);
+                            break;
+                        }
+                    }
+                    $result = static::parseRangeString($from->toString() . '/' . (string) $sameBits);
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -212,56 +249,6 @@ class Factory
         $calculator = new RangesFromBoundaryCalculator($numberOfBits);
 
         return $calculator->getRanges($from, $to);
-    }
-
-    /**
-     * @param \IPLib\Address\AddressInterface $from
-     * @param \IPLib\Address\AddressInterface $to
-     *
-     * @return \IPLib\Range\RangeInterface|null
-     *
-     * @since 1.2.0
-     */
-    protected static function rangeFromBoundaryAddresses(AddressInterface $from = null, AddressInterface $to = null)
-    {
-        if ($from === null && $to === null) {
-            $result = null;
-        } elseif ($to === null) {
-            $result = Range\Single::fromAddress($from);
-        } elseif ($from === null) {
-            $result = Range\Single::fromAddress($to);
-        } else {
-            $result = null;
-            $addressType = $from->getAddressType();
-            if ($addressType === $to->getAddressType()) {
-                $cmp = strcmp($from->getComparableString(), $to->getComparableString());
-                if ($cmp === 0) {
-                    $result = Range\Single::fromAddress($from);
-                } else {
-                    if ($cmp > 0) {
-                        list($from, $to) = array($to, $from);
-                    }
-                    $fromBytes = $from->getBytes();
-                    $toBytes = $to->getBytes();
-                    $numBytes = count($fromBytes);
-                    $sameBits = 0;
-                    for ($byteIndex = 0; $byteIndex < $numBytes; $byteIndex++) {
-                        $fromByte = $fromBytes[$byteIndex];
-                        $toByte = $toBytes[$byteIndex];
-                        if ($fromByte === $toByte) {
-                            $sameBits += 8;
-                        } else {
-                            $differentBitsInByte = decbin($fromByte ^ $toByte);
-                            $sameBits += 8 - strlen($differentBitsInByte);
-                            break;
-                        }
-                    }
-                    $result = static::parseRangeString($from->toString() . '/' . (string) $sameBits);
-                }
-            }
-        }
-
-        return $result;
     }
 
     /**
