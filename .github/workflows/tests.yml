@@ -9,27 +9,60 @@ on:
       - main
 
 jobs:
+  php-syntax:
+    name: Check PHP ${{ matrix.php-version }} Syntax
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version:
+          - "5.3"
+          - "8.4"
+    steps:
+      -
+        name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: none
+          coverage: none
+          extensions: opcache
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Check syntax
+        uses: mlocati/check-php-syntax@v1
+        with:
+          directory: src
+          include: |
+            ../ip-lib.php
+          fail-on-warnings: true
   php-coding-style:
     name: Check PHP coding style
     runs-on: ubuntu-latest
     steps:
-      - name: Setup PHP
+      -
+        name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: "7.2"
           extensions: mbstring, openssl, zip
           tools: composer:v2, php-cs-fixer:v2
           coverage: none
-      - name: Checkout
-        uses: actions/checkout@v2
+      -
+        name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
-      - name: Check PHP coding style
+      -
+        name: Check PHP coding style
         run: |
           php-cs-fixer fix --dry-run --config=./.php_cs.dist --using-cache=no --diff --diff-format=udiff --show-progress=dots --verbose --no-interaction --ansi --path-mode=intersection .
   phpunit:
     name: Run PHPUnit tests
-    needs: php-coding-style
+    needs:
+      - php-syntax
+      - php-coding-style
     env:
       CODE_COVERAGE_TOOL: none
     strategy:
@@ -52,53 +85,64 @@ jobs:
           - "8.3"
           - "8.4"
         include:
-          - os: windows-latest
+          -
+            os: windows-latest
             php-version: "5.5"
-          - os: windows-latest
+          -
+            os: windows-latest
             php-version: "7.4"
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Set code coverage
+      -
+        name: Set code coverage
         if: startsWith(matrix.os, 'ubuntu') && matrix.php-version == '7.2'
         run: |
           echo "CODE_COVERAGE_TOOL=xdebug" >> $GITHUB_ENV
-      - name: Setup PHP
+      -
+        name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
           tools: composer:v2
           extensions: pdo_sqlite
           coverage: ${{ env.CODE_COVERAGE_TOOL }}
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-      - name: Install Composer dependencies
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Install Composer dependencies
         if: matrix.php-version != '8.2'
         run: composer --ansi --no-interaction --no-progress --optimize-autoloader update
-      - name: Install Composer dependencies (ignore platform reqs)
+      -
+        name: Install Composer dependencies (ignore platform reqs)
         if: matrix.php-version == '8.2'
         run: composer --ansi --no-interaction --no-progress --optimize-autoloader --ignore-platform-reqs update
-      - name: Run PHPUnit (without code coverage)
+      -
+        name: Run PHPUnit (without code coverage)
         if: ${{ env.CODE_COVERAGE_TOOL == 'none' }}
         run: composer --ansi --no-interaction run-script test
-      - name: Run PHPUnit (with code coverage)
+      -
+        name: Run PHPUnit (with code coverage)
         if: ${{ env.CODE_COVERAGE_TOOL != 'none' }}
         run: composer --ansi --no-interaction run-script test -- --coverage-clover coverage-clover.xml
-      - name: Download Coveralls
+      -
+        name: Download Coveralls
         if: ${{ env.CODE_COVERAGE_TOOL != 'none' }}
         run: curl -sSLf -o php-coveralls.phar https://github.com/php-coveralls/php-coveralls/releases/download/v2.5.3/php-coveralls.phar
-      - name: Upload Coveralls data
+      -
+        name: Upload Coveralls data
         if: ${{ env.CODE_COVERAGE_TOOL != 'none' }}
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: >
           php php-coveralls.phar
           --coverage_clover=coverage-clover.xml --json_path=coveralls-upload.json --ansi --no-interaction -vvv
-      - name: Download Scrutinizer
+      -
+        name: Download Scrutinizer
         if: ${{ env.CODE_COVERAGE_TOOL != 'none' }}
         run: curl -sSLf -o ocular.phar https://scrutinizer-ci.com/ocular.phar
-      - name: Upload Scrutinizer data
+      -
+        name: Upload Scrutinizer data
         if: ${{ env.CODE_COVERAGE_TOOL != 'none' }}
         run: >
           php ocular.phar code-coverage:upload
