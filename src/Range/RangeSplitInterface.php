@@ -11,7 +11,8 @@ interface RangeSplitInterface
      * split the range into smaller ranges.
      *
      * @param int $networkPrefix
-     * @return \Generator
+     *
+     * @return array
      */
-    public function split(int $networkPrefix): \Generator;
+    public function split($networkPrefix);
 }

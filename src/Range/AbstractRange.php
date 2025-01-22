@@ -128,29 +128,33 @@ abstract class AbstractRange implements RangeInterface
      *
      * @see \IPLib\Range\RangeSplitInterface::split()
      */
-    public function split(int $networkPrefix): \Generator
+    public function split($networkPrefix)
     {
-        if (!$this instanceof RangeSplitInterface){
+        if (!$this instanceof RangeSplitInterface) {
             throw new \RuntimeException('This class does not implement RangeSplitInterface.');
         }
 
-        $maxPrefix = $this->fromAddress::getNumberOfBits();
+        $fromAddress = $this->fromAddress;
+        $maxPrefix = $fromAddress::getNumberOfBits();
 
         if ($networkPrefix <= $this->getNetworkPrefix()) {
             throw new \RuntimeException('New networkPrefix must be larger than the base networkPrefix.');
         }
 
-        if ($networkPrefix > $maxPrefix){
+        if ($networkPrefix > $maxPrefix) {
             throw new \RuntimeException('New networkPrefix must be smaller than the maximum networkPrefix.');
         }
 
         $addressCount = pow(2, ($maxPrefix - $networkPrefix));
         $startIp = $this->getStartAddress();
 
-        for ($i = 1 ; $i<= $this->getSize() / $addressCount ; $i++){
-            yield static::parseString(sprintf('%s/%d', $startIp->toString(), $networkPrefix));
+        $data  = array();
+        for ($i = 1; $i<= $this->getSize() / $addressCount ; $i++) {
+            $data[] =  static::parseString(sprintf('%s/%d', $startIp->toString(), $networkPrefix));
 
             $startIp = $startIp->getAddressAtOffset($addressCount);
         }
+
+        return $data;
     }
 }
