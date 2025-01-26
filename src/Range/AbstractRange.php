@@ -126,14 +126,10 @@ abstract class AbstractRange implements RangeInterface
     /**
      * {@inheritdoc}
      *
-     * @see \IPLib\Range\RangeSplitInterface::split()
+     * @see \IPLib\Range\RangeInterface::split()
      */
     public function split($networkPrefix)
     {
-        if (!$this instanceof RangeSplitInterface) {
-            throw new \RuntimeException('This class does not implement RangeSplitInterface.');
-        }
-
         $fromAddress = $this->fromAddress;
         $maxPrefix = $fromAddress::getNumberOfBits();
 

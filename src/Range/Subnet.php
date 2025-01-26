@@ -14,7 +14,7 @@ use IPLib\ParseStringFlag;
  * @example 127.0.0.1/32
  * @example ::/8
  */
-class Subnet extends AbstractRange implements RangeSplitInterface
+class Subnet extends AbstractRange
 {
     /**
      * Starting address of the range.

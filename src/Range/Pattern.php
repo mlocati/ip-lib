@@ -14,7 +14,7 @@ use IPLib\ParseStringFlag;
  * @example 127.0.*.*
  * @example ::/8
  */
-class Pattern extends AbstractRange implements RangeSplitInterface
+class Pattern extends AbstractRange
 {
     /**
      * Starting address of the range.

@@ -157,4 +157,14 @@ interface RangeInterface
      * @since 1.16.0
      */
     public function getSize();
+
+    /**
+     * split the range into smaller ranges.
+     *
+     * @param int $networkPrefix
+     *
+     * @return array
+     */
+    public function split($networkPrefix);
+
 }
