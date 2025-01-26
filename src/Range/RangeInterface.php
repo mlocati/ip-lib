@@ -166,5 +166,4 @@ interface RangeInterface
      * @return array
      */
     public function split($networkPrefix);
-
 }

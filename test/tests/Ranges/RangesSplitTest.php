@@ -11,7 +11,7 @@ class RangesSplitTest extends TestCase
     public function invalidIPV4Provider()
     {
         $invalid = 'New networkPrefix must be larger than the base networkPrefix.';
-        $max     = 'New networkPrefix must be smaller than the maximum networkPrefix.';
+        $max = 'New networkPrefix must be smaller than the maximum networkPrefix.';
 
         return array(
             array('1.2.3.4/0', 0, $invalid),
@@ -39,7 +39,8 @@ class RangesSplitTest extends TestCase
      * @dataProvider invalidIPV4Provider
      *
      * @param string $inputString
-     * @param int    $networkPrefix
+     * @param int $networkPrefix
+     * @param mixed $expectedMessage
      */
     public function testInvalidSplitIPV4($inputString, $networkPrefix, $expectedMessage)
     {
@@ -191,10 +192,10 @@ class RangesSplitTest extends TestCase
      * @dataProvider validIPV4Provider
      *
      * @param string $inputString
-     * @param int    $networkPrefix
-     * @param array  $expectedValue
+     * @param int $networkPrefix
+     * @param array $expectedValue
      */
-    public function testValidSplitIPV($inputString, $networkPrefix, $expectedValue)
+    public function testValidSplitIPV4($inputString, $networkPrefix, $expectedValue)
     {
         $range = Factory::parseRangeString($inputString, ParseStringFlag::IPV4SUBNET_MAYBE_COMPACT);
         $this->assertInstanceOf('IPLib\Range\AbstractRange', $range);
@@ -206,14 +207,13 @@ class RangesSplitTest extends TestCase
             $range->split($networkPrefix)
         );
 
-
         $this->assertSame($splitRange, $expectedValue);
     }
 
     public function invalidIPV6Provider()
     {
         $invalid = 'New networkPrefix must be larger than the base networkPrefix.';
-        $max     = 'New networkPrefix must be smaller than the maximum networkPrefix.';
+        $max = 'New networkPrefix must be smaller than the maximum networkPrefix.';
 
         return array(
             // Invalid cases (prefix not larger)
@@ -232,7 +232,8 @@ class RangesSplitTest extends TestCase
      * @dataProvider invalidIPV6Provider
      *
      * @param string $inputString
-     * @param int    $networkPrefix
+     * @param int $networkPrefix
+     * @param $expectedMessage
      */
     public function testInvalidSplitIPV6($inputString, $networkPrefix, $expectedMessage)
     {
@@ -247,7 +248,6 @@ class RangesSplitTest extends TestCase
     public function validIPV6Provider()
     {
         return array(
-
             array('2001:0db8:85a3:0000:0000:8a2e:0370:7334/64', 66, array(
                 '2001:db8:85a3::/66',
                 '2001:db8:85a3:0:4000::/66',
@@ -319,7 +319,6 @@ class RangesSplitTest extends TestCase
                 '2001:db8:85a3:0:f400::/70',
                 '2001:db8:85a3:0:f800::/70',
                 '2001:db8:85a3:0:fc00::/70',
-
             )),
         );
     }
@@ -328,8 +327,8 @@ class RangesSplitTest extends TestCase
      * @dataProvider validIPV6Provider
      *
      * @param string $inputString
-     * @param int    $networkPrefix
-     * @param array  $expectedValue
+     * @param int $networkPrefix
+     * @param array $expectedValue
      */
     public function testValidSplitIPV6($inputString, $networkPrefix, $expectedValue)
     {

@@ -144,9 +144,9 @@ abstract class AbstractRange implements RangeInterface
         $addressCount = pow(2, ($maxPrefix - $networkPrefix));
         $startIp = $this->getStartAddress();
 
-        $data  = array();
+        $data = array();
         for ($i = 1; $i <= $this->getSize() / $addressCount; $i++) {
-            $data[] =  static::parseString(sprintf('%s/%d', $startIp->toString(), $networkPrefix));
+            $data[] = static::parseString(sprintf('%s/%d', $startIp->toString(), $networkPrefix));
 
             $startIp = $startIp->getAddressAtOffset($addressCount);
         }
