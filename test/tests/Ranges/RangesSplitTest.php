@@ -46,6 +46,18 @@ class RangesSplitTest extends TestCase
     {
         $range = Factory::parseRangeString($inputString, ParseStringFlag::IPV4SUBNET_MAYBE_COMPACT);
 
+        // php 5.3, 5.4, 5.5 compatibility 🤮
+        if (!method_exists($this, 'expectException')) {
+            try {
+                $range->split($networkPrefix);
+                $this->fail('Expected exception not thrown');
+            } catch (\Exception $e) {
+                $this->assertEquals($expectedMessage, $e->getMessage());
+            }
+
+            return;
+        }
+
         $this->expectException('\RuntimeException');
         $this->expectExceptionMessage($expectedMessage);
 
@@ -238,6 +250,18 @@ class RangesSplitTest extends TestCase
     public function testInvalidSplitIPV6($inputString, $networkPrefix, $expectedMessage)
     {
         $range = Factory::parseRangeString($inputString);
+
+        // php 5.3, 5.4, 5.5 compatibility 🤮
+        if (!method_exists($this, 'expectException')) {
+            try {
+                $range->split($networkPrefix);
+                $this->fail('Expected exception not thrown');
+            } catch (\Exception $e) {
+                $this->assertEquals($expectedMessage, $e->getMessage());
+            }
+
+            return;
+        }
 
         $this->expectException('\RuntimeException');
         $this->expectExceptionMessage($expectedMessage);
