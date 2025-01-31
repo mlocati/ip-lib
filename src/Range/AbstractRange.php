@@ -130,6 +130,7 @@ abstract class AbstractRange implements RangeInterface
      */
     public function split($networkPrefix)
     {
+        $networkPrefix = (int) $networkPrefix;
         $fromAddress = $this->fromAddress;
         $maxPrefix = $fromAddress::getNumberOfBits();
 
