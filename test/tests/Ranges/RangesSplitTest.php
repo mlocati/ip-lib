@@ -5,6 +5,7 @@ namespace IPLib\Test\Ranges;
 use IPLib\Factory;
 use IPLib\Test\TestCase;
 use OutOfBoundsException;
+use OverflowException;
 
 class RangesSplitTest extends TestCase
 {
@@ -281,6 +282,7 @@ class RangesSplitTest extends TestCase
                     '2001:db8:85a3:0:8000::/66',
                     '2001:db8:85a3:0:c000::/66',
                 ),
+                98,
             ),
             array(
                 '2001:0db8:85a3:0000:0000:8a2e:0370:7334/64',
@@ -351,6 +353,7 @@ class RangesSplitTest extends TestCase
                     '2001:db8:85a3:0:f800::/70',
                     '2001:db8:85a3:0:fc00::/70',
                 ),
+                98,
             ),
             array(
                 '2001:0db8:85a3:0000:0000:8a2e:0370:7334/32',
@@ -389,12 +392,27 @@ class RangesSplitTest extends TestCase
      * @param string $inputString
      * @param int $networkPrefix
      * @param string[] $expectedValues
+     * @param int|null $minNetworkPrefixFor32BitSystems
      */
-    public function testValidSplit($inputString, $networkPrefix, $expectedValues)
+    public function testValidSplit($inputString, $networkPrefix, $expectedValues, $minNetworkPrefixFor32BitSystems = null)
     {
         $range = Factory::parseRangeString($inputString);
         $this->assertInstanceof('IPLib\Range\RangeInterface', $range, "{$inputString} is not a valid IP range");
-        $actualValues = array_map('strval', $range->split($networkPrefix));
-        $this->assertSame($expectedValues, array_map('strval', $actualValues));
+        if ($minNetworkPrefixFor32BitSystems !== null && PHP_INT_SIZE === 4) {
+            $exception = null;
+            try {
+                $range->split($networkPrefix);
+            } catch (OverflowException $x) {
+                $exception = $x;
+            }
+            $this->assertNotNull($exception, "split({$networkPrefix}) on {$inputString} should throw an exception on 32-bit systems");
+            $this->assertSame(
+                sprintf('The value of $networkPrefix leads to too large ranges for the current machine bitness (you can use a value of at least %s)', $minNetworkPrefixFor32BitSystems),
+                $exception->getMessage()
+            );
+        } else {
+            $actualValues = array_map('strval', $range->split($networkPrefix));
+            $this->assertSame($expectedValues, array_map('strval', $actualValues));
+        }
     }
 }

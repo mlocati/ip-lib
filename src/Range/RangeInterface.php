@@ -164,6 +164,7 @@ interface RangeInterface
      * @param int $networkPrefix
      *
      * @throws \OutOfBoundsException if $networkPrefix is not valid
+     * @throws \OverflowException if you are running a 32-bit system and the ranges are too wide
      *
      * @return \IPLib\Range\Subnet[]
      */

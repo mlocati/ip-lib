@@ -8,6 +8,7 @@ use IPLib\Address\IPv6;
 use IPLib\Address\Type as AddressType;
 use IPLib\Factory;
 use OutOfBoundsException;
+use OverflowException;
 
 /**
  * Base class for range classes.
@@ -145,6 +146,12 @@ abstract class AbstractRange implements RangeInterface
         $maxPrefix = $startIp::getNumberOfBits();
         if ($networkPrefix > $maxPrefix) {
             throw new OutOfBoundsException("The value of the \$networkPrefix parameter can't be larger than the maximum network prefix of the range ({$maxPrefix})");
+        }
+
+        $systemBitness = PHP_INT_SIZE * 8;
+        $minPrefixByBitness = $maxPrefix - $systemBitness + 2;
+        if ($minPrefixByBitness > $networkPrefix) {
+            throw new OverflowException("The value of \$networkPrefix leads to too large ranges for the current machine bitness (you can use a value of at least {$minPrefixByBitness})");
         }
 
         $chunkSize = pow(2, $maxPrefix - $networkPrefix);
