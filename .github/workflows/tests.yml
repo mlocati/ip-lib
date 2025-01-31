@@ -96,7 +96,7 @@ jobs:
     steps:
       -
         name: Set code coverage
-        if: startsWith(matrix.os, 'ubuntu') && matrix.php-version == '7.2' && env.GITHUB_REPOSITORY_OWNER == 'mlocati'
+        if: startsWith(matrix.os, 'ubuntu') && matrix.php-version == '7.2' && github.repository_owner == 'mlocati'
         run: |
           echo "CODE_COVERAGE_TOOL=xdebug" >> $GITHUB_ENV
       -
