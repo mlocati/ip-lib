@@ -163,7 +163,7 @@ interface RangeInterface
      *
      * @param int $networkPrefix
      *
-     * @return array
+     * @return \IPLib\Range\Subnet[]
      */
     public function split($networkPrefix);
 }
