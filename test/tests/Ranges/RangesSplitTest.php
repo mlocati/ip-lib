@@ -10,35 +10,34 @@ class RangesSplitTest extends TestCase
 {
     public function invalidCasesProvider()
     {
-        $networkPrefixTooSmall = 'New networkPrefix must be larger than the base networkPrefix.';
-        $networkPrefixTooBig = 'New networkPrefix must be smaller than the maximum networkPrefix.';
+        $networkPrefixTooSmall = 'The value of the $networkPrefix parameter can\'t be smaller than the network prefix of the range (%s)';
+        $networkPrefixTooBig = 'The value of the $networkPrefix parameter can\'t be larger than the maximum network prefix of the range (%s)';
 
         return array(
-            array('1.2.3.4/0', 0, $networkPrefixTooSmall),
-            array('1.2.3.4/1', 1, $networkPrefixTooSmall),
-            array('1.2.3.4/10', 10, $networkPrefixTooSmall),
-            array('1.2.3.4/20', 20, $networkPrefixTooSmall),
-            array('1.2.3.4/24', 24, $networkPrefixTooSmall),
-            array('1.2.3.4/25', 25, $networkPrefixTooSmall),
-            array('1.2.3.4/32', 32, $networkPrefixTooSmall),
+            array('1.2.3.4/1', 0, sprintf($networkPrefixTooSmall, 1)),
+            array('1.2.3.4/10', 9, sprintf($networkPrefixTooSmall, 10)),
+            array('1.2.3.4/20', 19, sprintf($networkPrefixTooSmall, 20)),
+            array('1.2.3.4/24', 23, sprintf($networkPrefixTooSmall, 24)),
+            array('1.2.3.4/25', 24, sprintf($networkPrefixTooSmall, 25)),
+            array('1.2.3.4/32', 31, sprintf($networkPrefixTooSmall, 32)),
 
-            array('2001:0db8:85a3:0000:0000:8a2e:0370:7334/32', 32, $networkPrefixTooSmall),
-            array('2001:0db8:85a3:0000:0000:8a2e:0370:7334/48', 48, $networkPrefixTooSmall),
-            array('2001:0db8:85a3:0000:0000:8a2e:0370:7334/64', 64, $networkPrefixTooSmall),
-            array('2001:0db8:85a3:0000:0000:8a2e:0370:7334/128', 128, $networkPrefixTooSmall),
+            array('2001:0db8:85a3:0000:0000:8a2e:0370:7334/32', 31, sprintf($networkPrefixTooSmall, 32)),
+            array('2001:0db8:85a3:0000:0000:8a2e:0370:7334/48', 47, sprintf($networkPrefixTooSmall, 48)),
+            array('2001:0db8:85a3:0000:0000:8a2e:0370:7334/64', 63, sprintf($networkPrefixTooSmall, 64)),
+            array('2001:0db8:85a3:0000:0000:8a2e:0370:7334/128', 127, sprintf($networkPrefixTooSmall, 128)),
 
-            array('1.2.3.4/0', 34, $networkPrefixTooBig),
-            array('1.2.3.4/1', 35, $networkPrefixTooBig),
-            array('1.2.3.4/10', 36, $networkPrefixTooBig),
-            array('1.2.3.4/20', 37, $networkPrefixTooBig),
-            array('1.2.3.4/24', 38, $networkPrefixTooBig),
-            array('1.2.3.4/25', 39, $networkPrefixTooBig),
-            array('1.2.3.4/32', 40, $networkPrefixTooBig),
-            array('1.2.3.4/32', 128, $networkPrefixTooBig),
-            array('1.2.3.4/32', 100, $networkPrefixTooBig),
+            array('1.2.3.4/0', 34, sprintf($networkPrefixTooBig, 32)),
+            array('1.2.3.4/1', 35, sprintf($networkPrefixTooBig, 32)),
+            array('1.2.3.4/10', 36, sprintf($networkPrefixTooBig, 32)),
+            array('1.2.3.4/20', 37, sprintf($networkPrefixTooBig, 32)),
+            array('1.2.3.4/24', 38, sprintf($networkPrefixTooBig, 32)),
+            array('1.2.3.4/25', 39, sprintf($networkPrefixTooBig, 32)),
+            array('1.2.3.4/32', 40, sprintf($networkPrefixTooBig, 32)),
+            array('1.2.3.4/32', 128, sprintf($networkPrefixTooBig, 32)),
+            array('1.2.3.4/32', 100, sprintf($networkPrefixTooBig, 32)),
 
-            array('2001:0db8:85a3:0000:0000:8a2e:0370:7334/0', 129, $networkPrefixTooBig),
-            array('2001:0db8:85a3:0000:0000:8a2e:0370:7334/128', 129, $networkPrefixTooBig),
+            array('2001:0db8:85a3:0000:0000:8a2e:0370:7334/0', 129, sprintf($networkPrefixTooBig, 128)),
+            array('2001:0db8:85a3:0000:0000:8a2e:0370:7334/128', 129, sprintf($networkPrefixTooBig, 128)),
         );
     }
 
@@ -66,6 +65,33 @@ class RangesSplitTest extends TestCase
     public function validCasesProvider()
     {
         return array(
+            array(
+                '1.2.3.4/0',
+                0,
+                array(
+                    '0.0.0.0/0',
+                ),
+            ),
+            array(
+                '1.2.3.4/10',
+                10,
+                array(
+                    '1.0.0.0/10',
+                ),
+            ),
+            array(
+                '1.2.3.4/20',
+                20,
+                array(
+                    '1.2.0.0/20',
+                ),
+            ),
+            array('1.2.3.4/24',
+                24,
+                array(
+                    '1.2.3.0/24',
+                ),
+            ),
             array(
                 '1.2.3.4/24',
                 25,
@@ -160,6 +186,20 @@ class RangesSplitTest extends TestCase
                 array(
                     '1.2.0.0/23',
                     '1.2.2.0/23',
+                ),
+            ),
+            array(
+                '1.2.3.4/25',
+                25,
+                array(
+                    '1.2.3.0/25',
+                ),
+            ),
+            array(
+                '1.2.3.4/32',
+                32,
+                array(
+                    '1.2.3.4/32',
                 ),
             ),
             array(
@@ -312,6 +352,34 @@ class RangesSplitTest extends TestCase
                     '2001:db8:85a3:0:fc00::/70',
                 ),
             ),
+            array(
+                '2001:0db8:85a3:0000:0000:8a2e:0370:7334/32',
+                32,
+                array(
+                    '2001:db8::/32',
+                ),
+            ),
+            array(
+                '2001:0db8:85a3:0000:0000:8a2e:0370:7334/48',
+                48,
+                array(
+                    '2001:db8:85a3::/48',
+                ),
+            ),
+            array(
+                '2001:0db8:85a3:0000:0000:8a2e:0370:7334/64',
+                64,
+                array(
+                    '2001:db8:85a3::/64',
+                ),
+            ),
+            array(
+                '2001:0db8:85a3:0000:0000:8a2e:0370:7334/128',
+                128,
+                array(
+                    '2001:db8:85a3::8a2e:370:7334/128',
+                ),
+            ),
         );
     }
 
@@ -326,7 +394,7 @@ class RangesSplitTest extends TestCase
     {
         $range = Factory::parseRangeString($inputString);
         $this->assertInstanceof('IPLib\Range\RangeInterface', $range, "{$inputString} is not a valid IP range");
-        $actualValues = $range->split($networkPrefix);
+        $actualValues = array_map('strval', $range->split($networkPrefix));
         $this->assertSame($expectedValues, array_map('strval', $actualValues));
     }
 }

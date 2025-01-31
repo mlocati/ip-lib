@@ -7,6 +7,7 @@ use IPLib\Address\IPv4;
 use IPLib\Address\IPv6;
 use IPLib\Address\Type as AddressType;
 use IPLib\Factory;
+use RuntimeException;
 
 /**
  * Base class for range classes.
@@ -131,25 +132,28 @@ abstract class AbstractRange implements RangeInterface
     public function split($networkPrefix)
     {
         $networkPrefix = (int) $networkPrefix;
-        $fromAddress = $this->fromAddress;
-        $maxPrefix = $fromAddress::getNumberOfBits();
-
-        if ($networkPrefix <= $this->getNetworkPrefix()) {
-            throw new \RuntimeException('New networkPrefix must be larger than the base networkPrefix.');
+        $myNetworkPrefix = $this->getNetworkPrefix();
+        if ($networkPrefix === $myNetworkPrefix) {
+            return array(
+                new Subnet($this->getStartAddress(), $this->getEndAddress(), $networkPrefix),
+            );
         }
-
-        if ($networkPrefix > $maxPrefix) {
-            throw new \RuntimeException('New networkPrefix must be smaller than the maximum networkPrefix.');
+        if ($networkPrefix < $myNetworkPrefix) {
+            throw new RuntimeException("The value of the \$networkPrefix parameter can't be smaller than the network prefix of the range ({$myNetworkPrefix})");
         }
-
-        $addressCount = pow(2, ($maxPrefix - $networkPrefix));
         $startIp = $this->getStartAddress();
+        $maxPrefix = $startIp::getNumberOfBits();
+        if ($networkPrefix > $maxPrefix) {
+            throw new RuntimeException("The value of the \$networkPrefix parameter can't be larger than the maximum network prefix of the range ({$maxPrefix})");
+        }
 
+        $chunkSize = pow(2, $maxPrefix - $networkPrefix);
+        $maxIndex = $this->getSize() / $chunkSize;
         $data = array();
-        for ($i = 1; $i <= $this->getSize() / $addressCount; $i++) {
-            $data[] = static::parseString(sprintf('%s/%d', $startIp->toString(), $networkPrefix));
+        for ($i = 0; $i < $maxIndex; $i++) {
+            $data[] = Subnet::parseString(sprintf('%s/%d', $startIp, $networkPrefix));
 
-            $startIp = $startIp->getAddressAtOffset($addressCount);
+            $startIp = $startIp->getAddressAtOffset($chunkSize);
         }
 
         return $data;
