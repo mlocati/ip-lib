@@ -7,7 +7,7 @@ use IPLib\Address\IPv4;
 use IPLib\Address\IPv6;
 use IPLib\Address\Type as AddressType;
 use IPLib\Factory;
-use RuntimeException;
+use OutOfBoundsException;
 
 /**
  * Base class for range classes.
@@ -139,12 +139,12 @@ abstract class AbstractRange implements RangeInterface
             );
         }
         if ($networkPrefix < $myNetworkPrefix) {
-            throw new RuntimeException("The value of the \$networkPrefix parameter can't be smaller than the network prefix of the range ({$myNetworkPrefix})");
+            throw new OutOfBoundsException("The value of the \$networkPrefix parameter can't be smaller than the network prefix of the range ({$myNetworkPrefix})");
         }
         $startIp = $this->getStartAddress();
         $maxPrefix = $startIp::getNumberOfBits();
         if ($networkPrefix > $maxPrefix) {
-            throw new RuntimeException("The value of the \$networkPrefix parameter can't be larger than the maximum network prefix of the range ({$maxPrefix})");
+            throw new OutOfBoundsException("The value of the \$networkPrefix parameter can't be larger than the maximum network prefix of the range ({$maxPrefix})");
         }
 
         $chunkSize = pow(2, $maxPrefix - $networkPrefix);

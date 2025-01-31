@@ -4,7 +4,7 @@ namespace IPLib\Test\Ranges;
 
 use IPLib\Factory;
 use IPLib\Test\TestCase;
-use RuntimeException;
+use OutOfBoundsException;
 
 class RangesSplitTest extends TestCase
 {
@@ -55,7 +55,7 @@ class RangesSplitTest extends TestCase
         $exception = null;
         try {
             $range->split($networkPrefix);
-        } catch (RuntimeException $x) {
+        } catch (OutOfBoundsException $x) {
             $exception = $x;
         }
         $this->assertNotNull($exception, "split({$networkPrefix}) on {$inputString} should throw an exception");

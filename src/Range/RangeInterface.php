@@ -163,7 +163,7 @@ interface RangeInterface
      *
      * @param int $networkPrefix
      *
-     * @throws \RuntimeException if $networkPrefix is not valid
+     * @throws \OutOfBoundsException if $networkPrefix is not valid
      *
      * @return \IPLib\Range\Subnet[]
      */
