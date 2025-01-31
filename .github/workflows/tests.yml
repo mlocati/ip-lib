@@ -66,6 +66,7 @@ jobs:
     env:
       CODE_COVERAGE_TOOL: none
     strategy:
+      fail-fast: false
       matrix:
         os:
           - ubuntu-latest
