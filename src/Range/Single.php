@@ -241,4 +241,17 @@ class Single extends AbstractRange
     {
         return 1;
     }
+
+    /**
+     * {@inheritdoc}
+     * {@override}
+     *
+     * @see \IPLib\Range\RangeInterface::split()
+     */
+    public function split($networkPrefix)
+    {
+        return array(
+            $this
+        );
+    }
 }

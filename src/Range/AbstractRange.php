@@ -132,10 +132,6 @@ abstract class AbstractRange implements RangeInterface
      */
     public function split($networkPrefix)
     {
-        if ($this instanceof Single){
-            return array(clone $this);
-        }
-
         $networkPrefix = (int) $networkPrefix;
         $myNetworkPrefix = $this->getNetworkPrefix();
         if ($networkPrefix === $myNetworkPrefix) {
