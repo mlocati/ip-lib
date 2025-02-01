@@ -310,7 +310,7 @@ class Pattern extends AbstractRange
     /**
      * @return float|int
      */
-    public function getNetworkPrefix()
+    protected function getNetworkPrefix()
     {
         switch ($this->getAddressType()) {
             case AddressType::T_IPv4:
