@@ -136,7 +136,7 @@ abstract class AbstractRange implements RangeInterface
         $myNetworkPrefix = $this->getNetworkPrefix();
         if ($networkPrefix === $myNetworkPrefix) {
             return array(
-                new Subnet($this->getStartAddress(), $this->getEndAddress(), $networkPrefix),
+                $this,
             );
         }
         if ($networkPrefix < $myNetworkPrefix) {
