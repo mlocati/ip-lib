@@ -166,7 +166,7 @@ interface RangeInterface
      * @throws \OutOfBoundsException if $networkPrefix is not valid
      * @throws \OverflowException if you are running a 32-bit system and the ranges are too wide
      *
-     * @return \IPLib\Range\Subnet[]
+     * @return \IPLib\Range\Subnet[] | \IPLib\Range\Single[]
      */
     public function split($networkPrefix);
 }
