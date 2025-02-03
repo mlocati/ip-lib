@@ -174,7 +174,7 @@ interface RangeInterface
      * Split the range into smaller ranges.
      *
      * @param int $networkPrefix
-     * @param bool $forceSubnet set to true to always have ranges in "subnet format" (ie 1.2.3.4/5), to false to try to keep the original format if possible (that is, pattern to pattern, single to single) 
+     * @param bool $forceSubnet set to true to always have ranges in "subnet format" (ie 1.2.3.4/5), to false to try to keep the original format if possible (that is, pattern to pattern, single to single)
      *
      * @throws \OutOfBoundsException if $networkPrefix is not valid
      * @throws \OverflowException if you are running a 32-bit system and the ranges are too wide

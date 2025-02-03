@@ -432,7 +432,7 @@ class RangesSplitTest extends TestCase
                 ),
                 null,
                 null,
-                true
+                true,
             ),
             array(
                 '1.2.*.*',
@@ -600,6 +600,8 @@ class RangesSplitTest extends TestCase
      * @param int $networkPrefix
      * @param string[] $expectedValues
      * @param int|null $minNetworkPrefixFor32BitSystems
+     * @param int|null $minNetworkPrefixFor64BitSystems
+     * @param bool $forceSubnet
      */
     public function testValidSplit($inputString, $networkPrefix, $expectedValues, $minNetworkPrefixFor32BitSystems = null, $minNetworkPrefixFor64BitSystems = null, $forceSubnet = false)
     {
