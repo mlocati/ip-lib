@@ -15,12 +15,22 @@ class RangesSplitTest extends TestCase
         $networkPrefixTooBig = 'The value of the $networkPrefix parameter can\'t be larger than the maximum network prefix of the range (%s)';
 
         return array(
+            array('1.2.3.4', 0, sprintf($networkPrefixTooSmall, 32)),
+            array('1.2.3.4', 1, sprintf($networkPrefixTooSmall, 32)),
+            array('1.2.3.4', 31, sprintf($networkPrefixTooSmall, 32)),
+            array('1.2.3.4', 33, sprintf($networkPrefixTooBig, 32)),
+
             array('1.2.3.4/1', 0, sprintf($networkPrefixTooSmall, 1)),
             array('1.2.3.4/10', 9, sprintf($networkPrefixTooSmall, 10)),
             array('1.2.3.4/20', 19, sprintf($networkPrefixTooSmall, 20)),
             array('1.2.3.4/24', 23, sprintf($networkPrefixTooSmall, 24)),
             array('1.2.3.4/25', 24, sprintf($networkPrefixTooSmall, 25)),
             array('1.2.3.4/32', 31, sprintf($networkPrefixTooSmall, 32)),
+
+            array('2001:0db8:85a3:0000:0000:8a2e:0370:7334', 0, sprintf($networkPrefixTooSmall, 128)),
+            array('2001:0db8:85a3:0000:0000:8a2e:0370:7334', 1, sprintf($networkPrefixTooSmall, 128)),
+            array('2001:0db8:85a3:0000:0000:8a2e:0370:7334', 127, sprintf($networkPrefixTooSmall, 128)),
+            array('2001:0db8:85a3:0000:0000:8a2e:0370:7334', 129, sprintf($networkPrefixTooBig, 128)),
 
             array('2001:0db8:85a3:0000:0000:8a2e:0370:7334/32', 31, sprintf($networkPrefixTooSmall, 32)),
             array('2001:0db8:85a3:0000:0000:8a2e:0370:7334/48', 47, sprintf($networkPrefixTooSmall, 48)),
@@ -66,14 +76,6 @@ class RangesSplitTest extends TestCase
     public function validCasesProvider()
     {
         return array(
-            // single range
-            array(
-                '1.2.3.4',
-                0,
-                array(
-                    '1.2.3.4',
-                ),
-            ),
             array(
                 '1.2.3.4',
                 32,
@@ -88,14 +90,6 @@ class RangesSplitTest extends TestCase
                     '2001:db8:85a3::8a2e:370:7334',
                 ),
             ),
-            array(
-                '2001:0db8:85a3:0000:0000:8a2e:0370:7334',
-                110,
-                array(
-                    '2001:db8:85a3::8a2e:370:7334',
-                ),
-            ),
-            // sub range
             array(
                 '1.2.3.4/0',
                 0,
@@ -413,7 +407,6 @@ class RangesSplitTest extends TestCase
                     '2001:db8:85a3::8a2e:370:7334/128',
                 ),
             ),
-            // pattern range
             array(
                 '1.2.3.*',
                 24,

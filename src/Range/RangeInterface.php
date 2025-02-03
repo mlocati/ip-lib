@@ -159,6 +159,18 @@ interface RangeInterface
     public function getSize();
 
     /**
+     * Get the "network prefix", that is how many bits of the address are dedicated to the network portion.
+     *
+     * @return int
+     *
+     * @since 1.19.0
+     *
+     * @example for 10.0.0.0/24 it's 24
+     * @example for 10.0.0.* it's 24
+     */
+    public function getNetworkPrefix();
+
+    /**
      * split the range into smaller ranges.
      *
      * @param int $networkPrefix
