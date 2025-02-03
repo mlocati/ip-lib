@@ -84,6 +84,16 @@ class RangesSplitTest extends TestCase
                 ),
             ),
             array(
+                '1.2.3.4',
+                32,
+                array(
+                    '1.2.3.4/32',
+                ),
+                null,
+                null,
+                true,
+            ),
+            array(
                 '2001:0db8:85a3:0000:0000:8a2e:0370:7334',
                 128,
                 array(
@@ -415,6 +425,16 @@ class RangesSplitTest extends TestCase
                 ),
             ),
             array(
+                '1.2.3.*',
+                24,
+                array(
+                    '1.2.3.0/24',
+                ),
+                null,
+                null,
+                true
+            ),
+            array(
                 '1.2.*.*',
                 16,
                 array(
@@ -563,6 +583,13 @@ class RangesSplitTest extends TestCase
                     '1:2::c000:0/98',
                 ),
             ),
+            array(
+                '::/0',
+                65,
+                array(),
+                98,
+                66,
+            ),
         );
     }
 
@@ -574,24 +601,33 @@ class RangesSplitTest extends TestCase
      * @param string[] $expectedValues
      * @param int|null $minNetworkPrefixFor32BitSystems
      */
-    public function testValidSplit($inputString, $networkPrefix, $expectedValues, $minNetworkPrefixFor32BitSystems = null)
+    public function testValidSplit($inputString, $networkPrefix, $expectedValues, $minNetworkPrefixFor32BitSystems = null, $minNetworkPrefixFor64BitSystems = null, $forceSubnet = false)
     {
         $range = Factory::parseRangeString($inputString);
         $this->assertInstanceof('IPLib\Range\RangeInterface', $range, "{$inputString} is not a valid IP range");
         if ($minNetworkPrefixFor32BitSystems !== null && PHP_INT_SIZE === 4) {
+            $overflowMessage = sprintf('The value of $networkPrefix leads to too large ranges for the current machine bitness (you can use a value of at least %s)', $minNetworkPrefixFor32BitSystems);
+            $bitness = 32;
+        } elseif ($minNetworkPrefixFor64BitSystems !== null && PHP_INT_SIZE === 8) {
+            $overflowMessage = sprintf('The value of $networkPrefix leads to too large ranges for the current machine bitness (you can use a value of at least %s)', $minNetworkPrefixFor64BitSystems);
+            $bitness = 64;
+        } else {
+            $overflowMessage = null;
+        }
+        if ($overflowMessage !== null) {
             $exception = null;
             try {
-                $range->split($networkPrefix);
+                $range->split($networkPrefix, $forceSubnet);
             } catch (OverflowException $x) {
                 $exception = $x;
             }
-            $this->assertNotNull($exception, "split({$networkPrefix}) on {$inputString} should throw an exception on 32-bit systems");
+            $this->assertNotNull($exception, "split({$networkPrefix}) on {$inputString} should throw an OverflowException exception on {$bitness}-bit systems");
             $this->assertSame(
-                sprintf('The value of $networkPrefix leads to too large ranges for the current machine bitness (you can use a value of at least %s)', $minNetworkPrefixFor32BitSystems),
+                $overflowMessage,
                 $exception->getMessage()
             );
         } else {
-            $actualValues = array_map('strval', $range->split($networkPrefix));
+            $actualValues = array_map('strval', $range->split($networkPrefix, $forceSubnet));
             $this->assertSame($expectedValues, array_map('strval', $actualValues));
         }
     }

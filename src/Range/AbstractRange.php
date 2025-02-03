@@ -130,13 +130,13 @@ abstract class AbstractRange implements RangeInterface
      *
      * @see \IPLib\Range\RangeInterface::split()
      */
-    public function split($networkPrefix)
+    public function split($networkPrefix, $forceSubnet = false)
     {
         $networkPrefix = (int) $networkPrefix;
         $myNetworkPrefix = $this->getNetworkPrefix();
         if ($networkPrefix === $myNetworkPrefix) {
             return array(
-                $this,
+                $forceSubnet ? $this->asSubnet() : $this,
             );
         }
         if ($networkPrefix < $myNetworkPrefix) {
@@ -150,7 +150,7 @@ abstract class AbstractRange implements RangeInterface
 
         $systemBitness = PHP_INT_SIZE * 8;
         $minPrefixByBitness = $maxPrefix - $systemBitness + 2;
-        if ($minPrefixByBitness > $networkPrefix) {
+        if ($networkPrefix < $minPrefixByBitness) {
             throw new OverflowException("The value of \$networkPrefix leads to too large ranges for the current machine bitness (you can use a value of at least {$minPrefixByBitness})");
         }
 
@@ -158,8 +158,11 @@ abstract class AbstractRange implements RangeInterface
         $maxIndex = $this->getSize() / $chunkSize;
         $data = array();
         for ($i = 0; $i < $maxIndex; $i++) {
-            $data[] = Subnet::parseString(sprintf('%s/%d', $startIp, $networkPrefix));
-
+            $range = Subnet::parseString(sprintf('%s/%d', $startIp, $networkPrefix));
+            if (!$forceSubnet && $this instanceof Pattern) {
+                $range = $range->asPattern() ?: $range;
+            }
+            $data[] = $range;
             $startIp = $startIp->getAddressAtOffset($chunkSize);
         }
 
