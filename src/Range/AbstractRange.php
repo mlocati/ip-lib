@@ -7,6 +7,8 @@ use IPLib\Address\IPv4;
 use IPLib\Address\IPv6;
 use IPLib\Address\Type as AddressType;
 use IPLib\Factory;
+use OutOfBoundsException;
+use OverflowException;
 
 /**
  * Base class for range classes.
@@ -121,5 +123,49 @@ abstract class AbstractRange implements RangeInterface
         }
 
         return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \IPLib\Range\RangeInterface::split()
+     */
+    public function split($networkPrefix, $forceSubnet = false)
+    {
+        $networkPrefix = (int) $networkPrefix;
+        $myNetworkPrefix = $this->getNetworkPrefix();
+        if ($networkPrefix === $myNetworkPrefix) {
+            return array(
+                $forceSubnet ? $this->asSubnet() : $this,
+            );
+        }
+        if ($networkPrefix < $myNetworkPrefix) {
+            throw new OutOfBoundsException("The value of the \$networkPrefix parameter can't be smaller than the network prefix of the range ({$myNetworkPrefix})");
+        }
+        $startIp = $this->getStartAddress();
+        $maxPrefix = $startIp::getNumberOfBits();
+        if ($networkPrefix > $maxPrefix) {
+            throw new OutOfBoundsException("The value of the \$networkPrefix parameter can't be larger than the maximum network prefix of the range ({$maxPrefix})");
+        }
+
+        $systemBitness = PHP_INT_SIZE * 8;
+        $minPrefixByBitness = $maxPrefix - $systemBitness + 2;
+        if ($networkPrefix < $minPrefixByBitness) {
+            throw new OverflowException("The value of \$networkPrefix leads to too large ranges for the current machine bitness (you can use a value of at least {$minPrefixByBitness})");
+        }
+
+        $chunkSize = pow(2, $maxPrefix - $networkPrefix);
+        $maxIndex = $this->getSize() / $chunkSize;
+        $data = array();
+        for ($i = 0; $i < $maxIndex; $i++) {
+            $range = Subnet::parseString(sprintf('%s/%d', $startIp, $networkPrefix));
+            if (!$forceSubnet && $this instanceof Pattern) {
+                $range = $range->asPattern() ?: $range;
+            }
+            $data[] = $range;
+            $startIp = $startIp->getAddressAtOffset($chunkSize);
+        }
+
+        return $data;
     }
 }

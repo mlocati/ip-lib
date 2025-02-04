@@ -370,6 +370,57 @@ echo \IPLib\Factory::parseRangeString('10.0.0.0/8')->asPattern()->toString();
 
 Please remark that all the range types implement the `asPattern()` and `asSubnet()` methods.
 
+### Splitting IP ranges
+
+If you need to divide an IP address range into smaller ranges, you can use the `split` method.
+You can specify the length of the network prefix, as well as indicate whether you want to force the Subnet notation (by default, it is not).
+
+For example:
+
+```php
+$subnet = \IPLib\Factory::parseRangeString('192.168.112.203/24');
+$smallerSubnets = $subnet->split(25);
+print_r(array_map('strval', $smallerSubnets));
+/*
+ * You'll have:
+ * Array
+ * (
+ *     [0] => 192.168.112.0/25
+ *     [1] => 192.168.112.128/25
+ * )
+ */
+
+$subnet = \IPLib\Factory::parseRangeString('192.168.*.*');
+$smallerSubnets = $subnet->split(24);
+print_r(array_map('strval', $smallerSubnets));
+/*
+ * You'll have:
+ * Array
+ * (
+ *     [0] => 192.168.0.*
+ *     [1] => 192.168.1.*
+ *     [...]
+ *     [254] => 192.168.254.*
+ *     [255] => 192.168.255.*
+ * )
+ */
+
+$subnet = \IPLib\Factory::parseRangeString('192.168.*.*');
+$smallerSubnets = $subnet->split(24, true);
+print_r(array_map('strval', $smallerSubnets));
+/*
+ * You'll have:
+ * Array
+ * (
+ *     [0] => 192.168.0.0/24
+ *     [1] => 192.168.1.0/24
+ *     [...]
+ *     [254] => 192.168.254.0/24
+ *     [255] => 192.168.255.0/24
+ * )
+ */
+```
+
 ### Getting the subnet mask for IPv4 ranges
 
 You can use the `getSubnetMask()` to get the subnet mask for IPv4 ranges:

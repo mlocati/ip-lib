@@ -66,6 +66,7 @@ jobs:
     env:
       CODE_COVERAGE_TOOL: none
     strategy:
+      fail-fast: false
       matrix:
         os:
           - ubuntu-latest
@@ -95,7 +96,7 @@ jobs:
     steps:
       -
         name: Set code coverage
-        if: startsWith(matrix.os, 'ubuntu') && matrix.php-version == '7.2'
+        if: startsWith(matrix.os, 'ubuntu') && matrix.php-version == '7.2' && github.repository_owner == 'mlocati'
         run: |
           echo "CODE_COVERAGE_TOOL=xdebug" >> $GITHUB_ENV
       -
@@ -119,19 +120,19 @@ jobs:
         run: composer --ansi --no-interaction --no-progress --optimize-autoloader --ignore-platform-reqs update
       -
         name: Run PHPUnit (without code coverage)
-        if: ${{ env.CODE_COVERAGE_TOOL == 'none' }}
+        if: env.CODE_COVERAGE_TOOL == 'none'
         run: composer --ansi --no-interaction run-script test
       -
         name: Run PHPUnit (with code coverage)
-        if: ${{ env.CODE_COVERAGE_TOOL != 'none' }}
+        if: env.CODE_COVERAGE_TOOL != 'none'
         run: composer --ansi --no-interaction run-script test -- --coverage-clover coverage-clover.xml
       -
         name: Download Coveralls
-        if: ${{ env.CODE_COVERAGE_TOOL != 'none' }}
+        if: env.CODE_COVERAGE_TOOL != 'none'
         run: curl -sSLf -o php-coveralls.phar https://github.com/php-coveralls/php-coveralls/releases/download/v2.5.3/php-coveralls.phar
       -
         name: Upload Coveralls data
-        if: ${{ env.CODE_COVERAGE_TOOL != 'none' }}
+        if: env.CODE_COVERAGE_TOOL != 'none'
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: >
@@ -139,11 +140,11 @@ jobs:
           --coverage_clover=coverage-clover.xml --json_path=coveralls-upload.json --ansi --no-interaction -vvv
       -
         name: Download Scrutinizer
-        if: ${{ env.CODE_COVERAGE_TOOL != 'none' }}
+        if: env.CODE_COVERAGE_TOOL != 'none'
         run: curl -sSLf -o ocular.phar https://scrutinizer-ci.com/ocular.phar
       -
         name: Upload Scrutinizer data
-        if: ${{ env.CODE_COVERAGE_TOOL != 'none' }}
+        if: env.CODE_COVERAGE_TOOL != 'none'
         run: >
           php ocular.phar code-coverage:upload
           --format=php-clover --ansi --no-interaction
