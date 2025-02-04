@@ -180,6 +180,8 @@ interface RangeInterface
      * @throws \OverflowException if you are running a 32-bit system and the ranges are too wide
      *
      * @return \IPLib\Range\RangeInterface[]
+     *
+     * @since 1.19.0
      */
     public function split($networkPrefix, $forceSubnet = false);
 }
