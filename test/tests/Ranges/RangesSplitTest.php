@@ -5,7 +5,6 @@ namespace IPLib\Test\Ranges;
 use IPLib\Factory;
 use IPLib\Test\TestCase;
 use OutOfBoundsException;
-use OverflowException;
 
 class RangesSplitTest extends TestCase
 {
@@ -89,8 +88,6 @@ class RangesSplitTest extends TestCase
                 array(
                     '1.2.3.4/32',
                 ),
-                null,
-                null,
                 true,
             ),
             array(
@@ -316,7 +313,6 @@ class RangesSplitTest extends TestCase
                     '2001:db8:85a3:0:8000::/66',
                     '2001:db8:85a3:0:c000::/66',
                 ),
-                98,
             ),
             array(
                 '2001:0db8:85a3:0000:0000:8a2e:0370:7334/64',
@@ -387,7 +383,6 @@ class RangesSplitTest extends TestCase
                     '2001:db8:85a3:0:f800::/70',
                     '2001:db8:85a3:0:fc00::/70',
                 ),
-                98,
             ),
             array(
                 '2001:0db8:85a3:0000:0000:8a2e:0370:7334/32',
@@ -430,8 +425,6 @@ class RangesSplitTest extends TestCase
                 array(
                     '1.2.3.0/24',
                 ),
-                null,
-                null,
                 true,
             ),
             array(
@@ -584,11 +577,12 @@ class RangesSplitTest extends TestCase
                 ),
             ),
             array(
-                '::/0',
-                65,
-                array(),
-                98,
-                66,
+                'ffff::/16',
+                17,
+                array(
+                    'ffff::/17',
+                    'ffff:8000::/17',
+                ),
             ),
         );
     }
@@ -603,34 +597,11 @@ class RangesSplitTest extends TestCase
      * @param int|null $minNetworkPrefixFor64BitSystems
      * @param bool $forceSubnet
      */
-    public function testValidSplit($inputString, $networkPrefix, $expectedValues, $minNetworkPrefixFor32BitSystems = null, $minNetworkPrefixFor64BitSystems = null, $forceSubnet = false)
+    public function testValidSplit($inputString, $networkPrefix, array $expectedValues, $forceSubnet = false)
     {
         $range = Factory::parseRangeString($inputString);
         $this->assertInstanceof('IPLib\Range\RangeInterface', $range, "{$inputString} is not a valid IP range");
-        if ($minNetworkPrefixFor32BitSystems !== null && PHP_INT_SIZE === 4) {
-            $overflowMessage = sprintf('The value of $networkPrefix leads to too large ranges for the current machine bitness (you can use a value of at least %s)', $minNetworkPrefixFor32BitSystems);
-            $bitness = 32;
-        } elseif ($minNetworkPrefixFor64BitSystems !== null && PHP_INT_SIZE === 8) {
-            $overflowMessage = sprintf('The value of $networkPrefix leads to too large ranges for the current machine bitness (you can use a value of at least %s)', $minNetworkPrefixFor64BitSystems);
-            $bitness = 64;
-        } else {
-            $overflowMessage = null;
-        }
-        if ($overflowMessage !== null) {
-            $exception = null;
-            try {
-                $range->split($networkPrefix, $forceSubnet);
-            } catch (OverflowException $x) {
-                $exception = $x;
-            }
-            $this->assertNotNull($exception, "split({$networkPrefix}) on {$inputString} should throw an OverflowException exception on {$bitness}-bit systems");
-            $this->assertSame(
-                $overflowMessage,
-                $exception->getMessage()
-            );
-        } else {
-            $actualValues = array_map('strval', $range->split($networkPrefix, $forceSubnet));
-            $this->assertSame($expectedValues, array_map('strval', $actualValues));
-        }
+        $actualValues = array_map('strval', $range->split($networkPrefix, $forceSubnet));
+        $this->assertSame($expectedValues, array_map('strval', $actualValues));
     }
 }

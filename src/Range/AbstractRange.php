@@ -8,7 +8,6 @@ use IPLib\Address\IPv6;
 use IPLib\Address\Type as AddressType;
 use IPLib\Factory;
 use OutOfBoundsException;
-use OverflowException;
 
 /**
  * Base class for range classes.
@@ -147,25 +146,25 @@ abstract class AbstractRange implements RangeInterface
         if ($networkPrefix > $maxPrefix) {
             throw new OutOfBoundsException("The value of the \$networkPrefix parameter can't be larger than the maximum network prefix of the range ({$maxPrefix})");
         }
-
-        $systemBitness = PHP_INT_SIZE * 8;
-        $minPrefixByBitness = $maxPrefix - $systemBitness + 2;
-        if ($networkPrefix < $minPrefixByBitness) {
-            throw new OverflowException("The value of \$networkPrefix leads to too large ranges for the current machine bitness (you can use a value of at least {$minPrefixByBitness})");
+        if ($startIp instanceof IPv4) {
+            $one = IPv4::fromBytes(array(0, 0, 0, 1));
+        } elseif ($startIp instanceof IPv6) {
+            $one = IPv6::fromBytes(array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1));
         }
-
-        $chunkSize = pow(2, $maxPrefix - $networkPrefix);
-        $maxIndex = $this->getSize() / $chunkSize;
-        $data = array();
-        for ($i = 0; $i < $maxIndex; $i++) {
-            $range = Subnet::parseString(sprintf('%s/%d', $startIp, $networkPrefix));
+        $delta = $one->shift($networkPrefix - $maxPrefix);
+        $result = array();
+        while (true) {
+            $range = Subnet::parseString("{$startIp}/{$networkPrefix}");
             if (!$forceSubnet && $this instanceof Pattern) {
                 $range = $range->asPattern() ?: $range;
             }
-            $data[] = $range;
-            $startIp = $startIp->getAddressAtOffset($chunkSize);
+            $result[] = $range;
+            $startIp = $startIp->add($delta);
+            if ($startIp === null || !$this->contains($startIp)) {
+                break;
+            }
         }
 
-        return $data;
+        return $result;
     }
 }
