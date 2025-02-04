@@ -79,6 +79,28 @@ echo (string) $address->getPreviousAddress();
 echo (string) $address->getNextAddress();
 ```
 
+### Shifting the bits of an address
+
+You can use the `shift` method to shift the address bits to the right (with positive values) or to the left (negative values):
+
+```php
+$address = \IPLib\Factory::parseAddressString('2.4.8.16');
+// This will print 1.2.4.8
+echo (string) $address->shift(1);
+// This will print 4.8.16.32
+echo (string) $address->shift(-1);
+// This will print 4.8.16.0
+echo (string) $address->shift(-8);
+
+$address = \IPLib\Factory::parseAddressString('::10');
+// This will print ::8
+echo (string) $address->shift(1);
+// This will print ::20
+echo (string) $address->shift(-1);
+// This will print ::10:0
+echo (string) $address->shift(-16);
+```
+
 ### Get the addresses at a specified offset
 
 For addresses:
