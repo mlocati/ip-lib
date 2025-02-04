@@ -645,7 +645,7 @@ class IPv6 implements AddressInterface
         }
         $myWords = $this->getWords();
         $otherWords = $other->getWords();
-        $sum = array_fill(0, 7, 0);
+        $sum = array_fill(0, 8, 0);
         $carry = 0;
         for ($index = 7; $index >= 0; $index--) {
             $word = $myWords[$index] + $otherWords[$index] + $carry;
