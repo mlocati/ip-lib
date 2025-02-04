@@ -539,4 +539,35 @@ class IPv4 implements AddressInterface
 
         return new static(implode('.', $bytes));
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \IPLib\Address\AddressInterface::add()
+     */
+    public function add(AddressInterface $other)
+    {
+        if (!$other instanceof self) {
+            return null;
+        }
+        $myBytes = $this->getBytes();
+        $otherBytes = $other->getBytes();
+        $sum = array_fill(0, 4, 0);
+        $carry = 0;
+        for ($index = 3; $index >= 0; $index--) {
+            $byte = $myBytes[$index] + $otherBytes[$index] + $carry;
+            if ($byte > 0xFF) {
+                $carry = $byte >> 8;
+                $byte &= 0xFF;
+            } else {
+                $carry = 0;
+            }
+            $sum[$index] = $byte;
+        }
+        if ($carry !== 0) {
+            return null;
+        }
+
+        return new static(implode('.', $sum));
+    }
 }

@@ -30,7 +30,7 @@ require_once 'path/to/iplib/ip-lib.php';
 
 ### Installation with Composer
 
-Simply run 
+Simply run
 
 ```sh
 composer require mlocati/ip-lib
@@ -99,6 +99,17 @@ echo (string) $address->shift(1);
 echo (string) $address->shift(-1);
 // This will print ::10:0
 echo (string) $address->shift(-16);
+```
+
+### Adding two IP addresses
+
+You can calculate the sum of 2 IP addresses using the `add` method:
+
+```php
+$a = \IPLib\Factory::parseAddressString('1.2.3.4');
+$b = \IPLib\Factory::parseAddressString('10.0.0.0');
+// This will print 11.2.3.4
+echo (string) $a->add($b);
 ```
 
 ### Get the addresses at a specified offset
