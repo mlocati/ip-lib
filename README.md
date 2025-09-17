@@ -274,6 +274,16 @@ echo \IPLib\Factory::parseAddressString('1:2:3:4:5:6:7:8')->toString(true);
 echo \IPLib\Factory::parseRangeString('0:0::1/64')->toString();
 ```
 
+You may also want a *long* representation for IPv4 addresses: here again you can use `true`as the parameter for the `toString` method:
+
+```php
+// This will print 1.2.3.4
+echo \IPLib\Factory::parseAddressString('1.2.3.4')->toString();
+
+// This will print 001.002.003.004
+echo \IPLib\Factory::parseAddressString('1.2.3.4')->toString(true);
+```
+
 The address and range objects implements the `__toString()` method, which call the `toString()` method.
 So, if you want the string (short) representation of an object, you can do any of the following:
 
