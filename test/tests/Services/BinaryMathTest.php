@@ -5,6 +5,7 @@ namespace IPLib\Test\Services;
 use IPLib\Service\BinaryMath;
 use IPLib\Test\TestCase;
 use ReflectionProperty;
+use RuntimeException;
 
 class BinaryMathTest extends TestCase
 {
@@ -273,6 +274,39 @@ class BinaryMathTest extends TestCase
             array(str_repeat('0', 100), '0'),
             array('098765432100', '98765432100'),
             array('-0009876543210098765432100987654321009876543210098765432100987654321009876543210098765432100', '-9876543210098765432100987654321009876543210098765432100987654321009876543210098765432100'),
+        );
+    }
+
+    /**
+     * @dataProvider provideAdd1ToIntegerStringCases
+     *
+     * @param string $input
+     * @param string $expectedResult
+     */
+    public function testAdd1ToIntegerString($input, $expectedResult)
+    {
+        if ($input !== self::$math->normalizeIntegerString($input)) {
+            throw new RuntimeException('Wrong input! add1ToIntegerString() accepts only strings normalized with normalizeIntegerString()');
+        }
+        $actualResult = self::$math->add1ToIntegerString($input);
+        $this->assertSame($expectedResult, $actualResult);
+    }
+
+    /**
+     * @return array
+     */
+    public function provideAdd1ToIntegerStringCases()
+    {
+        return array(
+            array('0', '1'),
+            array('1', '2'),
+            array('99999999999999999999999999999999999999999999', '100000000000000000000000000000000000000000000'),
+            array('100000000000000000000000000000000000000000000', '100000000000000000000000000000000000000000001'),
+            array('100000000000000000000000000000000000000000001', '100000000000000000000000000000000000000000002'),
+            array('-1', '0'),
+            array('-100000000000000000000000000000000000000000001', '-100000000000000000000000000000000000000000000'),
+            array('-100000000000000000000000000000000000000000000', '-99999999999999999999999999999999999999999999'),
+            array('-99999999999999999999999999999999999999999999', '-99999999999999999999999999999999999999999998'),
         );
     }
 }
