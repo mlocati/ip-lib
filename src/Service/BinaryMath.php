@@ -9,6 +9,20 @@ namespace IPLib\Service;
  */
 class BinaryMath
 {
+    private static $instance;
+
+    /**
+     * @return \IPLib\Service\BinaryMath
+     */
+    public static function getInstance()
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
     /**
      * Trim the leading zeroes from a non-negative integer represented in binary form.
      *

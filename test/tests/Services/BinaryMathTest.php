@@ -4,6 +4,7 @@ namespace IPLib\Test\Services;
 
 use IPLib\Service\BinaryMath;
 use IPLib\Test\TestCase;
+use ReflectionProperty;
 
 class BinaryMathTest extends TestCase
 {
@@ -19,7 +20,20 @@ class BinaryMathTest extends TestCase
      */
     protected static function doSetUpBeforeClass()
     {
-        self::$math = new BinaryMath();
+        self::$math = BinaryMath::getInstance();
+    }
+
+    public function testSingleton()
+    {
+        $this->assertSame(self::$math, BinaryMath::getInstance());
+        $instanceProperty = new ReflectionProperty('IPLib\\Service\\BinaryMath', 'instance');
+        if (PHP_VERSION_ID < 80100) {
+            $instanceProperty->setAccessible(true);
+        }
+        $instanceProperty->setValue(null, null);
+        $newMath = BinaryMath::getInstance();
+        $this->assertEquals(self::$math, $newMath);
+        $this->assertNotSame(self::$math, $newMath);
     }
 
     /**
