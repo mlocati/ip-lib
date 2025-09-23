@@ -491,6 +491,36 @@ echo \IPLib\Factory::parseRangeString('192.168.0.12/30')->getSize();
 echo \IPLib\Factory::parseRangeString('192.168.0.1')->getSize();
 ```
 
+Please note that if the number of IP addresses contained in the range is greater than the maximum integer supported by the operating system (2,147,483,647 for 32-bit systems, 9,223,372,036,854,775,807 for 64-bit systems), the `getSize()` method will return a `float` (which may be not precise).
+
+If instead you want the exact number of IP addresses, you can use the `getExactSize()` method, which will return a string containing the number of IP addresses in decimal format in case of such big numbers.
+
+```php
+// This will print:
+// int(1)
+var_dump(\IPLib\Factory::parseRangeString('0.0.0.0/32')->getExactSize());
+
+// On 32-bit systems, this will print
+// string(10) "2147483648"
+// On 64-bit systems, this will print
+// int(2147483648)
+var_dump(\IPLib\Factory::parseRangeString('0.0.0.0/1')->getExactSize());
+
+// This will print:
+// int(1073741824)
+var_dump(\IPLib\Factory::parseRangeString('::/98')->getExactSize());
+
+// On 32-bit systems, this will print
+// string(10) "2147483648"
+// On 64-bit systems, this will print
+// int(2147483648)
+var_dump(\IPLib\Factory::parseRangeString('::/97')->getExactSize());
+
+// On 32-bit and 64-bit systems, this will print
+// string(39) "170141183460469231731687303715884105728"
+var_dump(\IPLib\Factory::parseRangeString('::/1')->getExactSize());
+```
+
 ### Getting the reverse DNS lookup address
 
 To perform reverse DNS queries, you need to use a special format of the IP addresses.
