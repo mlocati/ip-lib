@@ -9,6 +9,20 @@ namespace IPLib\Service;
  */
 class BinaryMath
 {
+    private static $instance;
+
+    /**
+     * @return \IPLib\Service\BinaryMath
+     */
+    public static function getInstance()
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
     /**
      * Trim the leading zeroes from a non-negative integer represented in binary form.
      *
@@ -95,6 +109,37 @@ class BinaryMath
         }
 
         return $result;
+    }
+
+    /**
+     * Compute 2 raised to the given exponent.
+     *
+     * If the result fits into a native PHP integer, an int is returned.
+     * If the result exceeds PHP_INT_MAX, a string containing the exact decimal representation is returned.
+     *
+     * @param int $exponent The non-negative exponent
+     *
+     * @return int|string
+     */
+    public function pow2string($exponent)
+    {
+        if ($exponent < PHP_INT_SIZE * 8 - 1) {
+            return 1 << $exponent;
+        }
+        $digits = array(1);
+        for ($i = 0; $i < $exponent; $i++) {
+            $carry = 0;
+            foreach ($digits as $index => $digit) {
+                $product = $digit * 2 + $carry;
+                $digits[$index] = $product % 10;
+                $carry = (int) ($product / 10);
+            }
+            if ($carry !== 0) {
+                $digits[] = $carry;
+            }
+        }
+
+        return implode('', array_reverse($digits));
     }
 
     /**

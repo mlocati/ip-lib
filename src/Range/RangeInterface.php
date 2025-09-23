@@ -150,13 +150,22 @@ interface RangeInterface
     public function getReverseDNSLookupName();
 
     /**
-     * Get the count of addresses this IP range contains.
+     * Get the count of addresses contained in this IP range (possibly approximated).
      *
-     * @return int|float Return float as for huge IPv6 networks, int is not enough
+     * @return int|float If the number of addresses exceeds PHP_INT_MAX a float containing an approximation will be returned
      *
      * @since 1.16.0
      */
     public function getSize();
+
+    /**
+     * Get the exact count of addresses contained in this IP range.
+     *
+     * @return int|numeric-string If the number of addresses exceeds PHP_INT_MAX a string containing the exact number of addresses will be returned
+     *
+     * @since 1.21.0
+     */
+    public function getExactSize();
 
     /**
      * Get the "network prefix", that is how many bits of the address are dedicated to the network portion.

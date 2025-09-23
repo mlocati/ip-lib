@@ -4,6 +4,7 @@ namespace IPLib\Test\Services;
 
 use IPLib\Service\BinaryMath;
 use IPLib\Test\TestCase;
+use ReflectionProperty;
 
 class BinaryMathTest extends TestCase
 {
@@ -19,7 +20,20 @@ class BinaryMathTest extends TestCase
      */
     protected static function doSetUpBeforeClass()
     {
-        self::$math = new BinaryMath();
+        self::$math = BinaryMath::getInstance();
+    }
+
+    public function testSingleton()
+    {
+        $this->assertSame(self::$math, BinaryMath::getInstance());
+        $instanceProperty = new ReflectionProperty('IPLib\\Service\\BinaryMath', 'instance');
+        if (PHP_VERSION_ID < 80100) {
+            $instanceProperty->setAccessible(true);
+        }
+        $instanceProperty->setValue(null, null);
+        $newMath = BinaryMath::getInstance();
+        $this->assertEquals(self::$math, $newMath);
+        $this->assertNotSame(self::$math, $newMath);
     }
 
     /**
@@ -176,5 +190,43 @@ class BinaryMathTest extends TestCase
         }
 
         return $cases;
+    }
+
+    /**
+     * @dataProvider providePow2stringCases
+     *
+     * @param int $exponent
+     * @param int|string $expectedResult
+     */
+    public function testPow2string($exponent, $expectedResult)
+    {
+        $actualResult = self::$math->pow2string($exponent);
+
+        $this->assertSame($expectedResult, $actualResult);
+    }
+
+    /**
+     * @return array
+     */
+    public function providePow2stringCases()
+    {
+        return array(
+            array(0, 1),
+            array(1, 2),
+            array(2, 4),
+            array(3, 8),
+            array(30, 0x40000000),
+            array(31, PHP_INT_SIZE > 4 ? 0x80000000 : '2147483648'),
+            array(32, PHP_INT_SIZE > 4 ? 0x100000000 : '4294967296'),
+            array(33, PHP_INT_SIZE > 4 ? 0x200000000 : '8589934592'),
+            array(62, PHP_INT_SIZE > 4 ? 0x4000000000000000 : '4611686018427387904'),
+            array(63, PHP_INT_SIZE > 8 ? 0x8000000000000000 : '9223372036854775808'),
+            array(64, PHP_INT_SIZE > 8 ? 0x10000000000000000 : '18446744073709551616'),
+            array(65, PHP_INT_SIZE > 8 ? 0x20000000000000000 : '36893488147419103232'),
+            array(126, PHP_INT_SIZE > 8 ? 0x20000000000000000000000000000000 : '85070591730234615865843651857942052864'),
+            array(127, PHP_INT_SIZE > 9 ? 0x40000000000000000000000000000000 : '170141183460469231731687303715884105728'),
+            array(128, PHP_INT_SIZE > 9 ? 0x80000000000000000000000000000000 : '340282366920938463463374607431768211456'),
+            array(129, PHP_INT_SIZE > 9 ? 0x100000000000000000000000000000000 : '680564733841876926926749214863536422912'),
+        );
     }
 }
