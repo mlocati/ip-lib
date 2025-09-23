@@ -161,7 +161,7 @@ interface RangeInterface
     /**
      * Get the exact count of addresses contained in this IP range.
      *
-     * @return int|string If the number of addresses exceeds PHP_INT_MAX a string containing the exact number of addresses will be returned
+     * @return int|numeric-string If the number of addresses exceeds PHP_INT_MAX a string containing the exact number of addresses will be returned
      *
      * @since 1.21.0
      */
