@@ -143,6 +143,28 @@ class BinaryMath
     }
 
     /**
+     * @param numeric-string|mixed $value
+     *
+     * @return string empty string if $value is not a valid numeric string
+     */
+    public function normalizeIntegerString($value)
+    {
+        if (!is_string($value) || $value === '') {
+            return '';
+        }
+        $sign = $value[0];
+        if ($sign === '-' || $sign === '+') {
+            $value = substr($value, 1);
+        }
+        $matches = null;
+        if (!preg_match('/^0*([0-9]+)$/', $value, $matches)) {
+            return '';
+        }
+
+        return ($sign === '-' && $matches[1] !== '0' ? $sign : '') . $matches[1];
+    }
+
+    /**
      * Zero-padding of two non-negative integers represented in binary form, so that they have the same length.
      *
      * @param string $num1

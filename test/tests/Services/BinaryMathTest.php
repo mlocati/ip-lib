@@ -229,4 +229,50 @@ class BinaryMathTest extends TestCase
             array(129, PHP_INT_SIZE > 9 ? 0x100000000000000000000000000000000 : '680564733841876926926749214863536422912'),
         );
     }
+
+    /**
+     * @dataProvider provideNormalizeIntegerStringCases
+     *
+     * @param mixed $input
+     * @param string $expectedResult
+     */
+    public function testNormalizeIntegerString($input, $expectedResult = '')
+    {
+        $actualResult = self::$math->normalizeIntegerString($input);
+        $this->assertSame($expectedResult, $actualResult);
+    }
+
+    /**
+     * @return array
+     */
+    public function provideNormalizeIntegerStringCases()
+    {
+        return array(
+            array(new \stdClass()),
+            array(false),
+            array(array()),
+            array(null),
+            array(''),
+            array('+'),
+            array('-'),
+            array('0.0'),
+            array('.0'),
+            array('0.'),
+            array('123a'),
+            array('a123'),
+            array('123 '),
+            array(' 123'),
+            array('0', '0'),
+            array('1', '1'),
+            array('00', '0'),
+            array('0000001', '1'),
+            array('-0', '0'),
+            array('-1', '-1'),
+            array('-00001', '-1'),
+            array('-0000100', '-100'),
+            array(str_repeat('0', 100), '0'),
+            array('098765432100', '98765432100'),
+            array('-0009876543210098765432100987654321009876543210098765432100987654321009876543210098765432100', '-9876543210098765432100987654321009876543210098765432100987654321009876543210098765432100'),
+        );
+    }
 }
