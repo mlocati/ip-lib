@@ -6,6 +6,7 @@ use InvalidArgumentException;
 
 /**
  * @internal
+ *
  * @readonly
  */
 class NumberInChunks
