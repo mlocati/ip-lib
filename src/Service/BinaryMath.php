@@ -143,6 +143,73 @@ class BinaryMath
     }
 
     /**
+     * @param numeric-string|mixed $value
+     *
+     * @return string empty string if $value is not a valid numeric string
+     */
+    public function normalizeIntegerString($value)
+    {
+        if (!is_string($value) || $value === '') {
+            return '';
+        }
+        $sign = $value[0];
+        if ($sign === '-' || $sign === '+') {
+            $value = substr($value, 1);
+        }
+        $matches = null;
+        if (!preg_match('/^0*([0-9]+)$/', $value, $matches)) {
+            return '';
+        }
+
+        return ($sign === '-' && $matches[1] !== '0' ? $sign : '') . $matches[1];
+    }
+
+    /**
+     * @param numeric-string $value a string that has been normalized with normalizeIntegerString()
+     *
+     * @return string
+     */
+    public function add1ToIntegerString($value)
+    {
+        if ($value[0] === '-') {
+            if ($value === '-1') {
+                return '0';
+            }
+            $digits = str_split(substr($value, 1));
+            $i = count($digits) - 1;
+            while ($i >= 0) {
+                if ($digits[$i] !== '0') {
+                    $digits[$i] = (string) ((int) $digits[$i] - 1);
+                    break;
+                }
+                $digits[$i] = '9';
+                $i--;
+            }
+            $imploded = implode('', $digits);
+            if ($imploded[0] === '0') {
+                $imploded = substr($imploded, 1);
+            }
+
+            return '-' . $imploded;
+        }
+        $digits = str_split($value);
+        $carry = 1;
+        for ($i = count($digits) - 1; $i >= 0; $i--) {
+            $sum = (int) $digits[$i] + $carry;
+            $digits[$i] = (string) ($sum % 10);
+            $carry = (int) ($sum / 10);
+            if ($carry === 0) {
+                break;
+            }
+            if ($i === 0) {
+                array_unshift($digits, (string) $carry);
+            }
+        }
+
+        return implode('', $digits);
+    }
+
+    /**
      * Zero-padding of two non-negative integers represented in binary form, so that they have the same length.
      *
      * @param string $num1

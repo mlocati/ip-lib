@@ -14,6 +14,7 @@ class AddressAtOffsetTest extends TestCase
             array('127.0.0.0/16', -1, '127.0.255.255'),
             array('127.0.0.0/24', 256, null),
             array('127.0.0.0/16', 0, '127.0.0.0'),
+            array('0.0.0.0/0', '4294967295', '255.255.255.255'),
             array('::ff00/120', 0, '::ff00'),
             array('::ff00/120', 16, '::ff10'),
             array('::ff00/120', 100, '::ff64'),
@@ -23,8 +24,14 @@ class AddressAtOffsetTest extends TestCase
             array('::ff00/120', -256, '::ff00'),
             array('::ff00/120', -257, null),
             array('255.255.255.255/32', 1, null),
-            array('::ff00/120', '0', null),
+            array('::ff00/120', '0', '::ff00'),
             array('::ff00/120', 'invalid', null),
+            array('::/0', '340282366920938463463374607431768211454', 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffe'),
+            array('::/0', '340282366920938463463374607431768211455', 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'),
+            array('::/0', '340282366920938463463374607431768211456', null),
+            array('::/1', '340282366920938463463374607431768211455', null),
+            array('::/1', '170141183460469231731687303715884105727', '7fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'),
+            array('::/1', '170141183460469231731687303715884105728', null),
         );
     }
 
@@ -32,7 +39,7 @@ class AddressAtOffsetTest extends TestCase
      * @dataProvider ipProvider
      *
      * @param string $rangeString
-     * @param int|mixed $n
+     * @param int|numeric-string|mixed $n
      * @param string|null $expected
      */
     public function testAddressAtOffset($rangeString, $n, $expected)

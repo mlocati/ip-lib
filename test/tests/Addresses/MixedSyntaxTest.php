@@ -39,7 +39,7 @@ class MixedSyntaxTest extends TestCase
             ),
             array(
                 '0:0:0:0:0:FFFF:222.1.41.90',
-                '::ffff:222.1.41.90',  // IPv4MappedIPv6
+                '::ffff:222.1.41.90', // IPv4MappedIPv6
                 '::ffff:222.1.41.90',
                 '0000:0000:0000:0000:0000:ffff:222.1.41.90',
                 '::ffff:222.001.041.090',

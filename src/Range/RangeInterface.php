@@ -46,11 +46,12 @@ interface RangeInterface
     /**
      * Get the address at a certain offset of this range.
      *
-     * @param int $n the offset of the address (support negative offset)
+     * @param int|numeric-string $n the offset of the address (support negative offset)
      *
-     * @return \IPLib\Address\AddressInterface|null return NULL if $n is not an integer or if the offset out of range
+     * @return \IPLib\Address\AddressInterface|null return NULL if $n is neither an integer nor a string containing a valid integer, or if the offset out of range
      *
      * @since 1.15.0
+     * @since 1.21.0 $n can also be a numeric string
      *
      * @example passing 256 to the range 127.0.0.0/16 will result in 127.0.1.0
      * @example passing -1 to the range 127.0.1.0/16 will result in 127.0.255.255

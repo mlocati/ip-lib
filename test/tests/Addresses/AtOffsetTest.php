@@ -33,8 +33,18 @@ class AtOffsetTest extends TestCase
             array('::', 1, '::1'),
             array('0.0.0.0', 0x7fffffff, '127.255.255.255'),
             array('0.0.0.1', 0x7fffffff, '128.0.0.0'),
+            array('0.0.0.0', '4294967295', '255.255.255.255'),
+            array('255.255.255.255', '-4294967295', '0.0.0.0'),
+            array('255.255.255.255', '-4294967296', ''),
+            array('255.255.255.254', '-4294967296', ''),
+            array('0.0.0.0', '4294967296', ''),
+            array('0.0.0.1', '4294967295', ''),
             array('::', 0x7fffffff, '::7fff:ffff'),
             array('::1', 0x7fffffff, '::8000:0'),
+            array('::', '340282366920938463463374607431768211455', 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'),
+            array('ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff', '-340282366920938463463374607431768211455', '::'),
+            array('::1', '340282366920938463463374607431768211455', ''),
+            array('::', '340282366920938463463374607431768211456', ''),
         );
         if (PHP_INT_SIZE > 4) {
             $result = array_merge($result, array(
@@ -53,7 +63,7 @@ class AtOffsetTest extends TestCase
      * @dataProvider atOffsetProvider
      *
      * @param string $addressString
-     * @param int|mixed $n
+     * @param int|numeric-string|mixed $n
      * @param string $expected
      */
     public function testAtOffset($addressString, $n, $expected)

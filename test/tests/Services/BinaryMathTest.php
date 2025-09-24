@@ -5,6 +5,7 @@ namespace IPLib\Test\Services;
 use IPLib\Service\BinaryMath;
 use IPLib\Test\TestCase;
 use ReflectionProperty;
+use RuntimeException;
 
 class BinaryMathTest extends TestCase
 {
@@ -227,6 +228,85 @@ class BinaryMathTest extends TestCase
             array(127, PHP_INT_SIZE > 9 ? 0x40000000000000000000000000000000 : '170141183460469231731687303715884105728'),
             array(128, PHP_INT_SIZE > 9 ? 0x80000000000000000000000000000000 : '340282366920938463463374607431768211456'),
             array(129, PHP_INT_SIZE > 9 ? 0x100000000000000000000000000000000 : '680564733841876926926749214863536422912'),
+        );
+    }
+
+    /**
+     * @dataProvider provideNormalizeIntegerStringCases
+     *
+     * @param mixed $input
+     * @param string $expectedResult
+     */
+    public function testNormalizeIntegerString($input, $expectedResult = '')
+    {
+        $actualResult = self::$math->normalizeIntegerString($input);
+        $this->assertSame($expectedResult, $actualResult);
+    }
+
+    /**
+     * @return array
+     */
+    public function provideNormalizeIntegerStringCases()
+    {
+        return array(
+            array(new \stdClass()),
+            array(false),
+            array(array()),
+            array(null),
+            array(''),
+            array('+'),
+            array('-'),
+            array('0.0'),
+            array('.0'),
+            array('0.'),
+            array('123a'),
+            array('a123'),
+            array('123 '),
+            array(' 123'),
+            array('0', '0'),
+            array('1', '1'),
+            array('00', '0'),
+            array('0000001', '1'),
+            array('-0', '0'),
+            array('-1', '-1'),
+            array('-00001', '-1'),
+            array('-0000100', '-100'),
+            array(str_repeat('0', 100), '0'),
+            array('098765432100', '98765432100'),
+            array('-0009876543210098765432100987654321009876543210098765432100987654321009876543210098765432100', '-9876543210098765432100987654321009876543210098765432100987654321009876543210098765432100'),
+        );
+    }
+
+    /**
+     * @dataProvider provideAdd1ToIntegerStringCases
+     *
+     * @param string $input
+     * @param string $expectedResult
+     */
+    public function testAdd1ToIntegerString($input, $expectedResult)
+    {
+        if ($input !== self::$math->normalizeIntegerString($input)) {
+            throw new RuntimeException('Wrong input! add1ToIntegerString() accepts only strings normalized with normalizeIntegerString()');
+        }
+        $actualResult = self::$math->add1ToIntegerString($input);
+        $this->assertSame($expectedResult, $actualResult);
+    }
+
+    /**
+     * @return array
+     */
+    public function provideAdd1ToIntegerStringCases()
+    {
+        return array(
+            array('0', '1'),
+            array('1', '2'),
+            array('99999999999999999999999999999999999999999999', '100000000000000000000000000000000000000000000'),
+            array('100000000000000000000000000000000000000000000', '100000000000000000000000000000000000000000001'),
+            array('100000000000000000000000000000000000000000001', '100000000000000000000000000000000000000000002'),
+            array('-1', '0'),
+            array('-100000000000000000000000000000000000000000001', '-100000000000000000000000000000000000000000000'),
+            array('-100000000000000000000000000000000000000000000', '-99999999999999999999999999999999999999999999'),
+            array('-99999999999999999999999999999999999999999999', '-99999999999999999999999999999999999999999998'),
         );
     }
 }
