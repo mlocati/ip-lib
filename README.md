@@ -136,6 +136,10 @@ echo (string) $address->getAddressAtOffset(-1);
 
 // This will print NULL
 echo var_dump($address->getAddressAtOffset(-2));
+
+// This will print ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff
+echo (string) $address->getAddressAtOffset('340282366920938463463374607431768211454');
+
 ```
 
 For ranges:
@@ -166,6 +170,19 @@ echo (string) $range->getAddressAtOffset(-256);
 
 // This will print NULL because the address ::feff is out of the range
 var_dump($range->getAddressAtOffset(-257));
+
+
+$range2 = \IPLib\Factory::parseRangeString('::/0');
+
+// This will print ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff
+echo (string) $range2->getAddressAtOffset(-1);
+
+// This will print ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff
+echo (string) $range2->getAddressAtOffset('340282366920938463463374607431768211455');
+
+// This will print ::1
+echo (string) $range2->getAddressAtOffset('-340282366920938463463374607431768211455');
+
 ```
 
 ### Parse an IP address range
