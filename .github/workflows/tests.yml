@@ -57,7 +57,7 @@ jobs:
       -
         name: Check PHP coding style
         run: |
-          php-cs-fixer fix --dry-run --config=./.php_cs.dist --using-cache=no --diff --diff-format=udiff --show-progress=dots --verbose --no-interaction --ansi --path-mode=intersection .
+          php-cs-fixer fix --dry-run --config=./.php_cs.dist --using-cache=no --diff --diff-format=udiff --show-progress=dots --verbose --no-interaction --ansi
   phpunit:
     name: Run PHPUnit tests
     needs:
