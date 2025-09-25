@@ -7,6 +7,9 @@ use IPLib\Test\TestCase;
 
 class AtOffsetTest extends TestCase
 {
+    /**
+     * @return array{string, int|numeric-string|mixed, string}[]
+     */
     public function atOffsetProvider()
     {
         $result = array(
@@ -65,6 +68,8 @@ class AtOffsetTest extends TestCase
      * @param string $addressString
      * @param int|numeric-string|mixed $n
      * @param string $expected
+     *
+     * @return void
      */
     public function testAtOffset($addressString, $n, $expected)
     {

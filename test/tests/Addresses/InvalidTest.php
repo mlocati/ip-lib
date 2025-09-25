@@ -8,6 +8,9 @@ use IPLib\Test\TestCase;
 
 class InvalidTest extends TestCase
 {
+    /**
+     * @return array{string|mixed}[]
+     */
     public function invalidAddressesProvider()
     {
         return array(
@@ -38,10 +41,14 @@ class InvalidTest extends TestCase
      * @dataProvider invalidAddressesProvider
      *
      * @param string|mixed $address
+     *
+     * @return void
      */
     public function testInvalidAddresses($address)
     {
+        // @phpstan-ignore argument.type
         set_error_handler(function () {}, -1);
+        // @phpstan-ignore cast.string
         $str = (string) $address;
         $arr = (array) $address;
         restore_error_handler();

@@ -9,6 +9,9 @@ use IPLib\Test\TestCase;
 
 class ConversionTest extends TestCase
 {
+    /**
+     * @return array{string, string, 2?: string|null}[]
+     */
     public function rangeConversionProvider()
     {
         return array(
@@ -79,6 +82,8 @@ class ConversionTest extends TestCase
      * @param string $subnet
      * @param string $pattern
      * @param string|null $subnet2
+     *
+     * @return void
      */
     public function testRangeConversion($subnet, $pattern, $subnet2 = null)
     {
@@ -89,6 +94,7 @@ class ConversionTest extends TestCase
         if ($pattern === '') {
             $this->assertNull($patternRange);
         } else {
+            $this->assertInstanceOf('IPLib\Range\Pattern', $patternRange);
             $this->assertSame((string) $patternRange, (string) $patternRange->asPattern());
             $this->assertInstanceOf('IPLib\Range\Pattern', $patternRange);
             $this->assertSame($pattern, (string) $patternRange);

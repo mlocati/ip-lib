@@ -7,6 +7,9 @@ use IPLib\Test\TestCase;
 
 class RangeSizeTest extends TestCase
 {
+    /**
+     * @return array{string, int|float, 2?: int|string|null}[]
+     */
     public function rangesProvider()
     {
         return array(
@@ -40,10 +43,13 @@ class RangeSizeTest extends TestCase
      * @param string $addressRange
      * @param int|float $expectedSize
      * @param int|string|null $expectedExactSize
+     *
+     * @return void
      */
     public function testSize($addressRange, $expectedSize, $expectedExactSize = null)
     {
         $range = Factory::rangeFromString($addressRange);
+        $this->assertInstanceOf('IPLib\Range\RangeInterface', $range);
         $actualSize = $range->getSize();
         $this->assertSame($expectedSize, $actualSize, 'getSize()');
         if ($expectedExactSize === null) {

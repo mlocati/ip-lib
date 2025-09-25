@@ -7,6 +7,9 @@ use IPLib\Test\TestCase;
 
 class RangeFromBoundariesTest extends TestCase
 {
+    /**
+     * @return array{string|mixed, string|mixed}[]
+     */
     public function invalidProvider()
     {
         return array(
@@ -24,16 +27,21 @@ class RangeFromBoundariesTest extends TestCase
      *
      * @param string|mixed $from
      * @param string|mixed $to
+     *
+     * @return void
      */
     public function testInvalid($from, $to)
     {
         $range = Factory::rangeFromBoundaries($from, $to);
-        $this->assertNull($range, "Boundaries '{$from}' -> '{$to}' should not be resolved to an address");
+        $this->assertNull($range, "Boundaries '" . json_encode($from) . "' -> '" . json_encode($to) . "' should not be resolved to an address");
         list($from, $to) = array($to, $from);
         $range = Factory::rangeFromBoundaries($from, $to);
-        $this->assertNull($range, "Boundaries '{$from}' -> '{$to}' should not be resolved to an address");
+        $this->assertNull($range, "Boundaries '" . json_encode($from) . "' -> '" . json_encode($to) . "' should not be resolved to an address");
     }
 
+    /**
+     * @return array{string, string|null, string}[]
+     */
     public function validProvider()
     {
         return array(
@@ -75,6 +83,8 @@ class RangeFromBoundariesTest extends TestCase
      * @param string $from
      * @param string|null $to
      * @param string $expected
+     *
+     * @return void
      */
     public function testValid($from, $to, $expected)
     {

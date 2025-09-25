@@ -48,35 +48,33 @@ class Factory
      */
     public static function parseAddressString($address, $flags = 0)
     {
-        $result = null;
-        if ($result === null) {
-            $result = Address\IPv4::parseString($address, $flags);
+        if (($result = Address\IPv4::parseString($address, $flags)) !== null) {
+            return $result;
         }
-        if ($result === null) {
-            $result = Address\IPv6::parseString($address, $flags);
+        if (($result = Address\IPv6::parseString($address, $flags)) !== null) {
+            return $result;
         }
 
-        return $result;
+        return null;
     }
 
     /**
      * Convert a byte array to an address instance.
      *
-     * @param int[]|array $bytes
+     * @param array<int|mixed> $bytes
      *
      * @return \IPLib\Address\AddressInterface|null
      */
     public static function addressFromBytes(array $bytes)
     {
-        $result = null;
-        if ($result === null) {
-            $result = Address\IPv4::fromBytes($bytes);
+        if (($result = Address\IPv4::fromBytes($bytes)) !== null) {
+            return $result;
         }
-        if ($result === null) {
-            $result = Address\IPv6::fromBytes($bytes);
+        if (($result = Address\IPv6::fromBytes($bytes)) !== null) {
+            return $result;
         }
 
-        return $result;
+        return null;
     }
 
     /**
@@ -100,7 +98,7 @@ class Factory
     /**
      * Parse an IP range string.
      *
-     * @param string $range
+     * @param string|mixed $range
      * @param int $flags A combination or zero or more flags
      *
      * @return \IPLib\Range\RangeInterface|null
@@ -110,10 +108,7 @@ class Factory
      */
     public static function parseRangeString($range, $flags = 0)
     {
-        $result = null;
-        if ($result === null) {
-            $result = Range\Subnet::parseString($range, $flags);
-        }
+        $result = Range\Subnet::parseString($range, $flags);
         if ($result === null) {
             $result = Range\Pattern::parseString($range, $flags);
         }
@@ -133,7 +128,7 @@ class Factory
      * @param string|\IPLib\Address\AddressInterface|mixed $to
      * @param bool $supportNonDecimalIPv4
      *
-     * @return \IPLib\Address\AddressInterface|null
+     * @return \IPLib\Range\RangeInterface|null
      *
      * @see \IPLib\Factory::getRangeFromBoundaries()
      * @since 1.2.0
@@ -185,8 +180,8 @@ class Factory
     /**
      * Create a list of Range instances that exactly describes all the addresses between the two provided addresses.
      *
-     * @param string|\IPLib\Address\AddressInterface $from
-     * @param string|\IPLib\Address\AddressInterface $to
+     * @param string|\IPLib\Address\AddressInterface|mixed $from
+     * @param string|\IPLib\Address\AddressInterface|mixed $to
      * @param int $flags A combination or zero or more flags
      *
      * @return \IPLib\Range\Subnet[]|null return NULL if $from and/or $to are invalid addresses, or if both are NULL or empty strings, or if they are addresses of different types
@@ -202,6 +197,7 @@ class Factory
         }
         if ($from === null || $to === null) {
             $address = $from ? $from : $to;
+            /** @var AddressInterface $address */
 
             return array(new Subnet($address, $address, $address->getNumberOfBits()));
         }
@@ -265,8 +261,8 @@ class Factory
     }
 
     /**
-     * @param string|\IPLib\Address\AddressInterface $from
-     * @param string|\IPLib\Address\AddressInterface $to
+     * @param string|\IPLib\Address\AddressInterface|mixed $from
+     * @param string|\IPLib\Address\AddressInterface|mixed $to
      * @param int $flags
      *
      * @return \IPLib\Address\AddressInterface[]|null[]|false[]
@@ -277,7 +273,7 @@ class Factory
         foreach (array('from', 'to') as $param) {
             $value = $$param;
             if (!($value instanceof AddressInterface)) {
-                $value = (string) $value;
+                $value = is_object($value) && method_exists($value, '__toString') || is_scalar($value) ? (string) $value : '';
                 if ($value === '') {
                     $value = null;
                 } else {

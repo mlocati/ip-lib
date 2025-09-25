@@ -23,7 +23,7 @@ class UnsignedIntegerMathTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array{string, int, 2?: int[]|null, 3?: bool}[]
      */
     public function provideCases()
     {
@@ -77,6 +77,8 @@ class UnsignedIntegerMathTest extends TestCase
      * @param int $numBytes
      * @param int[]|null $expectedResult
      * @param bool $onlyDecimal
+     *
+     * @return void
      */
     public function testGetBytes($value, $numBytes, $expectedResult = null, $onlyDecimal = false)
     {

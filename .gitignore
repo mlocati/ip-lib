@@ -1,7 +1,7 @@
 /vendor/
-/.php_cs
-/.php_cs.cache
+/.php-cs-fixer.cache
+/.php-cs-fixer.php
+/.phpunit.result.cache
 /composer.lock
 /ocular.phar
 /php-coveralls.phar
-/.phpunit.result.cache

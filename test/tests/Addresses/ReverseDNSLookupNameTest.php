@@ -8,6 +8,9 @@ use IPLib\Test\TestCase;
 
 class ReverseDNSLookupNameTest extends TestCase
 {
+    /**
+     * @return array{string, string}[]
+     */
     public function reverseDNSAddressProvider()
     {
         return array(
@@ -28,10 +31,13 @@ class ReverseDNSLookupNameTest extends TestCase
      *
      * @param string $addressString
      * @param string $expectedReverseDNSAddress
+     *
+     * @return void
      */
     public function testReverseDNSLookupName($addressString, $expectedReverseDNSAddress)
     {
         $address = Factory::addressFromString($addressString);
+        /** @var \IPLib\Address\AddressInterface $address */
         $actualReverseDNSAddress = $address->getReverseDNSLookupName();
         $this->assertSame($expectedReverseDNSAddress, $actualReverseDNSAddress);
         $address2 = Factory::parseAddressString($actualReverseDNSAddress, ParseStringFlag::ADDRESS_MAYBE_RDNS);

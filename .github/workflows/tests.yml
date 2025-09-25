@@ -9,6 +9,7 @@ on:
       - main
 
 jobs:
+
   php-syntax:
     name: Check PHP ${{ matrix.php-version }} Syntax
     runs-on: ubuntu-latest
@@ -37,6 +38,7 @@ jobs:
           include: |
             ../ip-lib.php
           fail-on-warnings: true
+
   php-coding-style:
     name: Check PHP coding style
     runs-on: ubuntu-latest
@@ -56,12 +58,38 @@ jobs:
           fetch-depth: 1
       -
         name: Check PHP coding style
-        run: php-cs-fixer fix --dry-run --using-cache=no --diff --format=@auto --show-progress=dots --verbose --no-interaction --ansi
+        run: php-cs-fixer --no-interaction --ansi --dry-run --using-cache=no --diff --format=@auto --show-progress=dots --verbose fix
+
+  phpstan:
+    name: PHPStan Analysis
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: mbstring, openssl, zip
+          tools: composer:v2, phpstan:v2
+          coverage: none
+      -
+        name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+      -
+        name: Install Composer dependencies
+        run: composer --no-interaction --ansi --no-progress --optimize-autoloader update
+      -
+        name: Run PHPStan
+        run: phpstan --no-interaction --ansi --level=max --no-progress -vvv analyse
+
   phpunit:
     name: PHPUnit (${{ matrix.php-version }} ${{ matrix.os }})
     needs:
       - php-syntax
       - php-coding-style
+      - phpstan
     strategy:
       fail-fast: false
       matrix:
@@ -113,13 +141,13 @@ jobs:
           coverage: ${{ matrix.php-coverage }}
       -
         name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       -
         name: Install Composer dependencies
-        run: composer --ansi --no-interaction --no-progress --optimize-autoloader update
+        run: composer --no-interaction --ansi --no-progress --optimize-autoloader update
       -
         name: Run PHPUnit
-        run: composer --ansi --no-interaction run-script test -- ${{ matrix.composer-options }}
+        run: composer --no-interaction --ansi run-script test -- ${{ matrix.composer-options }}
       -
         name: Download Coveralls
         if: matrix.php-coverage && matrix.php-coverage != 'none'
@@ -129,4 +157,4 @@ jobs:
         if: matrix.php-coverage && matrix.php-coverage != 'none'
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: php php-coveralls.phar --coverage_clover=coverage-clover.xml --json_path=coveralls-upload.json --ansi --no-interaction -vvv
+        run: php php-coveralls.phar --no-interaction --ansi --coverage_clover=coverage-clover.xml --json_path=coveralls-upload.json -vvv

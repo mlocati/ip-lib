@@ -7,6 +7,9 @@ use IPLib\Test\TestCase;
 
 class PortsTest extends TestCase
 {
+    /**
+     * @return array{string, bool}[]
+     */
     public function validAddresses()
     {
         return array(
@@ -22,6 +25,8 @@ class PortsTest extends TestCase
      *
      * @param string $address
      * @param bool $hasPort
+     *
+     * @return void
      */
     public function testValidAddresses($address, $hasPort)
     {
@@ -33,13 +38,16 @@ class PortsTest extends TestCase
         }
     }
 
+    /**
+     * @return array{string}[]
+     */
     public function invalidAddresses()
     {
         return array(
-            array('127.0.0.1::80', false),
-            array('[127.0.0.1]:80', true),
-            array('[::1]', false),
-            array('[::1]:a', true),
+            array('127.0.0.1::80'),
+            array('[127.0.0.1]:80'),
+            array('[::1]'),
+            array('[::1]:a'),
         );
     }
 
@@ -47,6 +55,8 @@ class PortsTest extends TestCase
      * @dataProvider invalidAddresses
      *
      * @param string $address
+     *
+     * @return void
      */
     public function testInvalidAddresses($address)
     {

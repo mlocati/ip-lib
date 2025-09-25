@@ -8,6 +8,9 @@ use IPLib\Test\TestCase;
 
 class SingleTest extends TestCase
 {
+    /**
+     * @return array{string|mixed}[]
+     */
     public function invalidProvider()
     {
         return array(
@@ -27,12 +30,17 @@ class SingleTest extends TestCase
      * @dataProvider invalidProvider
      *
      * @param string|mixed $range
+     *
+     * @return void
      */
     public function testInvalid($range)
     {
         $this->assertNull(Single::fromString($range), json_encode($range) . " has been recognized as a single range, but it shouldn't");
     }
 
+    /**
+     * @return array{string, string, string}[]
+     */
     public function validProvider()
     {
         return array(
@@ -49,6 +57,8 @@ class SingleTest extends TestCase
      * @param string $range
      * @param string $short
      * @param string $long
+     *
+     * @return void
      */
     public function testValid($range, $short, $long)
     {

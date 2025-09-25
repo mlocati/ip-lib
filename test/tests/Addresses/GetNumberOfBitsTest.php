@@ -7,6 +7,9 @@ use IPLib\Test\TestCase;
 
 class GetNumberOfBitsTest extends TestCase
 {
+    /**
+     * @return array{string, int}[]
+     */
     public function provideTestCases()
     {
         return array(
@@ -19,7 +22,9 @@ class GetNumberOfBitsTest extends TestCase
      * @dataProvider provideTestCases
      *
      * @param string $address
-     * @param string $expectedNumberOfBits
+     * @param int $expectedNumberOfBits
+     *
+     * @return void
      */
     public function testGetBits($address, $expectedNumberOfBits)
     {

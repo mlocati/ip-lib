@@ -22,6 +22,8 @@ class RangesFromBoundaryCalculatorTest extends TestCase
      * @param \IPLib\Service\RangesFromBoundaryCalculator $calculator
      * @param \IPLib\Address\AddressInterface $from
      * @param \IPLib\Address\AddressInterface $to
+     *
+     * @return void
      */
     public function testInvalid(RangesFromBoundaryCalculator $calculator, AddressInterface $from, AddressInterface $to)
     {
@@ -30,14 +32,16 @@ class RangesFromBoundaryCalculatorTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array{\IPLib\Service\RangesFromBoundaryCalculator, \IPLib\Address\AddressInterface, \IPLib\Address\AddressInterface}[]
      */
     public function provideInvalidCases()
     {
         $ipv4Calculator = self::getCalculator(IPv4::getNumberOfBits());
         $ipv6Calculator = self::getCalculator(IPv6::getNumberOfBits());
         $ipv4 = Factory::addressFromString('127.0.0.1');
+        /** @var IPv4 $ipv4 */
         $ipv6 = Factory::addressFromString('::');
+        /** @var IPv6 $ipv6 */
 
         return array(
             array(
@@ -79,22 +83,28 @@ class RangesFromBoundaryCalculatorTest extends TestCase
      * @param string $from
      * @param string $to
      * @param string[] $expectedRanges
+     *
+     * @return void
      */
     public function testValid($from, $to, array $expectedRanges)
     {
         $fromAddress = Factory::addressFromString($from);
+        $this->assertInstanceof('IPLib\Address\AddressInterface', $fromAddress);
         $toAddress = Factory::addressFromString($to);
+        $this->assertInstanceof('IPLib\Address\AddressInterface', $toAddress);
         $calculator = self::getCalculator($fromAddress->getNumberOfBits());
-        $ranges = array();
-        foreach ($calculator->getRanges($fromAddress, $toAddress) as $range) {
-            $this->assertSame('IPLib\Range\Subnet', get_class($range));
-            $ranges[] = (string) $range;
+        $rangesAsStrings = array();
+        $ranges = $calculator->getRanges($fromAddress, $toAddress);
+        $this->assertNotNull($ranges);
+        foreach ($ranges as $range) {
+            $this->assertInstanceOf('IPLib\Range\Subnet', $range);
+            $rangesAsStrings[] = (string) $range;
         }
-        $this->assertSame($ranges, $expectedRanges);
+        $this->assertSame($rangesAsStrings, $expectedRanges);
     }
 
     /**
-     * @return array
+     * @return array{string, string, string[]}[]
      */
     public function provideValidCases()
     {

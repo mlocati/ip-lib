@@ -7,6 +7,9 @@ use IPLib\Test\TestCase;
 
 class SubnetMaskTest extends TestCase
 {
+    /**
+     * @return array{string, string}[]
+     */
     public function subnetMaskProvider()
     {
         return array(
@@ -45,6 +48,8 @@ class SubnetMaskTest extends TestCase
      *
      * @param string $rangeString
      * @param string $subnetMaskString
+     *
+     * @return void
      */
     public function testSubnetMask($rangeString, $subnetMaskString)
     {

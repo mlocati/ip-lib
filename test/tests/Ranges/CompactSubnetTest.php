@@ -11,6 +11,9 @@ use IPLib\Test\TestCase;
  */
 class CompactSubnetTest extends TestCase
 {
+    /**
+     * @return array{string, string, string, string, 4?: bool}[]
+     */
     public function provideTestCases()
     {
         return array(
@@ -34,6 +37,8 @@ class CompactSubnetTest extends TestCase
      * @param string $expectedStartAddressString
      * @param string $expectedEndAddressString
      * @param bool $inputIsCompact
+     *
+     * @return void
      */
     public function testBoundaries($inputString, $expectedRangeString, $expectedStartAddressString, $expectedEndAddressString, $inputIsCompact = true)
     {

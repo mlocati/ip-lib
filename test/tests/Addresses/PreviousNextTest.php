@@ -7,6 +7,9 @@ use IPLib\Test\TestCase;
 
 class PreviousNextTest extends TestCase
 {
+    /**
+     * @return array{string, string, string}[]
+     */
     public function previousNextProvider()
     {
         return array(
@@ -36,6 +39,8 @@ class PreviousNextTest extends TestCase
      * @param string $addressString
      * @param string $previousString
      * @param string $nextString
+     *
+     * @return void
      */
     public function testPreviousNext($addressString, $previousString, $nextString)
     {

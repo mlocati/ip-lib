@@ -7,6 +7,9 @@ use IPLib\Test\TestCase;
 
 class RangesFromBoundariesTest extends TestCase
 {
+    /**
+     * @return array{string|mixed, string|mixed}[]
+     */
     public function invalidProvider()
     {
         return array(
@@ -24,16 +27,21 @@ class RangesFromBoundariesTest extends TestCase
      *
      * @param string|mixed $from
      * @param string|mixed $to
+     *
+     * @return void
      */
     public function testInvalid($from, $to)
     {
         $range = Factory::rangesFromBoundaries($from, $to);
-        $this->assertNull($range, "Boundaries '{$from}' -> '{$to}' should not be resolved to an address");
+        $this->assertNull($range, "Boundaries '" . json_encode($from) . "' -> '" . json_encode($to) . "' should not be resolved to an address");
         list($from, $to) = array($to, $from);
         $range = Factory::rangesFromBoundaries($from, $to);
-        $this->assertNull($range, "Boundaries '{$from}' -> '{$to}' should not be resolved to an address");
+        $this->assertNull($range, "Boundaries '" . json_encode($from) . "' -> '" . json_encode($to) . "' should not be resolved to an address");
     }
 
+    /**
+     * @return array{string, string|null, string[]}[]
+     */
     public function validProvider()
     {
         return array(
@@ -74,6 +82,8 @@ class RangesFromBoundariesTest extends TestCase
      * @param string $from
      * @param string|null $to
      * @param string[] $expected
+     *
+     * @return void
      */
     public function testValid($from, $to, array $expected)
     {
@@ -82,6 +92,7 @@ class RangesFromBoundariesTest extends TestCase
         $this->assertSameIPRanges($expected, $ranges);
         foreach ($ranges as $range) {
             $range2 = Factory::rangeFromString((string) $range);
+            $this->assertInstanceOf('IPLib\Range\RangeInterface', $range2);
             $this->assertSame((string) $range, (string) $range2, 'Same range');
             $this->assertSame((string) $range->getStartAddress(), (string) $range2->getStartAddress(), 'Same start address');
             $this->assertSame((string) $range->getEndAddress(), (string) $range2->getEndAddress(), 'Same end address');
@@ -92,11 +103,17 @@ class RangesFromBoundariesTest extends TestCase
         $this->assertSameIPRanges($expected, $ranges);
     }
 
+    /**
+     * @param string[] $expected
+     * @param mixed[] $calculatedInstances
+     *
+     * @return void
+     */
     private function assertSameIPRanges(array $expected, array $calculatedInstances)
     {
         $calculatedStrings = array();
         foreach ($calculatedInstances as $calculatedInstance) {
-            $this->assertSame('IPLib\Range\Subnet', get_class($calculatedInstance));
+            $this->assertInstanceOf('IPLib\Range\Subnet', $calculatedInstance);
             $calculatedStrings[] = (string) $calculatedInstance;
         }
         $this->assertSame($expected, $calculatedStrings);

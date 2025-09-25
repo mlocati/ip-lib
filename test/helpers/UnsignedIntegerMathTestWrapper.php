@@ -13,6 +13,8 @@ class UnsignedIntegerMathTestWrapper extends UnsignedIntegerMath
 
     /**
      * @param int|null $value
+     *
+     * @return void
      */
     public function setMaxSignedInt($value)
     {

@@ -7,6 +7,9 @@ use IPLib\Test\TestCase;
 
 class BoundariesTest extends TestCase
 {
+    /**
+     * @return array{string, string, string}[]
+     */
     public function boundariesProvider()
     {
         return array(
@@ -29,6 +32,8 @@ class BoundariesTest extends TestCase
      * @param string $rangeString
      * @param string $startAddressString
      * @param string $endAddressString
+     *
+     * @return void
      */
     public function testBoundaries($rangeString, $startAddressString, $endAddressString)
     {

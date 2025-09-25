@@ -7,6 +7,9 @@ use IPLib\Test\TestCase;
 
 class AddressAtOffsetTest extends TestCase
 {
+    /**
+     * @return array{string, int|numeric-string|mixed, string|null}[]
+     */
     public function ipProvider()
     {
         return array(
@@ -41,11 +44,13 @@ class AddressAtOffsetTest extends TestCase
      * @param string $rangeString
      * @param int|numeric-string|mixed $n
      * @param string|null $expected
+     *
+     * @return void
      */
     public function testAddressAtOffset($rangeString, $n, $expected)
     {
         $range = Factory::rangeFromString($rangeString);
-
+        $this->assertInstanceOf('IPLib\Range\RangeInterface', $range);
         $result = $range->getAddressAtOffset($n);
         if ($result !== null) {
             $result = $result->toString();
@@ -56,6 +61,6 @@ class AddressAtOffsetTest extends TestCase
             $expectedString = 'NULL';
         }
 
-        $this->assertSame($expected, $result, "'{$rangeString}' with offset {$n} must be '{$expectedString}'");
+        $this->assertSame($expected, $result, "'{$rangeString}' with offset " . json_encode($n) . " must be '{$expectedString}'");
     }
 }

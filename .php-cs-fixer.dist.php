@@ -232,8 +232,6 @@ return $config
         'phpdoc_var_annotation_correct_order' => true,
         // Classes must be in a path that matches their namespace, be at least one namespace deep and the class name should match the file name.
         'psr_autoloading' => true,
-        // Local, dynamic and directly referenced variables should not be assigned and directly returned by a function or method.
-        'return_assignment' => true,
         // Adjust spacing around colon in return type declarations and backed enum types.
         'return_type_declaration' => true,
         // Instructions must be terminated with a semicolon.
