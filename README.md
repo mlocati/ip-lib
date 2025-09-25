@@ -1,5 +1,5 @@
 [![Tests](https://github.com/mlocati/ip-lib/actions/workflows/tests.yml/badge.svg)](https://github.com/mlocati/ip-lib/actions?query=workflow%3A%22tests%22)
-[![Code Coverage](https://coveralls.io/repos/github/mlocati/ip-lib/badge.svg?branch=main)](https://coveralls.io/github/mlocati/ip-lib?branch=main)
+![Code Coverage](https://img.shields.io/coverallsCoverage/github/mlocati/ip-lib?branch=main&label=Coverage)
 ![Packagist Downloads](https://img.shields.io/packagist/dt/mlocati/ip-lib?label=Downloads)
 [![Open in Gitpod](https://img.shields.io/badge/Open%20in-Gitpod-%232cb64c?logo=gitpod)](https://gitpod.io/#https://github.com/mlocati/ip-lib)
 
