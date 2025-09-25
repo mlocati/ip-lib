@@ -8,6 +8,9 @@ use IPLib\Test\TestCase;
 
 class RangeTypeTest extends TestCase
 {
+    /**
+     * @return array{string, int}[]
+     */
     public function ipProvider()
     {
         return array(
@@ -276,6 +279,8 @@ class RangeTypeTest extends TestCase
      *
      * @param string $address
      * @param int $expectedType
+     *
+     * @return void
      */
     public function testRangeTypes($address, $expectedType)
     {
@@ -285,6 +290,9 @@ class RangeTypeTest extends TestCase
         $this->assertSame($expectedType, $detectedType, sprintf("'%s' has been detected as\n%s\ninstead of\n%s", $ip->toString(), Type::getName($detectedType), Type::getName($expectedType)));
     }
 
+    /**
+     * @return array{int|mixed, string}[]
+     */
     public function rangeTypeNameProvider()
     {
         return array(
@@ -299,6 +307,8 @@ class RangeTypeTest extends TestCase
      *
      * @param int|mixed $type
      * @param string $expectedName
+     *
+     * @return void
      */
     public function testRangeTypeName($type, $expectedName)
     {

@@ -15,6 +15,8 @@ abstract class DBTestCase extends TestCase
      * {@inheritdoc}
      *
      * @see \IPLib\Test\TestCaseBase::doSetUp()
+     *
+     * @return void
      */
     protected function doSetUp()
     {

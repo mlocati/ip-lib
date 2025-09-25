@@ -10,6 +10,9 @@ use IPLib\Test\TestCase;
  */
 class MixedSyntaxTest extends TestCase
 {
+    /**
+     * @return array{string, string, string, string, string, string}[]
+     */
     public function validMixedSyntaxProvider()
     {
         return array(
@@ -73,20 +76,27 @@ class MixedSyntaxTest extends TestCase
      * @param string $normalizedMixedRepresentationLS
      * @param string $normalizedMixedRepresentationSL
      * @param string $normalizedMixedRepresentationLL
+     *
+     * @return void
      */
     public function testValidMixedSyntax($mixedRepresentation, $expectedShortIPv6Representation, $normalizedMixedRepresentationSS, $normalizedMixedRepresentationLS, $normalizedMixedRepresentationSL, $normalizedMixedRepresentationLL)
     {
         $ip = Factory::addressFromString($mixedRepresentation);
-        $this->assertNotNull($ip, "Unable to parse the IPv6+IPv4 mixed syntax '{$mixedRepresentation}'");
+        $this->assertInstanceOf('IPLib\Address\IPv6', $ip, "Unable to parse the IPv6+IPv4 mixed syntax '{$mixedRepresentation}'");
         $calculatedShortSyntax = $ip->toString(false);
         $this->assertSame($expectedShortIPv6Representation, $calculatedShortSyntax, 'The default short IPv6 representation is wrong');
-        $this->assertSame($expectedShortIPv6Representation, Factory::addressFromString($calculatedShortSyntax)->toString(false), 'Re-parsing the representation failed');
+        $ip2 = Factory::addressFromString($calculatedShortSyntax);
+        $this->assertInstanceOf('IPLib\Address\IPv6', $ip2);
+        $this->assertSame($expectedShortIPv6Representation, $ip2->toString(false), 'Re-parsing the representation failed');
         $this->assertSame($normalizedMixedRepresentationSS, $ip->toMixedIPv6IPv4String(), 'The mixed IPv6+IPv4 representation is wrong (IPv6 short, IPv4 short)');
         $this->assertSame($normalizedMixedRepresentationLS, $ip->toMixedIPv6IPv4String(true), 'The mixed IPv6+IPv4 representation is wrong (IPv6 long, IPv4 short)');
         $this->assertSame($normalizedMixedRepresentationSL, $ip->toMixedIPv6IPv4String(false, true), 'The mixed IPv6+IPv4 representation is wrong (IPv6 short, IPv4 long)');
         $this->assertSame($normalizedMixedRepresentationLL, $ip->toMixedIPv6IPv4String(true, true), 'The mixed IPv6+IPv4 representation is wrong (IPv6 long, IPv4 long)');
     }
 
+    /**
+     * @return array{string}[]
+     */
     public function invalidMixedSyntaxProvider()
     {
         return array(
@@ -101,6 +111,8 @@ class MixedSyntaxTest extends TestCase
      * @dataProvider invalidMixedSyntaxProvider
      *
      * @param string $mixedRepresentation
+     *
+     * @return void
      */
     public function testInalidMixedSyntax($mixedRepresentation)
     {

@@ -8,6 +8,9 @@ use IPLib\Test\TestCase;
 
 class PatternTest extends TestCase
 {
+    /**
+     * @return array{string|mixed}[]
+     */
     public function invalidProvider()
     {
         return array(
@@ -30,12 +33,17 @@ class PatternTest extends TestCase
      * @dataProvider invalidProvider
      *
      * @param string|mixed $range
+     *
+     * @return void
      */
     public function testInvalid($range)
     {
         $this->assertNull(Pattern::fromString($range), json_encode($range) . " has been recognized as a pattern range, but it shouldn't");
     }
 
+    /**
+     * @return array{string, string, string}[]
+     */
     public function validProvider()
     {
         return array(
@@ -66,6 +74,8 @@ class PatternTest extends TestCase
      * @param string $range
      * @param string $short
      * @param string $long
+     *
+     * @return void
      */
     public function testValid($range, $short, $long)
     {

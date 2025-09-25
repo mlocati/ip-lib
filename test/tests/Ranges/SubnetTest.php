@@ -8,6 +8,9 @@ use IPLib\Test\TestCase;
 
 class SubnetTest extends TestCase
 {
+    /**
+     * @return array{string|mixed}[]
+     */
     public function invalidProvider()
     {
         return array(
@@ -29,12 +32,17 @@ class SubnetTest extends TestCase
      * @dataProvider invalidProvider
      *
      * @param string|mixed $range
+     *
+     * @return void
      */
     public function testInvalid($range)
     {
         $this->assertNull(Subnet::fromString($range), json_encode($range) . " has been recognized as a subnet range, but it shouldn't");
     }
 
+    /**
+     * @return array{string, string, string}[]
+     */
     public function validProvider()
     {
         return array(
@@ -51,6 +59,8 @@ class SubnetTest extends TestCase
      * @param string $range
      * @param string $short
      * @param string $long
+     *
+     * @return void
      */
     public function testValid($range, $short, $long)
     {

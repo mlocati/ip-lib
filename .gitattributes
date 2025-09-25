@@ -1,4 +1,5 @@
 /test/ export-ignore
 /.* export-ignore
-/*.yml export-ignore
+/*.neon export-ignore
 /*.xml export-ignore
+/*.yml export-ignore

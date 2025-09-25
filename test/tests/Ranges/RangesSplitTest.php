@@ -8,6 +8,9 @@ use OutOfBoundsException;
 
 class RangesSplitTest extends TestCase
 {
+    /**
+     * @return array{string, int, string}[]
+     */
     public function invalidCasesProvider()
     {
         $networkPrefixTooSmall = 'The value of the $networkPrefix parameter can\'t be smaller than the network prefix of the range (%s)';
@@ -57,6 +60,8 @@ class RangesSplitTest extends TestCase
      * @param string $inputString
      * @param int $networkPrefix
      * @param string $expectedMessage
+     *
+     * @return void
      */
     public function testInvalidSplit($inputString, $networkPrefix, $expectedMessage)
     {
@@ -72,6 +77,9 @@ class RangesSplitTest extends TestCase
         $this->assertSame($expectedMessage, $exception->getMessage());
     }
 
+    /**
+     * @return array{string, int, string[], 3?: bool}[]
+     */
     public function validCasesProvider()
     {
         return array(
@@ -593,9 +601,9 @@ class RangesSplitTest extends TestCase
      * @param string $inputString
      * @param int $networkPrefix
      * @param string[] $expectedValues
-     * @param int|null $minNetworkPrefixFor32BitSystems
-     * @param int|null $minNetworkPrefixFor64BitSystems
      * @param bool $forceSubnet
+     *
+     * @return void
      */
     public function testValidSplit($inputString, $networkPrefix, array $expectedValues, $forceSubnet = false)
     {

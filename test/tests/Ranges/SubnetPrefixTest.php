@@ -7,6 +7,9 @@ use IPLib\Test\TestCase;
 
 class SubnetPrefixTest extends TestCase
 {
+    /**
+     * @return array{string, int}[]
+     */
     public function ipProvider()
     {
         $tests = array();
@@ -29,6 +32,8 @@ class SubnetPrefixTest extends TestCase
      *
      * @param string $rangeString
      * @param int $expectedPrefix
+     *
+     * @return void
      */
     public function testSubnetPrefix($rangeString, $expectedPrefix)
     {

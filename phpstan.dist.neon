@@ -1,0 +1,11 @@
+parameters:
+  level: max
+  bootstrapFiles:
+    - test/bootstrap.php
+  paths:
+   - src
+   - test
+   - ip-lib.php
+  excludePaths:
+    - # Return type mixed of method IPLib\Test\TestCase4::...() is not covariant with return type void of method PHPUnit\Framework\TestCase::...()
+      test/tests/TestCase4.php

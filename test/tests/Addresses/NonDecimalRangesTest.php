@@ -7,6 +7,9 @@ use IPLib\Test\TestCase;
 
 class NonDecimalRangesTest extends TestCase
 {
+    /**
+     * @return array{string, bool, 2?: string|null}[]
+     */
     public function casesProvider()
     {
         return array(
@@ -50,6 +53,8 @@ class NonDecimalRangesTest extends TestCase
      * @param string $input
      * @param bool $parseNonDecimal
      * @param string|null $expectedStringRepresentation
+     *
+     * @return void
      */
     public function testCases($input, $parseNonDecimal, $expectedStringRepresentation = null)
     {

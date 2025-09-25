@@ -7,6 +7,9 @@ use IPLib\Test\TestCase;
 
 class AddTest extends TestCase
 {
+    /**
+     * @return array{string, string, string|null}[]
+     */
     public function provideCases()
     {
         return array(
@@ -46,6 +49,8 @@ class AddTest extends TestCase
      * @param string $addressA
      * @param string $addressB
      * @param string|null $expectedSum
+     *
+     * @return void
      */
     public function testAdd($addressA, $addressB, $expectedSum)
     {

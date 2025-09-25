@@ -7,6 +7,9 @@ use IPLib\Test\TestCase;
 
 class ZoneIdTest extends TestCase
 {
+    /**
+     * @return array{string, bool}[]
+     */
     public function validAddresses()
     {
         return array(
@@ -20,6 +23,8 @@ class ZoneIdTest extends TestCase
      *
      * @param string $address
      * @param bool $hasZoneId
+     *
+     * @return void
      */
     public function testValidAddresses($address, $hasZoneId)
     {
@@ -31,6 +36,9 @@ class ZoneIdTest extends TestCase
         }
     }
 
+    /**
+     * @return array{string}[]
+     */
     public function invalidAddresses()
     {
         return array(
@@ -44,6 +52,8 @@ class ZoneIdTest extends TestCase
      * @dataProvider invalidAddresses
      *
      * @param string $address
+     *
+     * @return void
      */
     public function testInvalidAddresses($address)
     {

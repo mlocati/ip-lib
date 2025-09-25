@@ -7,6 +7,9 @@ use IPLib\Test\TestCase;
 
 class ShiftTest extends TestCase
 {
+    /**
+     * @return array{string, int, string}[]
+     */
     public function provideRightShiftCases()
     {
         return array(
@@ -155,6 +158,8 @@ class ShiftTest extends TestCase
      * @param string $address
      * @param int $bits
      * @param string $expected
+     *
+     * @return void
      */
     public function testRightShift($address, $bits, $expected)
     {
@@ -164,6 +169,9 @@ class ShiftTest extends TestCase
         $this->assertSame($expected, (string) $shifted);
     }
 
+    /**
+     * @return array{string, int, string}[]
+     */
     public function provideLeftShiftCases()
     {
         return array(
@@ -327,6 +335,8 @@ class ShiftTest extends TestCase
      * @param string $address
      * @param int $bits
      * @param string $expected
+     *
+     * @return void
      */
     public function testLeftShift($address, $bits, $expected)
     {

@@ -24,6 +24,9 @@ class BinaryMathTest extends TestCase
         self::$math = BinaryMath::getInstance();
     }
 
+    /**
+     * @return void
+     */
     public function testSingleton()
     {
         $this->assertSame(self::$math, BinaryMath::getInstance());
@@ -42,6 +45,8 @@ class BinaryMathTest extends TestCase
      *
      * @param string $value
      * @param string $expectedResult
+     *
+     * @return void
      */
     public function testReduce($value, $expectedResult)
     {
@@ -50,7 +55,7 @@ class BinaryMathTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array{string, string}[]
      */
     public function provideReduceCases()
     {
@@ -68,7 +73,9 @@ class BinaryMathTest extends TestCase
      *
      * @param string $a
      * @param string $b
-     * @param string $expectedResult
+     * @param int $expectedResult
+     *
+     * @return void
      */
     public function testCompare($a, $b, $expectedResult)
     {
@@ -77,7 +84,7 @@ class BinaryMathTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array{string, string, int}[]
      */
     public function provideCompareCases()
     {
@@ -106,6 +113,8 @@ class BinaryMathTest extends TestCase
      *
      * @param string $value
      * @param string $expectedResult
+     *
+     * @return void
      */
     public function testIncrement($value, $expectedResult)
     {
@@ -114,7 +123,7 @@ class BinaryMathTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array{string, string}[]
      */
     public function provideIncrementCases()
     {
@@ -135,6 +144,8 @@ class BinaryMathTest extends TestCase
      * @param string $operand1
      * @param string $operand2
      * @param string $expectedResult
+     *
+     * @return void
      */
     public function testAnd($operand1, $operand2, $expectedResult)
     {
@@ -143,7 +154,7 @@ class BinaryMathTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array{string, string, string}[]
      */
     public function provideAndCases()
     {
@@ -167,6 +178,8 @@ class BinaryMathTest extends TestCase
      * @param string $operand1
      * @param string $operand2
      * @param string $expectedResult
+     *
+     * @return void
      */
     public function testOr($operand1, $operand2, $expectedResult)
     {
@@ -175,7 +188,7 @@ class BinaryMathTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array{string, string, string}[]
      */
     public function provideOrCases()
     {
@@ -198,6 +211,8 @@ class BinaryMathTest extends TestCase
      *
      * @param int $exponent
      * @param int|string $expectedResult
+     *
+     * @return void
      */
     public function testPow2string($exponent, $expectedResult)
     {
@@ -207,7 +222,7 @@ class BinaryMathTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array{int, int|string}[]
      */
     public function providePow2stringCases()
     {
@@ -221,12 +236,19 @@ class BinaryMathTest extends TestCase
             array(32, PHP_INT_SIZE > 4 ? 0x100000000 : '4294967296'),
             array(33, PHP_INT_SIZE > 4 ? 0x200000000 : '8589934592'),
             array(62, PHP_INT_SIZE > 4 ? 0x4000000000000000 : '4611686018427387904'),
+            // @phpstan-ignore greater.alwaysFalse
             array(63, PHP_INT_SIZE > 8 ? 0x8000000000000000 : '9223372036854775808'),
+            // @phpstan-ignore greater.alwaysFalse
             array(64, PHP_INT_SIZE > 8 ? 0x10000000000000000 : '18446744073709551616'),
+            // @phpstan-ignore greater.alwaysFalse
             array(65, PHP_INT_SIZE > 8 ? 0x20000000000000000 : '36893488147419103232'),
+            // @phpstan-ignore greater.alwaysFalse
             array(126, PHP_INT_SIZE > 8 ? 0x20000000000000000000000000000000 : '85070591730234615865843651857942052864'),
+            // @phpstan-ignore greater.alwaysFalse
             array(127, PHP_INT_SIZE > 9 ? 0x40000000000000000000000000000000 : '170141183460469231731687303715884105728'),
+            // @phpstan-ignore greater.alwaysFalse
             array(128, PHP_INT_SIZE > 9 ? 0x80000000000000000000000000000000 : '340282366920938463463374607431768211456'),
+            // @phpstan-ignore greater.alwaysFalse
             array(129, PHP_INT_SIZE > 9 ? 0x100000000000000000000000000000000 : '680564733841876926926749214863536422912'),
         );
     }
@@ -236,6 +258,8 @@ class BinaryMathTest extends TestCase
      *
      * @param mixed $input
      * @param string $expectedResult
+     *
+     * @return void
      */
     public function testNormalizeIntegerString($input, $expectedResult = '')
     {
@@ -244,7 +268,7 @@ class BinaryMathTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array{mixed, 1?: string}[]
      */
     public function provideNormalizeIntegerStringCases()
     {
@@ -280,8 +304,10 @@ class BinaryMathTest extends TestCase
     /**
      * @dataProvider provideAdd1ToIntegerStringCases
      *
-     * @param string $input
-     * @param string $expectedResult
+     * @param numeric-string $input
+     * @param numeric-string $expectedResult
+     *
+     * @return void
      */
     public function testAdd1ToIntegerString($input, $expectedResult)
     {
@@ -293,7 +319,7 @@ class BinaryMathTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array{numeric-string, numeric-string}[]
      */
     public function provideAdd1ToIntegerStringCases()
     {

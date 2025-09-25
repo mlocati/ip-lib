@@ -7,6 +7,9 @@ use IPLib\Test\TestCase;
 
 class ValidTest extends TestCase
 {
+    /**
+     * @return array{string, string, string}[]
+     */
     public function validAddressesProvider()
     {
         return array(
@@ -28,6 +31,8 @@ class ValidTest extends TestCase
      * @param string $address
      * @param string $short
      * @param string $long
+     *
+     * @return void
      */
     public function testValidAddresses($address, $short, $long)
     {

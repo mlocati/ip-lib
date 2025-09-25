@@ -7,6 +7,9 @@ use IPLib\Test\DBTestCase;
 
 class MembershipTest extends DBTestCase
 {
+    /**
+     * @return array{string, string, bool}[]
+     */
     public function addressMembershipProvider()
     {
         return array(
@@ -43,6 +46,8 @@ class MembershipTest extends DBTestCase
      * @param string $address
      * @param string $range
      * @param bool $contained
+     *
+     * @return void
      */
     public function testAddressMembership($address, $range, $contained)
     {
@@ -83,6 +88,9 @@ class MembershipTest extends DBTestCase
         }
     }
 
+    /**
+     * @return array{string, string, bool}[]
+     */
     public function rangeMembershipProvider()
     {
         return array(
@@ -107,13 +115,15 @@ class MembershipTest extends DBTestCase
      * @param string $rangeString
      * @param string $otherRangeString
      * @param bool $contained
+     *
+     * @return void
      */
     public function testRangeMembership($rangeString, $otherRangeString, $contained)
     {
         $range = Factory::rangeFromString($rangeString);
-        $this->assertNotNull($range, "'{$rangeString}' has not been recognized as a range");
+        $this->assertInstanceOf('IPLib\Range\RangeInterface', $range, "'{$rangeString}' has not been recognized as a range");
         $otherRange = Factory::rangeFromString($otherRangeString);
-        $this->assertNotNull($range, "'{$otherRangeString}' has not been recognized as a range");
+        $this->assertInstanceOf('IPLib\Range\RangeInterface', $otherRange, "'{$otherRangeString}' has not been recognized as a range");
         $this->assertSame(
             $contained,
             $range->containsRange($otherRange),
@@ -125,6 +135,9 @@ class MembershipTest extends DBTestCase
         );
     }
 
+    /**
+     * @return array{string, string}[]
+     */
     public function sameRangeProvider()
     {
         return array(
@@ -137,11 +150,15 @@ class MembershipTest extends DBTestCase
      *
      * @param string $range1
      * @param string $range2
+     *
+     * @return void
      */
     public function testSameRange($range1, $range2)
     {
         $rangeObject1 = Factory::rangeFromString($range1);
+        $this->assertInstanceOf('IPLib\Range\RangeInterface', $rangeObject1);
         $rangeObject2 = Factory::rangeFromString($range2);
+        $this->assertInstanceOf('IPLib\Range\RangeInterface', $rangeObject2);
         $this->assertTrue($rangeObject1->containsRange($rangeObject1), "{$range1} should contain {$range1}");
         $this->assertTrue($rangeObject2->containsRange($rangeObject2), "{$range2} should contain {$range2}");
         $this->assertTrue($rangeObject1->containsRange($rangeObject2), "{$range1} should contain {$range2}");

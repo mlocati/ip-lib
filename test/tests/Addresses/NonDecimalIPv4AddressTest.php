@@ -20,6 +20,9 @@ class NonDecimalIPv4AddressTest extends TestCase
 
     const HEX_LONG = 'xl';
 
+    /**
+     * @return array{0: string, 1: bool, 2?: array<string, string>|null}[]
+     */
     public function casesProvider()
     {
         return array(
@@ -195,7 +198,9 @@ class NonDecimalIPv4AddressTest extends TestCase
      *
      * @param string $input
      * @param bool $parseNonDecimal
-     * @param array|null $expected
+     * @param array<string, string>|null $expected
+     *
+     * @return void
      */
     public function testCases($input, $parseNonDecimal, $expected = null)
     {
@@ -231,7 +236,7 @@ class NonDecimalIPv4AddressTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array{string|mixed, 1?: int, 2?: string}[]
      */
     public function newCasesProvider()
     {
@@ -275,6 +280,8 @@ class NonDecimalIPv4AddressTest extends TestCase
      * @param string|mixed $input
      * @param int $flags
      * @param string $expected
+     *
+     * @return void
      */
     public function testNewCases($input, $flags = 0, $expected = '')
     {

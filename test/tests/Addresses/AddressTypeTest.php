@@ -8,6 +8,9 @@ use IPLib\Test\TestCase;
 
 class AddressTypeTest extends TestCase
 {
+    /**
+     * @return array{string, int}[]
+     */
     public function ipProvider()
     {
         return array(
@@ -271,6 +274,8 @@ class AddressTypeTest extends TestCase
      *
      * @param string $address
      * @param int $expectedType
+     *
+     * @return void
      */
     public function testAddressTypes($address, $expectedType)
     {
@@ -280,10 +285,13 @@ class AddressTypeTest extends TestCase
         $this->assertSame($expectedType, $detectedType, sprintf("'%s' has been detected as\n%s\ninstead of\n%s", $ip->toString(), Type::getName($detectedType), Type::getName($expectedType)));
     }
 
+    /**
+     * @return array{int|mixed, string}[]
+     */
     public function addressTypeNameProvider()
     {
         return array(
-            array(null, 'Unknown type ()'),
+            array(null, 'Unknown type'),
             array('x', 'Unknown type (x)'),
             array(-1, 'Unknown type (-1)'),
         );
@@ -294,6 +302,8 @@ class AddressTypeTest extends TestCase
      *
      * @param int|mixed $type
      * @param string $expectedName
+     *
+     * @return void
      */
     public function testAddressTypeName($type, $expectedName)
     {

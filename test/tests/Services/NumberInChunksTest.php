@@ -28,9 +28,11 @@ class NumberInChunksTest extends TestCase
     /**
      * @dataProvider provideStringConversionCases
      *
-     * @param string $input
+     * @param numeric-string $input
      * @param int[] $expectedBytes
      * @param int[] $expectedWords
+     *
+     * @return void
      */
     public function testStringConversion($input, array $expectedBytes, array $expectedWords)
     {
@@ -53,7 +55,7 @@ class NumberInChunksTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array{numeric-string, int[], int[]}[]
      */
     public function provideStringConversionCases()
     {
@@ -104,9 +106,11 @@ class NumberInChunksTest extends TestCase
     /**
      * @dataProvider provideIntegerConversionCases
      *
-     * @param int $input
+     * @param int|mixed $input
      * @param int[] $expectedBytes
      * @param int[] $expectedWords
+     *
+     * @return void
      */
     public function testIntegerConversion($input, array $expectedBytes, array $expectedWords)
     {
@@ -122,7 +126,7 @@ class NumberInChunksTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array{int, int[], int[]}[]
      */
     public function provideIntegerConversionCases()
     {
@@ -207,6 +211,8 @@ class NumberInChunksTest extends TestCase
      * @param bool $expectedNegative
      * @param int[] $expectedBytes
      * @param int[] $expectedWords
+     *
+     * @return void
      */
     public function testAdd($inputA, $inputB, $expectedNegative, $expectedBytes, $expectedWords)
     {
@@ -240,7 +246,7 @@ class NumberInChunksTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array{int|numeric-string, int|numeric-string, bool, int[], int[]}[]
      */
     public function provideAddCases()
     {
@@ -261,6 +267,9 @@ class NumberInChunksTest extends TestCase
         );
     }
 
+    /**
+     * @return void
+     */
     public function testAddInvalid()
     {
         $a = NumberInChunks::fromInteger(1, NumberInChunks::CHUNKSIZE_BYTES);
