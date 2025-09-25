@@ -1,6 +1,6 @@
-[![Tests](https://github.com/mlocati/ip-lib/actions/workflows/tests.yml/badge.svg)](https://github.com/mlocati/ip-lib/actions?query=workflow%3A%22tests%22)
-![Code Coverage](https://img.shields.io/coverallsCoverage/github/mlocati/ip-lib?branch=main&label=Coverage)
-![Packagist Downloads](https://img.shields.io/packagist/dt/mlocati/ip-lib?label=Downloads)
+[![Tests](https://github.com/mlocati/ip-lib/actions/workflows/tests.yml/badge.svg)](https://github.com/mlocati/ip-lib/actions/workflows/tests.yml)
+[![Code Coverage](https://img.shields.io/coverallsCoverage/github/mlocati/ip-lib?branch=main&label=Coverage)](https://coveralls.io/github/mlocati/ip-lib?branch=main)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/mlocati/ip-lib?label=Downloads)](https://packagist.org/packages/mlocati/ip-lib)
 [![Open in Gitpod](https://img.shields.io/badge/Open%20in-Gitpod-%232cb64c?logo=gitpod)](https://gitpod.io/#https://github.com/mlocati/ip-lib)
 
 # IPLib - Handle IPv4, IPv6 and IP ranges
