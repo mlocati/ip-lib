@@ -235,6 +235,21 @@ $ranges = \IPLib\Factory::getRangesFromBoundaries('192.168.0.0', '192.168.0.5');
 echo implode(' ', $ranges);
 ```
 
+### Retrieve a range that contains a set of IP addresses
+
+You can use `IPLib\Factory::getRangeFromAddresses()` to retrieve the minimal IP range that contains all the provided IP addresses:
+
+```php
+$range = \IPLib\Factory::getRangeFromAddresses(array(
+  '1.2.2.225',
+  '1.2.1.124',
+  '1.2.3.237',
+));
+
+// This will print 1.2.0.0/22
+echo (string) $range;
+```
+
 ### Retrieve the boundaries of a range
 
 ```php

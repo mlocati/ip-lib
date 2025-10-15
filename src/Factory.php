@@ -159,6 +159,53 @@ class Factory
     }
 
     /**
+     * Calculate the minimal range that contains all the specified addresses.
+     *
+     * @param array<non-empty-string|\IPLib\Address\AddressInterface|mixed> $addresses
+     * @param int $flags
+     *
+     * @return \IPLib\Range\RangeInterface|null Returns NULL if $addresses is empty, if it contains invalid addresses, or if the addresses aren't compatible (for example, both IPv4 and IPv6 addresses)
+     *
+     * @since 1.22.0
+     */
+    public static function getRangeFromAddresses(array $addresses, $flags = 0)
+    {
+        $min = null;
+        $max = null;
+        $numberOfBits = null;
+        foreach ($addresses as $address) {
+            if (!$address instanceof AddressInterface) {
+                $address = Factory::parseAddressString($address, $flags);
+                if ($address === null) {
+                    return null;
+                }
+            }
+            if ($numberOfBits === null) {
+                $min = $address;
+                $max = $address;
+                $numberOfBits = $address->getNumberOfBits();
+            } elseif ($numberOfBits !== $address->getNumberOfBits()) {
+                return null;
+            } else {
+                /** @var AddressInterface $min */
+                /** @var AddressInterface $max */
+                $comparable = $address->getComparableString();
+                if ($min->getComparableString() > $comparable) {
+                    $min = $address;
+                }
+                if ($max->getComparableString() < $comparable) {
+                    $max = $address;
+                }
+            }
+        }
+        if ($numberOfBits === null) {
+            return null;
+        }
+
+        return static::rangeFromBoundaryAddresses($min, $max);
+    }
+
+    /**
      * @deprecated since 1.17.0: use the getRangesFromBoundaries() method instead.
      * For upgrading:
      * - if $supportNonDecimalIPv4 is true, use the ParseStringFlag::IPV4_MAYBE_NON_DECIMAL flag
@@ -265,7 +312,7 @@ class Factory
      * @param string|\IPLib\Address\AddressInterface|mixed $to
      * @param int $flags
      *
-     * @return \IPLib\Address\AddressInterface[]|null[]|false[]
+     * @return array{\IPLib\Address\AddressInterface|false|null, \IPLib\Address\AddressInterface|false|null}
      */
     private static function parseBoundaries($from, $to, $flags = 0)
     {
@@ -285,6 +332,7 @@ class Factory
             }
             $result[] = $value;
         }
+        /** @var array{\IPLib\Address\AddressInterface|false|null, \IPLib\Address\AddressInterface|false|null} $result */
         if ($result[0] && $result[1] && strcmp($result[0]->getComparableString(), $result[1]->getComparableString()) > 0) {
             $result = array($result[1], $result[0]);
         }
