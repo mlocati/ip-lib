@@ -108,6 +108,13 @@ class Type
     const T_CGNAT = 14;
 
     /**
+     * Address reserved for documentation.
+     * 
+     * @var int
+     */
+    const T_DOCUMENTATION = 15;
+
+    /**
      * Get the name of a type.
      *
      * @param int|mixed $type
@@ -145,6 +152,8 @@ class Type
                 return 'Public address';
             case static::T_CGNAT:
                 return 'Carrier-grade NAT';
+            case static::T_DOCUMENTATION:
+                return 'Documentation address';
             default:
                 return $type === null ? 'Unknown type' : sprintf('Unknown type (%s)', print_r($type, true));
         }

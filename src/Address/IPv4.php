@@ -350,7 +350,7 @@ class IPv4 implements AddressInterface
                 // RFC 5735
                 '192.0.0.0/24' => array(RangeType::T_RESERVED),
                 // RFC 5735
-                '192.0.2.0/24' => array(RangeType::T_RESERVED),
+                '192.0.2.0/24' => array(RangeType::T_DOCUMENTATION),
                 // RFC 5735
                 '192.88.99.0/24' => array(RangeType::T_ANYCASTRELAY),
                 // RFC 5735
@@ -358,11 +358,11 @@ class IPv4 implements AddressInterface
                 // RFC 5735
                 '198.18.0.0/15' => array(RangeType::T_RESERVED),
                 // RFC 5735
-                '198.51.100.0/24' => array(RangeType::T_RESERVED),
+                '198.51.100.0/24' => array(RangeType::T_DOCUMENTATION),
                 // RFC 5735
-                '203.0.113.0/24' => array(RangeType::T_RESERVED),
-                // RFC 5735
-                '224.0.0.0/4' => array(RangeType::T_MULTICAST),
+                '203.0.113.0/24' => array(RangeType::T_DOCUMENTATION),
+                // RFC 5735 + RFC 6676
+                '224.0.0.0/4' => array(RangeType::T_MULTICAST, array('233.252.0.0/24' => RangeType::T_DOCUMENTATION)),
                 // RFC 5735
                 '240.0.0.0/4' => array(RangeType::T_RESERVED, array('255.255.255.255/32' => RangeType::T_LIMITEDBROADCAST)),
             ) as $range => $data) {

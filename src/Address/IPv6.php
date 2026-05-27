@@ -403,6 +403,10 @@ class IPv6 implements AddressInterface
                 //'2002::/16' => array(RangeType::),
                 // RFC 4291
                 '2000::/3' => array(RangeType::T_PUBLIC),
+                // RFC 3849
+                '2001:db8::/32' => array(RangeType::T_DOCUMENTATION),
+                // RFC 9637
+                '3fff::/20' => array(RangeType::T_DOCUMENTATION),
                 // RFC 4193
                 'fc00::/7' => array(RangeType::T_PRIVATENETWORK),
                 // RFC 4291
