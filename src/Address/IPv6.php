@@ -401,10 +401,8 @@ class IPv6 implements AddressInterface
                 // RFC 4291
                 '100::/8' => array(RangeType::T_DISCARD, array('100::/64' => RangeType::T_DISCARDONLY)),
                 //'2002::/16' => array(RangeType::),
-                // RFC 4291
-                '2000::/3' => array(RangeType::T_PUBLIC),
-                // RFC 3849
-                '2001:db8::/32' => array(RangeType::T_DOCUMENTATION),
+                // RFC 4291 + RFC 3849
+                '2000::/3' => array(RangeType::T_PUBLIC, array('2001:db8::/32' => RangeType::T_DOCUMENTATION)),
                 // RFC 9637
                 '3fff::/20' => array(RangeType::T_DOCUMENTATION),
                 // RFC 4193
