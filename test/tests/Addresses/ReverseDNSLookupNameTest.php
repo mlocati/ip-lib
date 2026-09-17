@@ -43,5 +43,11 @@ class ReverseDNSLookupNameTest extends TestCase
         $address2 = Factory::parseAddressString($actualReverseDNSAddress, ParseStringFlag::ADDRESS_MAYBE_RDNS);
         $this->assertNotNull($address2);
         $this->assertSame((string) $address, (string) $address2);
+        $address3 = Factory::parseAddressString($actualReverseDNSAddress . '.', ParseStringFlag::ADDRESS_MAYBE_RDNS);
+        $this->assertNotNull($address3);
+        $this->assertSame((string) $address, (string) $address3);
+        foreach (array('x', '.x', '..', '.arpa') as $suffix) {
+            $this->assertNull(Factory::parseAddressString($actualReverseDNSAddress . $suffix, ParseStringFlag::ADDRESS_MAYBE_RDNS), "'{$actualReverseDNSAddress}{$suffix}' should not be parsed as an address");
+        }
     }
 }

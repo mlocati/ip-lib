@@ -136,7 +136,7 @@ class IPv6 implements AddressInterface
         $matches = null;
         $flags = (int) $flags;
         if ($flags & ParseStringFlag::ADDRESS_MAYBE_RDNS) {
-            if (preg_match('/^([0-9a-f](?:\.[0-9a-f]){31})\.ip6\.arpa\.?/i', $address, $matches)) {
+            if (preg_match('/^([0-9a-f](?:\.[0-9a-f]){31})\.ip6\.arpa\.?$/i', $address, $matches)) {
                 $nibbles = array_reverse(explode('.', $matches[1]));
                 $quibbles = array();
                 foreach (array_chunk($nibbles, 4) as $n) {
