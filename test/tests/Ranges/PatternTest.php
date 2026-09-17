@@ -64,6 +64,10 @@ class PatternTest extends TestCase
             array('1::*', '1::*', '0001:0000:0000:0000:0000:0000:0000:*'),
             array('::1:*', '::1:*', '0000:0000:0000:0000:0000:0000:0001:*'),
             array('::*:*', '::*:*', '0000:0000:0000:0000:0000:0000:*:*'),
+            array('::ffff:*:*', '::ffff:*:*', '0000:0000:0000:0000:0000:ffff:*:*'),
+            array('::ffff:0:*', '::ffff:0:*', '0000:0000:0000:0000:0000:ffff:0000:*'),
+            array('::ffff:102:*', '::ffff:102:*', '0000:0000:0000:0000:0000:ffff:0102:*'),
+            array('1:0:0:2:0:0:0:*', '1:0:0:2::*', '0001:0000:0000:0002:0000:0000:0000:*'),
             array('*:*:*:*:*:*:*:*', '*:*:*:*:*:*:*:*', '*:*:*:*:*:*:*:*'),
         );
     }
@@ -84,5 +88,8 @@ class PatternTest extends TestCase
         $this->assertInstanceOf('IPLib\Range\Pattern', $ex, "'{$range}' has been recognized as a range, but not a Pattern range");
         $this->assertSame($short, $ex->toString(false));
         $this->assertSame($long, $ex->toString(true));
+        $reparsed = Factory::parseRangeString($short);
+        $this->assertInstanceOf('IPLib\Range\Pattern', $reparsed, "'{$short}' has not been recognized as a Pattern range, but it should");
+        $this->assertSame($short, $reparsed->toString(false));
     }
 }
