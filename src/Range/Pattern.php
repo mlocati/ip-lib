@@ -146,7 +146,7 @@ class Pattern extends AbstractRange
         }
         if (strpos($range, ':') !== false && preg_match('/^[^*]+((?::\*)+)$/D', $range, $matches)) {
             $asterisksCount = strlen($matches[1]) >> 1;
-            $fromAddress = IPv6::parseString(str_replace('*', '0', $range));
+            $fromAddress = IPv6::parseString(str_replace('*', '0', $range), $flags);
             if ($fromAddress === null) {
                 return null;
             }
@@ -201,7 +201,7 @@ class Pattern extends AbstractRange
                 }
                 break;
             default:
-                throw new \Exception('@todo'); // @codeCoverageIgnore
+                throw new \RuntimeException('Unsupported address type: ' . get_class($this->fromAddress)); // @codeCoverageIgnore
         }
 
         return $result;

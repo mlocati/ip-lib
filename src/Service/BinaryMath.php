@@ -46,7 +46,7 @@ class BinaryMath
      * @param string $a
      * @param string $b
      *
-     * @return int 1 if $a is greater than $b, -1 if $b is greater than $b, 0 if they are the same
+     * @return int 1 if $a is greater than $b, -1 if $b is greater than $a, 0 if they are the same
      */
     public function compare($a, $b)
     {
@@ -229,7 +229,7 @@ class BinaryMath
      * @param string $num1
      * @param string $num2
      *
-     * @return array{string, string, int} The first array element is $num1 (padded), the first array element is $num2 (padded), the third array element is the number of bits
+     * @return array{string, string, int} The first array element is $num1 (padded), the second array element is $num2 (padded), the third array element is the number of bits
      */
     private function toSameLength($num1, $num2)
     {
