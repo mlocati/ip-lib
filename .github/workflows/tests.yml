@@ -29,7 +29,7 @@ jobs:
           extensions: opcache
       -
         name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
       -
         name: Check syntax
         uses: mlocati/check-php-syntax@v1
@@ -53,7 +53,7 @@ jobs:
           coverage: none
       -
         name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           fetch-depth: 1
       -
@@ -74,7 +74,7 @@ jobs:
           coverage: none
       -
         name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           fetch-depth: 1
       -
@@ -147,7 +147,7 @@ jobs:
           coverage: ${{ matrix.php-coverage }}
       -
         name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
       -
         name: Install Composer dependencies
         run: composer --no-interaction --ansi --no-progress --optimize-autoloader update
