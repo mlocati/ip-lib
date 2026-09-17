@@ -237,13 +237,13 @@ class Subnet extends AbstractRange
      */
     public function asPattern()
     {
-        $address = $this->getStartAddress();
+        $startAddress = $this->getStartAddress();
         $networkPrefix = $this->getNetworkPrefix();
-        switch ($address->getAddressType()) {
+        switch ($startAddress->getAddressType()) {
             case AddressType::T_IPv4:
-                return $networkPrefix % 8 === 0 ? new Pattern($address, $address, 4 - $networkPrefix / 8) : null;
+                return $networkPrefix % 8 === 0 ? new Pattern($startAddress, $this->getEndAddress(), 4 - $networkPrefix / 8) : null;
             case AddressType::T_IPv6:
-                return $networkPrefix % 16 === 0 ? new Pattern($address, $address, 8 - $networkPrefix / 16) : null;
+                return $networkPrefix % 16 === 0 ? new Pattern($startAddress, $this->getEndAddress(), 8 - $networkPrefix / 16) : null;
         }
     }
 
