@@ -187,13 +187,17 @@ class Pattern extends AbstractRange
                 } elseif ($this->asterisksCount === 8) {
                     $result = '*:*:*:*:*:*:*:*';
                 } else {
-                    $bytes = $this->toAddress->getBytes();
-                    $bytes = array_slice($bytes, 0, -$this->asterisksCount * 2);
-                    $bytes = array_pad($bytes, 16, 1);
-                    $address = IPv6::fromBytes($bytes);
-                    /** @var IPv6 $address */
-                    $before = substr($address->toString(false), 0, -strlen(':101') * $this->asterisksCount);
-                    $result = $before . str_repeat(':*', $this->asterisksCount);
+                    $numFixedWords = 8 - $this->asterisksCount;
+                    $chunks = array_map('dechex', array_slice($this->fromAddress->getWords(), 0, $numFixedWords));
+                    $result = implode(':', array_pad($chunks, 8, '*'));
+                    $matches = null;
+                    for ($i = $numFixedWords; $i > 1; $i--) {
+                        $search = '(?:^|:)' . rtrim(str_repeat('0:', $i), ':') . ':';
+                        if (preg_match('/^(.*?)' . $search . '(.*)$/', $result, $matches)) {
+                            $result = $matches[1] . '::' . $matches[2];
+                            break;
+                        }
+                    }
                 }
                 break;
             default:
