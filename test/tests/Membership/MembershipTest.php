@@ -52,19 +52,19 @@ class MembershipTest extends DBTestCase
     public function testAddressMembership($address, $range, $contained)
     {
         $addressObject = Factory::addressFromString($address);
-        $this->assertNotNull($addressObject, "'{$address}' has not been recognized as an address");
-        $this->assertInstanceOf('IPLib\Address\AddressInterface', $addressObject);
+        static::assertNotNull($addressObject, "'{$address}' has not been recognized as an address");
+        static::assertInstanceOf('IPLib\Address\AddressInterface', $addressObject);
 
         $rangeObject = Factory::rangeFromString($range);
-        $this->assertNotNull($rangeObject, "'{$range}' has not been recognized as a range");
-        $this->assertInstanceOf('IPLib\Range\RangeInterface', $rangeObject);
+        static::assertNotNull($rangeObject, "'{$range}' has not been recognized as a range");
+        static::assertInstanceOf('IPLib\Range\RangeInterface', $rangeObject);
 
         if ($contained) {
-            $this->assertSame(true, $rangeObject->contains($addressObject), "Failed to check that '{$range}' contains '{$address}'");
-            $this->assertSame(true, $addressObject->matches($rangeObject), "Failed to check that '{$address}' is contained in '{$range}'");
+            static::assertSame(true, $rangeObject->contains($addressObject), "Failed to check that '{$range}' contains '{$address}'");
+            static::assertSame(true, $addressObject->matches($rangeObject), "Failed to check that '{$address}' is contained in '{$range}'");
         } else {
-            $this->assertSame(false, $rangeObject->contains($addressObject), "Failed to check that '{$range}' does not contain '{$address}'");
-            $this->assertSame(false, $addressObject->matches($rangeObject), "Failed to check that '{$address}' is not contained in '{$range}'");
+            static::assertSame(false, $rangeObject->contains($addressObject), "Failed to check that '{$range}' does not contain '{$address}'");
+            static::assertSame(false, $addressObject->matches($rangeObject), "Failed to check that '{$address}' is not contained in '{$range}'");
         }
         $pdo = $this->getConnection();
         $insertQuery = $pdo->prepare('insert into ranges (rangeRepresentation, addressType, rangeFrom, rangeTo) values (:rangeRepresentation, :addressType, :rangeFrom, :rangeTo)');
@@ -82,9 +82,9 @@ class MembershipTest extends DBTestCase
         $foundRow = $searchQuery->fetch();
         $searchQuery->closeCursor();
         if ($contained) {
-            $this->assertNotEmpty($foundRow, "Failed to check that '{$range}' contains '{$address}' using database comparison");
+            static::assertNotEmpty($foundRow, "Failed to check that '{$range}' contains '{$address}' using database comparison");
         } else {
-            $this->assertFalse($foundRow, "Failed to check that '{$range}' does not contain '{$address}' using database comparison");
+            static::assertFalse($foundRow, "Failed to check that '{$range}' does not contain '{$address}' using database comparison");
         }
     }
 
@@ -121,10 +121,10 @@ class MembershipTest extends DBTestCase
     public function testRangeMembership($rangeString, $otherRangeString, $contained)
     {
         $range = Factory::rangeFromString($rangeString);
-        $this->assertInstanceOf('IPLib\Range\RangeInterface', $range, "'{$rangeString}' has not been recognized as a range");
+        static::assertInstanceOf('IPLib\Range\RangeInterface', $range, "'{$rangeString}' has not been recognized as a range");
         $otherRange = Factory::rangeFromString($otherRangeString);
-        $this->assertInstanceOf('IPLib\Range\RangeInterface', $otherRange, "'{$otherRangeString}' has not been recognized as a range");
-        $this->assertSame(
+        static::assertInstanceOf('IPLib\Range\RangeInterface', $otherRange, "'{$otherRangeString}' has not been recognized as a range");
+        static::assertSame(
             $contained,
             $range->containsRange($otherRange),
             sprintf(
@@ -156,12 +156,12 @@ class MembershipTest extends DBTestCase
     public function testSameRange($range1, $range2)
     {
         $rangeObject1 = Factory::rangeFromString($range1);
-        $this->assertInstanceOf('IPLib\Range\RangeInterface', $rangeObject1);
+        static::assertInstanceOf('IPLib\Range\RangeInterface', $rangeObject1);
         $rangeObject2 = Factory::rangeFromString($range2);
-        $this->assertInstanceOf('IPLib\Range\RangeInterface', $rangeObject2);
-        $this->assertTrue($rangeObject1->containsRange($rangeObject1), "{$range1} should contain {$range1}");
-        $this->assertTrue($rangeObject2->containsRange($rangeObject2), "{$range2} should contain {$range2}");
-        $this->assertTrue($rangeObject1->containsRange($rangeObject2), "{$range1} should contain {$range2}");
-        $this->assertTrue($rangeObject2->containsRange($rangeObject1), "{$range2} should contain {$range1}");
+        static::assertInstanceOf('IPLib\Range\RangeInterface', $rangeObject2);
+        static::assertTrue($rangeObject1->containsRange($rangeObject1), "{$range1} should contain {$range1}");
+        static::assertTrue($rangeObject2->containsRange($rangeObject2), "{$range2} should contain {$range2}");
+        static::assertTrue($rangeObject1->containsRange($rangeObject2), "{$range1} should contain {$range2}");
+        static::assertTrue($rangeObject2->containsRange($rangeObject1), "{$range2} should contain {$range1}");
     }
 }

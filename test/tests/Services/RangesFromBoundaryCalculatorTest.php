@@ -28,7 +28,7 @@ class RangesFromBoundaryCalculatorTest extends TestCase
     public function testInvalid(RangesFromBoundaryCalculator $calculator, AddressInterface $from, AddressInterface $to)
     {
         $ranges = $calculator->getRanges($from, $to);
-        $this->assertNull($ranges);
+        static::assertNull($ranges);
     }
 
     /**
@@ -89,18 +89,18 @@ class RangesFromBoundaryCalculatorTest extends TestCase
     public function testValid($from, $to, array $expectedRanges)
     {
         $fromAddress = Factory::addressFromString($from);
-        $this->assertInstanceof('IPLib\Address\AddressInterface', $fromAddress);
+        static::assertInstanceof('IPLib\Address\AddressInterface', $fromAddress);
         $toAddress = Factory::addressFromString($to);
-        $this->assertInstanceof('IPLib\Address\AddressInterface', $toAddress);
+        static::assertInstanceof('IPLib\Address\AddressInterface', $toAddress);
         $calculator = self::getCalculator($fromAddress->getNumberOfBits());
         $rangesAsStrings = array();
         $ranges = $calculator->getRanges($fromAddress, $toAddress);
-        $this->assertNotNull($ranges);
+        static::assertNotNull($ranges);
         foreach ($ranges as $range) {
-            $this->assertInstanceOf('IPLib\Range\Subnet', $range);
+            static::assertInstanceOf('IPLib\Range\Subnet', $range);
             $rangesAsStrings[] = (string) $range;
         }
-        $this->assertSame($rangesAsStrings, $expectedRanges);
+        static::assertSame($rangesAsStrings, $expectedRanges);
     }
 
     /**

@@ -206,8 +206,8 @@ class ReverseDNSLookupNameTest extends TestCase
     public function testReverseDNSLookupName($addressString, array $expectedReverseDNSAddresses)
     {
         $range = Factory::rangeFromString($addressString);
-        $this->assertInstanceOf('IPLib\Range\RangeInterface', $range);
+        static::assertInstanceOf('IPLib\Range\RangeInterface', $range);
         $actualReverseDNSAddress = $range->getReverseDNSLookupName();
-        $this->assertSame($expectedReverseDNSAddresses, $actualReverseDNSAddress);
+        static::assertSame($expectedReverseDNSAddresses, $actualReverseDNSAddress);
     }
 }

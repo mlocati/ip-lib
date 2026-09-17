@@ -45,16 +45,16 @@ class PreviousNextTest extends TestCase
     public function testPreviousNext($addressString, $previousString, $nextString)
     {
         $address = Factory::addressFromString($addressString);
-        $this->assertInstanceof('IPLib\Address\AddressInterface', $address, "Checking that {$addressString} is a valid address");
+        static::assertInstanceof('IPLib\Address\AddressInterface', $address, "Checking that {$addressString} is a valid address");
         $previous = $address->getPreviousAddress();
-        $this->assertSame($previousString, (string) $previous, "Checking the address before {$addressString}");
+        static::assertSame($previousString, (string) $previous, "Checking the address before {$addressString}");
         if ($previous !== null) {
-            $this->assertSame($addressString, (string) $previous->getNextAddress(), "Checking the address after the address before {$addressString}");
+            static::assertSame($addressString, (string) $previous->getNextAddress(), "Checking the address after the address before {$addressString}");
         }
         $next = $address->getNextAddress();
-        $this->assertSame($nextString, (string) $next, "Checking the address after {$addressString}");
+        static::assertSame($nextString, (string) $next, "Checking the address after {$addressString}");
         if ($next !== null) {
-            $this->assertSame($addressString, (string) $next->getPreviousAddress(), "Checking the address before the address after {$addressString}");
+            static::assertSame($addressString, (string) $next->getPreviousAddress(), "Checking the address before the address after {$addressString}");
         }
     }
 }

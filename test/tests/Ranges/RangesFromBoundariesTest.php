@@ -33,10 +33,10 @@ class RangesFromBoundariesTest extends TestCase
     public function testInvalid($from, $to)
     {
         $range = Factory::rangesFromBoundaries($from, $to);
-        $this->assertNull($range, "Boundaries '" . json_encode($from) . "' -> '" . json_encode($to) . "' should not be resolved to an address");
+        static::assertNull($range, "Boundaries '" . json_encode($from) . "' -> '" . json_encode($to) . "' should not be resolved to an address");
         list($from, $to) = array($to, $from);
         $range = Factory::rangesFromBoundaries($from, $to);
-        $this->assertNull($range, "Boundaries '" . json_encode($from) . "' -> '" . json_encode($to) . "' should not be resolved to an address");
+        static::assertNull($range, "Boundaries '" . json_encode($from) . "' -> '" . json_encode($to) . "' should not be resolved to an address");
     }
 
     /**
@@ -88,19 +88,19 @@ class RangesFromBoundariesTest extends TestCase
     public function testValid($from, $to, array $expected)
     {
         $ranges = Factory::rangesFromBoundaries($from, $to);
-        $this->assertNotNull($ranges, "Boundaries '{$from}' -> '{$to}' should be resolved to an address");
-        $this->assertSameIPRanges($expected, $ranges);
+        static::assertNotNull($ranges, "Boundaries '{$from}' -> '{$to}' should be resolved to an address");
+        self::assertSameIPRanges($expected, $ranges);
         foreach ($ranges as $range) {
             $range2 = Factory::rangeFromString((string) $range);
-            $this->assertInstanceOf('IPLib\Range\RangeInterface', $range2);
-            $this->assertSame((string) $range, (string) $range2, 'Same range');
-            $this->assertSame((string) $range->getStartAddress(), (string) $range2->getStartAddress(), 'Same start address');
-            $this->assertSame((string) $range->getEndAddress(), (string) $range2->getEndAddress(), 'Same end address');
+            static::assertInstanceOf('IPLib\Range\RangeInterface', $range2);
+            static::assertSame((string) $range, (string) $range2, 'Same range');
+            static::assertSame((string) $range->getStartAddress(), (string) $range2->getStartAddress(), 'Same start address');
+            static::assertSame((string) $range->getEndAddress(), (string) $range2->getEndAddress(), 'Same end address');
         }
         list($from, $to) = array($to, $from);
         $ranges = Factory::rangesFromBoundaries($from, $to);
-        $this->assertNotNull($ranges, "Boundaries '{$from}' -> '{$to}' should be resolved to an address");
-        $this->assertSameIPRanges($expected, $ranges);
+        static::assertNotNull($ranges, "Boundaries '{$from}' -> '{$to}' should be resolved to an address");
+        self::assertSameIPRanges($expected, $ranges);
     }
 
     /**
@@ -109,13 +109,13 @@ class RangesFromBoundariesTest extends TestCase
      *
      * @return void
      */
-    private function assertSameIPRanges(array $expected, array $calculatedInstances)
+    private static function assertSameIPRanges(array $expected, array $calculatedInstances)
     {
         $calculatedStrings = array();
         foreach ($calculatedInstances as $calculatedInstance) {
-            $this->assertInstanceOf('IPLib\Range\Subnet', $calculatedInstance);
+            static::assertInstanceOf('IPLib\Range\Subnet', $calculatedInstance);
             $calculatedStrings[] = (string) $calculatedInstance;
         }
-        $this->assertSame($expected, $calculatedStrings);
+        static::assertSame($expected, $calculatedStrings);
     }
 }

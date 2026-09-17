@@ -35,7 +35,7 @@ class SingleTest extends TestCase
      */
     public function testInvalid($range)
     {
-        $this->assertNull(Single::fromString($range), json_encode($range) . " has been recognized as a single range, but it shouldn't");
+        static::assertNull(Single::fromString($range), json_encode($range) . " has been recognized as a single range, but it shouldn't");
     }
 
     /**
@@ -63,10 +63,10 @@ class SingleTest extends TestCase
     public function testValid($range, $short, $long)
     {
         $ex = Factory::rangeFromString($range);
-        $this->assertNotNull($ex, "'{$range}' has not been recognized as a range, but it should");
-        $this->assertInstanceOf('IPLib\Range\Single', $ex, "'{$range}' has been recognized as a range, but not a single range");
-        $this->assertSame($ex->containsRange($ex), true);
-        $this->assertSame($short, $ex->toString(false));
-        $this->assertSame($long, $ex->toString(true));
+        static::assertNotNull($ex, "'{$range}' has not been recognized as a range, but it should");
+        static::assertInstanceOf('IPLib\Range\Single', $ex, "'{$range}' has been recognized as a range, but not a single range");
+        static::assertSame($ex->containsRange($ex), true);
+        static::assertSame($short, $ex->toString(false));
+        static::assertSame($long, $ex->toString(true));
     }
 }

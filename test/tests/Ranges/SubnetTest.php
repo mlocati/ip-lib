@@ -39,7 +39,7 @@ class SubnetTest extends TestCase
      */
     public function testInvalid($range)
     {
-        $this->assertNull(Subnet::fromString($range), json_encode($range) . " has been recognized as a subnet range, but it shouldn't");
+        static::assertNull(Subnet::fromString($range), json_encode($range) . " has been recognized as a subnet range, but it shouldn't");
     }
 
     /**
@@ -67,10 +67,10 @@ class SubnetTest extends TestCase
     public function testValid($range, $short, $long)
     {
         $ex = Factory::rangeFromString($range);
-        $this->assertNotNull($ex, "'{$range}' has not been recognized as a range, but it should");
-        $this->assertInstanceOf('IPLib\Range\Subnet', $ex, "'{$range}' has been recognized as a range, but not a subnet range");
-        $this->assertSame($short, $ex->toString(false));
-        $this->assertSame($long, $ex->toString(true));
+        static::assertNotNull($ex, "'{$range}' has not been recognized as a range, but it should");
+        static::assertInstanceOf('IPLib\Range\Subnet', $ex, "'{$range}' has been recognized as a range, but not a subnet range");
+        static::assertSame($short, $ex->toString(false));
+        static::assertSame($long, $ex->toString(true));
     }
 
     /**
@@ -79,14 +79,14 @@ class SubnetTest extends TestCase
     public function testGet6to4()
     {
         $subnet = Subnet::get6to4();
-        $this->assertInstanceOf('IPLib\Range\Subnet', $subnet);
-        $this->assertSame('2002::/16', (string) $subnet);
-        $this->assertSame($subnet, Subnet::get6to4());
+        static::assertInstanceOf('IPLib\Range\Subnet', $subnet);
+        static::assertSame('2002::/16', (string) $subnet);
+        static::assertSame($subnet, Subnet::get6to4());
         $address = Factory::parseAddressString('2002:102:304::');
-        $this->assertNotNull($address);
-        $this->assertTrue($subnet->contains($address));
+        static::assertNotNull($address);
+        static::assertTrue($subnet->contains($address));
         $address = Factory::parseAddressString('2003::');
-        $this->assertNotNull($address);
-        $this->assertFalse($subnet->contains($address));
+        static::assertNotNull($address);
+        static::assertFalse($subnet->contains($address));
     }
 }

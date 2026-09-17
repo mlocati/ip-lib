@@ -44,12 +44,12 @@ class CompactSubnetTest extends TestCase
     {
         if ($inputIsCompact) {
             $range = Factory::parseRangeString($inputString);
-            $this->assertNull($range);
+            static::assertNull($range);
         }
         $range = Factory::parseRangeString($inputString, ParseStringFlag::IPV4SUBNET_MAYBE_COMPACT);
-        $this->assertInstanceOf('IPLib\Range\Subnet', $range);
-        $this->assertSame($expectedRangeString, (string) $range);
-        $this->assertSame((string) $range->getStartAddress(), $expectedStartAddressString, 'Start address');
-        $this->assertSame((string) $range->getEndAddress(), $expectedEndAddressString, 'End address');
+        static::assertInstanceOf('IPLib\Range\Subnet', $range);
+        static::assertSame($expectedRangeString, (string) $range);
+        static::assertSame((string) $range->getStartAddress(), $expectedStartAddressString, 'Start address');
+        static::assertSame((string) $range->getEndAddress(), $expectedEndAddressString, 'End address');
     }
 }

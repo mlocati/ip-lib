@@ -37,9 +37,9 @@ class ValidTest extends TestCase
     public function testValidAddresses($address, $short, $long)
     {
         $ip = Factory::addressFromString($address);
-        $this->assertNotNull($ip, "'{$address}' has been detected as an invalid IP, but it should be valid");
-        $this->assertSame($short, $ip->toString(false));
-        $this->assertSame($short, $ip->__toString());
-        $this->assertSame($long, $ip->toString(true));
+        static::assertNotNull($ip, "'{$address}' has been detected as an invalid IP, but it should be valid");
+        static::assertSame($short, $ip->toString(false));
+        static::assertSame($short, $ip->__toString());
+        static::assertSame($long, $ip->toString(true));
     }
 }

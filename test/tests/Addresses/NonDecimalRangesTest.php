@@ -60,10 +60,10 @@ class NonDecimalRangesTest extends TestCase
     {
         $range = Factory::rangeFromString($input, $parseNonDecimal);
         if ($expectedStringRepresentation === null) {
-            $this->assertNull($range);
+            static::assertNull($range);
         } else {
-            $this->assertInstanceOf('\IPLib\Range\RangeInterface', $range);
-            $this->assertSame($expectedStringRepresentation, (string) $range->toString());
+            static::assertInstanceOf('\IPLib\Range\RangeInterface', $range);
+            static::assertSame($expectedStringRepresentation, (string) $range->toString());
         }
     }
 }

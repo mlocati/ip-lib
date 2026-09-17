@@ -30,11 +30,11 @@ class ConversionTest extends TestCase
     public function test6to4($address)
     {
         $ipV4 = Factory::addressFromString($address);
-        $this->assertInstanceOf('IPLib\Address\IPv4', $ipV4, "'{$address}' has been detected as an invalid IP, but it should be valid");
+        static::assertInstanceOf('IPLib\Address\IPv4', $ipV4, "'{$address}' has been detected as an invalid IP, but it should be valid");
         $ipV6 = $ipV4->toIPv6();
         $ipV4back = $ipV6->toIPv4();
-        $this->assertNotNull($ipV4back, "'{$address}' has been converted to '" . $ipV6->toString() . "', but it coulnd't be converted back to IPv4");
-        $this->assertSame($address, $ipV4back->toString());
+        static::assertNotNull($ipV4back, "'{$address}' has been converted to '" . $ipV6->toString() . "', but it coulnd't be converted back to IPv4");
+        static::assertSame($address, $ipV4back->toString());
     }
 
     /**
@@ -60,12 +60,12 @@ class ConversionTest extends TestCase
     public function testIPv4MappedAddress($address)
     {
         $ipV4 = Factory::addressFromString($address);
-        $this->assertNotNull($ipV4, "'{$address}' has been detected as an invalid IP, but it should be valid");
-        $this->assertInstanceOf('IPLib\Address\IPv4', $ipV4);
+        static::assertNotNull($ipV4, "'{$address}' has been detected as an invalid IP, but it should be valid");
+        static::assertInstanceOf('IPLib\Address\IPv4', $ipV4);
         $ipV6 = $ipV4->toIPv6IPv4Mapped();
-        $this->assertInstanceOf('IPLib\Address\IPv6', $ipV6);
+        static::assertInstanceOf('IPLib\Address\IPv6', $ipV6);
         $ipV4back = $ipV6->toIPv4();
-        $this->assertInstanceOf('IPLib\Address\IPv4', $ipV4back, "'{$address}' has been converted to '" . $ipV6->toString() . "', but it coulnd't be converted back to IPv4");
-        $this->assertSame($address, (string) $ipV4back->toString());
+        static::assertInstanceOf('IPLib\Address\IPv4', $ipV4back, "'{$address}' has been converted to '" . $ipV6->toString() . "', but it coulnd't be converted back to IPv4");
+        static::assertSame($address, (string) $ipV4back->toString());
     }
 }

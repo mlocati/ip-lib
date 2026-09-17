@@ -164,9 +164,9 @@ class ShiftTest extends TestCase
     public function testRightShift($address, $bits, $expected)
     {
         $ip = Factory::parseAddressString($address);
-        $this->assertNotNull($ip, "'{$address}' has been detected as an invalid IP, but it should be valid");
+        static::assertNotNull($ip, "'{$address}' has been detected as an invalid IP, but it should be valid");
         $shifted = $ip->shift($bits);
-        $this->assertSame($expected, (string) $shifted);
+        static::assertSame($expected, (string) $shifted);
     }
 
     /**
@@ -341,8 +341,8 @@ class ShiftTest extends TestCase
     public function testLeftShift($address, $bits, $expected)
     {
         $ip = Factory::parseAddressString($address);
-        $this->assertNotNull($ip, "'{$address}' has been detected as an invalid IP, but it should be valid");
+        static::assertNotNull($ip, "'{$address}' has been detected as an invalid IP, but it should be valid");
         $shifted = $ip->shift(-$bits);
-        $this->assertSame($expected, (string) $shifted);
+        static::assertSame($expected, (string) $shifted);
     }
 }

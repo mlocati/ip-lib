@@ -39,15 +39,15 @@ class ReverseDNSLookupNameTest extends TestCase
         $address = Factory::addressFromString($addressString);
         /** @var \IPLib\Address\AddressInterface $address */
         $actualReverseDNSAddress = $address->getReverseDNSLookupName();
-        $this->assertSame($expectedReverseDNSAddress, $actualReverseDNSAddress);
+        static::assertSame($expectedReverseDNSAddress, $actualReverseDNSAddress);
         $address2 = Factory::parseAddressString($actualReverseDNSAddress, ParseStringFlag::ADDRESS_MAYBE_RDNS);
-        $this->assertNotNull($address2);
-        $this->assertSame((string) $address, (string) $address2);
+        static::assertNotNull($address2);
+        static::assertSame((string) $address, (string) $address2);
         $address3 = Factory::parseAddressString($actualReverseDNSAddress . '.', ParseStringFlag::ADDRESS_MAYBE_RDNS);
-        $this->assertNotNull($address3);
-        $this->assertSame((string) $address, (string) $address3);
+        static::assertNotNull($address3);
+        static::assertSame((string) $address, (string) $address3);
         foreach (array('x', '.x', '..', '.arpa', "\n", ".\n") as $suffix) {
-            $this->assertNull(Factory::parseAddressString($actualReverseDNSAddress . $suffix, ParseStringFlag::ADDRESS_MAYBE_RDNS), json_encode($actualReverseDNSAddress . $suffix) . ' should not be parsed as an address');
+            static::assertNull(Factory::parseAddressString($actualReverseDNSAddress . $suffix, ParseStringFlag::ADDRESS_MAYBE_RDNS), json_encode($actualReverseDNSAddress . $suffix) . ' should not be parsed as an address');
         }
     }
 }
