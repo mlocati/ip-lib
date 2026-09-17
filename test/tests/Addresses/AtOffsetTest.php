@@ -79,7 +79,7 @@ class AtOffsetTest extends TestCase
     public function testAtOffset($addressString, $n, $expected)
     {
         $address = Factory::addressFromString($addressString);
-        $this->assertInstanceof(
+        static::assertInstanceof(
             'IPLib\Address\AddressInterface',
             $address,
             "Checking that {$addressString} is a valid address"
@@ -87,14 +87,14 @@ class AtOffsetTest extends TestCase
 
         $next = $address->getAddressAtOffset($n);
 
-        $this->assertSame(
+        static::assertSame(
             $expected,
             (string) $next,
             "Checking the address {$addressString} " . (is_int($n) ? (($n > 0 ? '+' : '-') . ' ' . abs($n)) : gettype($n))
         );
 
         if ($next !== null && is_int($n)) {
-            $this->assertSame(
+            static::assertSame(
                 $addressString,
                 (string) $next->getAddressAtOffset(-$n),
                 "Checking the address after the nth address before the nth {$addressString}"

@@ -38,8 +38,8 @@ class BoundariesTest extends TestCase
     public function testBoundaries($rangeString, $startAddressString, $endAddressString)
     {
         $range = Factory::rangeFromString($rangeString);
-        $this->assertInstanceOf('IPLib\Range\RangeInterface', $range);
-        $this->assertSame((string) $range->getStartAddress(), $startAddressString, "Checking start address of {$rangeString}");
-        $this->assertSame((string) $range->getEndAddress(), $endAddressString, "Checking end address of {$rangeString}");
+        static::assertInstanceOf('IPLib\Range\RangeInterface', $range);
+        static::assertSame((string) $range->getStartAddress(), $startAddressString, "Checking start address of {$rangeString}");
+        static::assertSame((string) $range->getEndAddress(), $endAddressString, "Checking end address of {$rangeString}");
     }
 }

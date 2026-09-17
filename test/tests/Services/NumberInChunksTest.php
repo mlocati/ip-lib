@@ -46,11 +46,11 @@ class NumberInChunksTest extends TestCase
         foreach ($signs as $negative) {
             $newInput = ($negative ? '-' : '') . $input;
             $actual = NumberInChunks::fromNumericString($newInput, NumberInChunks::CHUNKSIZE_BYTES);
-            $this->assertSame($negative, $actual->negative, 'NumberInBytes::negative');
-            $this->assertSame($expectedBytes, $actual->chunks, 'NumberInBytes::bytes');
+            static::assertSame($negative, $actual->negative, 'NumberInBytes::negative');
+            static::assertSame($expectedBytes, $actual->chunks, 'NumberInBytes::bytes');
             $actual = NumberInChunks::fromNumericString($newInput, NumberInChunks::CHUNKSIZE_WORDS);
-            $this->assertSame($negative, $actual->negative, 'NumberInWords::negative');
-            $this->assertSame($expectedWords, $actual->chunks, 'NumberInWords::words');
+            static::assertSame($negative, $actual->negative, 'NumberInWords::negative');
+            static::assertSame($expectedWords, $actual->chunks, 'NumberInWords::words');
         }
     }
 
@@ -118,11 +118,11 @@ class NumberInChunksTest extends TestCase
             throw new RuntimeException('Wrong input! testIntegerConversion() accepts only integers');
         }
         $actual = NumberInChunks::fromInteger($input, NumberInChunks::CHUNKSIZE_BYTES);
-        $this->assertSame($input < 0, $actual->negative, 'NumberInBytes::negative');
-        $this->assertSame($expectedBytes, $actual->chunks, 'NumberInBytes::bytes');
+        static::assertSame($input < 0, $actual->negative, 'NumberInBytes::negative');
+        static::assertSame($expectedBytes, $actual->chunks, 'NumberInBytes::bytes');
         $actual = NumberInChunks::fromInteger($input, NumberInChunks::CHUNKSIZE_WORDS);
-        $this->assertSame($input < 0, $actual->negative, 'NumberInWords::negative');
-        $this->assertSame($expectedWords, $actual->chunks, 'NumberInWords::words');
+        static::assertSame($input < 0, $actual->negative, 'NumberInWords::negative');
+        static::assertSame($expectedWords, $actual->chunks, 'NumberInWords::words');
     }
 
     /**
@@ -247,16 +247,16 @@ class NumberInChunksTest extends TestCase
                 throw new RuntimeException('Wrong input! testAdd() accepts only integers or normalized strings');
             }
             $sum = $a->add($b);
-            $this->assertSame($expectedNegative, $sum->negative, 'Wrong negative result');
+            static::assertSame($expectedNegative, $sum->negative, 'Wrong negative result');
             if ($chunkSize === NumberInChunks::CHUNKSIZE_BYTES) {
-                $this->assertSame($expectedBytes, $sum->chunks, 'Wrong result bytes');
+                static::assertSame($expectedBytes, $sum->chunks, 'Wrong result bytes');
             } elseif ($chunkSize === NumberInChunks::CHUNKSIZE_WORDS) {
-                $this->assertSame($expectedWords, $sum->chunks, 'Wrong result words');
+                static::assertSame($expectedWords, $sum->chunks, 'Wrong result words');
             }
             $sum2 = $b->add($a);
-            $this->assertEquals($sum, $sum2);
+            static::assertEquals($sum, $sum2);
             $sum3 = $a->negate()->add($b->negate())->negate();
-            $this->assertEquals($sum, $sum3);
+            static::assertEquals($sum, $sum3);
         }
     }
 
@@ -295,6 +295,6 @@ class NumberInChunksTest extends TestCase
         } catch (InvalidArgumentException $x) {
             $exception = $x;
         }
-        $this->assertNotNull($exception, 'Adding incompatible types should throw an InvalidArgumentException');
+        static::assertNotNull($exception, 'Adding incompatible types should throw an InvalidArgumentException');
     }
 }

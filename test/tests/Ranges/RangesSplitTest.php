@@ -66,15 +66,15 @@ class RangesSplitTest extends TestCase
     public function testInvalidSplit($inputString, $networkPrefix, $expectedMessage)
     {
         $range = Factory::parseRangeString($inputString);
-        $this->assertInstanceof('IPLib\Range\RangeInterface', $range, "{$inputString} is not a valid IP range");
+        static::assertInstanceof('IPLib\Range\RangeInterface', $range, "{$inputString} is not a valid IP range");
         $exception = null;
         try {
             $range->split($networkPrefix);
         } catch (OutOfBoundsException $x) {
             $exception = $x;
         }
-        $this->assertNotNull($exception, "split({$networkPrefix}) on {$inputString} should throw an exception");
-        $this->assertSame($expectedMessage, $exception->getMessage());
+        static::assertNotNull($exception, "split({$networkPrefix}) on {$inputString} should throw an exception");
+        static::assertSame($expectedMessage, $exception->getMessage());
     }
 
     /**
@@ -608,8 +608,8 @@ class RangesSplitTest extends TestCase
     public function testValidSplit($inputString, $networkPrefix, array $expectedValues, $forceSubnet = false)
     {
         $range = Factory::parseRangeString($inputString);
-        $this->assertInstanceof('IPLib\Range\RangeInterface', $range, "{$inputString} is not a valid IP range");
+        static::assertInstanceof('IPLib\Range\RangeInterface', $range, "{$inputString} is not a valid IP range");
         $actualValues = array_map('strval', $range->split($networkPrefix, $forceSubnet));
-        $this->assertSame($expectedValues, array_map('strval', $actualValues));
+        static::assertSame($expectedValues, array_map('strval', $actualValues));
     }
 }

@@ -334,9 +334,9 @@ class RangeTypeTest extends TestCase
     public function testRangeTypes($rangeString, $expectedType)
     {
         $range = Factory::rangeFromString($rangeString);
-        $this->assertNotNull($range, "'{$rangeString}' has been detected as an invalid subnet, but it should be valid");
+        static::assertNotNull($range, "'{$rangeString}' has been detected as an invalid subnet, but it should be valid");
         $detectedType = $range->getRangeType();
-        $this->assertSame($expectedType, $detectedType, sprintf("'%s' has been detected as\n%s\ninstead of\n%s", $range->toString(), Type::getName($detectedType), Type::getName($expectedType)));
+        static::assertSame($expectedType, $detectedType, sprintf("'%s' has been detected as\n%s\ninstead of\n%s", $range->toString(), Type::getName($detectedType), Type::getName($expectedType)));
     }
 
     /**
@@ -361,6 +361,6 @@ class RangeTypeTest extends TestCase
      */
     public function testRangeTypeName($type, $expectedName)
     {
-        $this->assertSame($expectedName, Type::getName($type));
+        static::assertSame($expectedName, Type::getName($type));
     }
 }

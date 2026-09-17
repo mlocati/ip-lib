@@ -29,8 +29,8 @@ class GetNumberOfBitsTest extends TestCase
     public function testGetBits($address, $expectedNumberOfBits)
     {
         $ip = Factory::addressFromString($address);
-        $this->assertNotNull($ip, "'{$address}' has been detected as an invalid IP, but it should be valid");
-        $this->assertSame($expectedNumberOfBits, $ip->getNumberOfBits());
-        $this->assertSame($expectedNumberOfBits, strlen($ip->getBits()));
+        static::assertNotNull($ip, "'{$address}' has been detected as an invalid IP, but it should be valid");
+        static::assertSame($expectedNumberOfBits, $ip->getNumberOfBits());
+        static::assertSame($expectedNumberOfBits, strlen($ip->getBits()));
     }
 }

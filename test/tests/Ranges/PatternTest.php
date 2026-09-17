@@ -44,7 +44,7 @@ class PatternTest extends TestCase
      */
     public function testInvalid($range)
     {
-        $this->assertNull(Pattern::fromString($range), json_encode($range) . " has been recognized as a pattern range, but it shouldn't");
+        static::assertNull(Pattern::fromString($range), json_encode($range) . " has been recognized as a pattern range, but it shouldn't");
     }
 
     /**
@@ -90,12 +90,12 @@ class PatternTest extends TestCase
     public function testValid($range, $short, $long)
     {
         $ex = Factory::rangeFromString($range);
-        $this->assertNotNull($ex, "'{$range}' has not been recognized as a range, but it should");
-        $this->assertInstanceOf('IPLib\Range\Pattern', $ex, "'{$range}' has been recognized as a range, but not a Pattern range");
-        $this->assertSame($short, $ex->toString(false));
-        $this->assertSame($long, $ex->toString(true));
+        static::assertNotNull($ex, "'{$range}' has not been recognized as a range, but it should");
+        static::assertInstanceOf('IPLib\Range\Pattern', $ex, "'{$range}' has been recognized as a range, but not a Pattern range");
+        static::assertSame($short, $ex->toString(false));
+        static::assertSame($long, $ex->toString(true));
         $reparsed = Factory::parseRangeString($short);
-        $this->assertInstanceOf('IPLib\Range\Pattern', $reparsed, "'{$short}' has not been recognized as a Pattern range, but it should");
-        $this->assertSame($short, $reparsed->toString(false));
+        static::assertInstanceOf('IPLib\Range\Pattern', $reparsed, "'{$short}' has not been recognized as a Pattern range, but it should");
+        static::assertSame($short, $reparsed->toString(false));
     }
 }

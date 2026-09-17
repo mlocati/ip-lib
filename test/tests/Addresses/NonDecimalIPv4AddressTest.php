@@ -206,33 +206,33 @@ class NonDecimalIPv4AddressTest extends TestCase
     {
         $ip = Factory::addressFromString($input, true, true, $parseNonDecimal);
         if ($expected === null) {
-            $this->assertNull($ip);
+            static::assertNull($ip);
 
             return;
         }
-        $this->assertInstanceOf('IPLib\Address\IPv4', $ip);
+        static::assertInstanceOf('IPLib\Address\IPv4', $ip);
         $octShort = $ip->toOctal();
-        $this->assertSame($expected[self::OCT_SHORT], $octShort);
-        $this->assertSame($octShort, $ip->toOctal(false));
-        $this->assertEquals($expected[self::DEC_SHORT], (string) Factory::addressFromString($octShort, false, false, true));
+        static::assertSame($expected[self::OCT_SHORT], $octShort);
+        static::assertSame($octShort, $ip->toOctal(false));
+        static::assertEquals($expected[self::DEC_SHORT], (string) Factory::addressFromString($octShort, false, false, true));
         $octLong = $ip->toOctal(true);
-        $this->assertSame($expected[self::OCT_LONG], $octLong);
-        $this->assertEquals($expected[self::DEC_SHORT], (string) Factory::addressFromString($octLong, false, false, true));
+        static::assertSame($expected[self::OCT_LONG], $octLong);
+        static::assertEquals($expected[self::DEC_SHORT], (string) Factory::addressFromString($octLong, false, false, true));
         $decShort = $ip->toString();
-        $this->assertSame($expected[self::DEC_SHORT], $decShort);
-        $this->assertSame($decShort, $ip->toString(false));
-        $this->assertEquals($expected[self::DEC_SHORT], (string) Factory::addressFromString($decShort, false, false, false));
-        $this->assertEquals($expected[self::DEC_SHORT], (string) Factory::addressFromString($decShort, false, false, true));
+        static::assertSame($expected[self::DEC_SHORT], $decShort);
+        static::assertSame($decShort, $ip->toString(false));
+        static::assertEquals($expected[self::DEC_SHORT], (string) Factory::addressFromString($decShort, false, false, false));
+        static::assertEquals($expected[self::DEC_SHORT], (string) Factory::addressFromString($decShort, false, false, true));
         $decLong = $ip->toString(true);
-        $this->assertSame($expected[self::DEC_LONG], $decLong);
-        $this->assertEquals($expected[self::DEC_SHORT], (string) Factory::addressFromString($decShort, false, false, false));
+        static::assertSame($expected[self::DEC_LONG], $decLong);
+        static::assertEquals($expected[self::DEC_SHORT], (string) Factory::addressFromString($decShort, false, false, false));
         $hexShort = $ip->toHexadecimal();
-        $this->assertSame($expected[self::HEX_SHORT], $hexShort);
-        $this->assertSame($hexShort, $ip->toHexadecimal(false));
-        $this->assertEquals($expected[self::DEC_SHORT], (string) Factory::addressFromString($hexShort, false, false, true));
+        static::assertSame($expected[self::HEX_SHORT], $hexShort);
+        static::assertSame($hexShort, $ip->toHexadecimal(false));
+        static::assertEquals($expected[self::DEC_SHORT], (string) Factory::addressFromString($hexShort, false, false, true));
         $hexLong = $ip->toHexadecimal(true);
-        $this->assertSame($expected[self::HEX_LONG], $hexLong);
-        $this->assertEquals($expected[self::DEC_SHORT], (string) Factory::addressFromString($hexLong, false, false, true));
+        static::assertSame($expected[self::HEX_LONG], $hexLong);
+        static::assertEquals($expected[self::DEC_SHORT], (string) Factory::addressFromString($hexLong, false, false, true));
     }
 
     /**
@@ -289,10 +289,10 @@ class NonDecimalIPv4AddressTest extends TestCase
     {
         $ip = Factory::parseAddressString($input, $flags);
         if ($expected === '') {
-            $this->assertNull($ip);
+            static::assertNull($ip);
         } else {
-            $this->assertInstanceof('IPLib\Address\IPv4', $ip);
-            $this->assertSame($expected, (string) $ip);
+            static::assertInstanceof('IPLib\Address\IPv4', $ip);
+            static::assertSame($expected, (string) $ip);
         }
     }
 }

@@ -29,15 +29,15 @@ class BinaryMathTest extends TestCase
      */
     public function testSingleton()
     {
-        $this->assertSame(self::$math, BinaryMath::getInstance());
+        static::assertSame(self::$math, BinaryMath::getInstance());
         $instanceProperty = new ReflectionProperty('IPLib\\Service\\BinaryMath', 'instance');
         if (PHP_VERSION_ID < 80100) {
             $instanceProperty->setAccessible(true);
         }
         $instanceProperty->setValue(null, null);
         $newMath = BinaryMath::getInstance();
-        $this->assertEquals(self::$math, $newMath);
-        $this->assertNotSame(self::$math, $newMath);
+        static::assertEquals(self::$math, $newMath);
+        static::assertNotSame(self::$math, $newMath);
     }
 
     /**
@@ -51,7 +51,7 @@ class BinaryMathTest extends TestCase
     public function testReduce($value, $expectedResult)
     {
         $result = self::$math->reduce($value);
-        $this->assertSame($expectedResult, $result);
+        static::assertSame($expectedResult, $result);
     }
 
     /**
@@ -80,7 +80,7 @@ class BinaryMathTest extends TestCase
     public function testCompare($a, $b, $expectedResult)
     {
         $result = self::$math->compare($a, $b);
-        $this->assertSame($expectedResult, $result);
+        static::assertSame($expectedResult, $result);
     }
 
     /**
@@ -119,7 +119,7 @@ class BinaryMathTest extends TestCase
     public function testIncrement($value, $expectedResult)
     {
         $result = self::$math->increment($value);
-        $this->assertSame($expectedResult, $result);
+        static::assertSame($expectedResult, $result);
     }
 
     /**
@@ -150,7 +150,7 @@ class BinaryMathTest extends TestCase
     public function testAnd($operand1, $operand2, $expectedResult)
     {
         $result = self::$math->andX($operand1, $operand2);
-        $this->assertSame($expectedResult, $result);
+        static::assertSame($expectedResult, $result);
     }
 
     /**
@@ -184,7 +184,7 @@ class BinaryMathTest extends TestCase
     public function testOr($operand1, $operand2, $expectedResult)
     {
         $result = self::$math->orX($operand1, $operand2);
-        $this->assertSame($expectedResult, $result);
+        static::assertSame($expectedResult, $result);
     }
 
     /**
@@ -218,7 +218,7 @@ class BinaryMathTest extends TestCase
     {
         $actualResult = self::$math->pow2string($exponent);
 
-        $this->assertSame($expectedResult, $actualResult);
+        static::assertSame($expectedResult, $actualResult);
     }
 
     /**
@@ -264,7 +264,7 @@ class BinaryMathTest extends TestCase
     public function testNormalizeIntegerString($input, $expectedResult = '')
     {
         $actualResult = self::$math->normalizeIntegerString($input);
-        $this->assertSame($expectedResult, $actualResult);
+        static::assertSame($expectedResult, $actualResult);
     }
 
     /**
@@ -315,7 +315,7 @@ class BinaryMathTest extends TestCase
             throw new RuntimeException('Wrong input! add1ToIntegerString() accepts only strings normalized with normalizeIntegerString()');
         }
         $actualResult = self::$math->add1ToIntegerString($input);
-        $this->assertSame($expectedResult, $actualResult);
+        static::assertSame($expectedResult, $actualResult);
     }
 
     /**

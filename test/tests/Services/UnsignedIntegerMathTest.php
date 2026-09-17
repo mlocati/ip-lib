@@ -86,11 +86,11 @@ class UnsignedIntegerMathTest extends TestCase
         foreach ($maxSignedIntegers as $maxSignedInteger) {
             self::$math->setMaxSignedInt($maxSignedInteger);
             $actualResult = self::$math->getBytes($value, $numBytes, $onlyDecimal);
-            $this->assertSame($expectedResult, $actualResult);
+            static::assertSame($expectedResult, $actualResult);
             $actualResult = self::$math->getBytes(strtolower($value), $numBytes, $onlyDecimal);
-            $this->assertSame($expectedResult, $actualResult);
+            static::assertSame($expectedResult, $actualResult);
             $actualResult = self::$math->getBytes(strtoupper($value), $numBytes, $onlyDecimal);
-            $this->assertSame($expectedResult, $actualResult);
+            static::assertSame($expectedResult, $actualResult);
         }
     }
 }

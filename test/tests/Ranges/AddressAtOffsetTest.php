@@ -50,7 +50,7 @@ class AddressAtOffsetTest extends TestCase
     public function testAddressAtOffset($rangeString, $n, $expected)
     {
         $range = Factory::rangeFromString($rangeString);
-        $this->assertInstanceOf('IPLib\Range\RangeInterface', $range);
+        static::assertInstanceOf('IPLib\Range\RangeInterface', $range);
         $result = $range->getAddressAtOffset($n);
         if ($result !== null) {
             $result = $result->toString();
@@ -61,6 +61,6 @@ class AddressAtOffsetTest extends TestCase
             $expectedString = 'NULL';
         }
 
-        $this->assertSame($expected, $result, "'{$rangeString}' with offset " . json_encode($n) . " must be '{$expectedString}'");
+        static::assertSame($expected, $result, "'{$rangeString}' with offset " . json_encode($n) . " must be '{$expectedString}'");
     }
 }

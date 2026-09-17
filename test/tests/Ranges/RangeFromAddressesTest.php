@@ -33,7 +33,7 @@ class RangeFromAddressesTest extends TestCase
      */
     public function testInvalid(array $addresses)
     {
-        $this->assertNull(Factory::getRangeFromAddresses($addresses));
+        static::assertNull(Factory::getRangeFromAddresses($addresses));
     }
 
     /**
@@ -81,7 +81,7 @@ class RangeFromAddressesTest extends TestCase
     public function testValid(array $addresses, $expectedSubnetStringRepresentation, $flags = 0)
     {
         $subnet = Factory::getRangeFromAddresses($addresses, $flags);
-        $this->assertNotNull($subnet);
-        $this->assertSame($expectedSubnetStringRepresentation, (string) $subnet);
+        static::assertNotNull($subnet);
+        static::assertSame($expectedSubnetStringRepresentation, (string) $subnet);
     }
 }

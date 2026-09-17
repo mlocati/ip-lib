@@ -88,38 +88,38 @@ class ConversionTest extends TestCase
     public function testRangeConversion($subnet, $pattern, $subnet2 = null)
     {
         $subnetRange = Factory::rangeFromString($subnet);
-        $this->assertInstanceOf('IPLib\Range\Subnet', $subnetRange);
-        $this->assertSame((string) $subnetRange, (string) $subnetRange->asSubnet());
+        static::assertInstanceOf('IPLib\Range\Subnet', $subnetRange);
+        static::assertSame((string) $subnetRange, (string) $subnetRange->asSubnet());
         $patternRange = $subnetRange->asPattern();
         if ($pattern === '') {
-            $this->assertNull($patternRange);
+            static::assertNull($patternRange);
         } else {
-            $this->assertInstanceOf('IPLib\Range\Pattern', $patternRange);
-            $this->assertSame((string) $patternRange, (string) $patternRange->asPattern());
-            $this->assertInstanceOf('IPLib\Range\Pattern', $patternRange);
-            $this->assertSame($pattern, (string) $patternRange);
-            $this->assertSame((string) $subnetRange->getStartAddress(), (string) $patternRange->getStartAddress());
-            $this->assertSame((string) $subnetRange->getEndAddress(), (string) $patternRange->getEndAddress());
-            $this->assertTrue($patternRange->contains($subnetRange->getEndAddress()));
+            static::assertInstanceOf('IPLib\Range\Pattern', $patternRange);
+            static::assertSame((string) $patternRange, (string) $patternRange->asPattern());
+            static::assertInstanceOf('IPLib\Range\Pattern', $patternRange);
+            static::assertSame($pattern, (string) $patternRange);
+            static::assertSame((string) $subnetRange->getStartAddress(), (string) $patternRange->getStartAddress());
+            static::assertSame((string) $subnetRange->getEndAddress(), (string) $patternRange->getEndAddress());
+            static::assertTrue($patternRange->contains($subnetRange->getEndAddress()));
             $subnetRange2 = $patternRange->asSubnet();
-            $this->assertInstanceOf('IPLib\Range\Subnet', $subnetRange2);
+            static::assertInstanceOf('IPLib\Range\Subnet', $subnetRange2);
             if ($subnet2 === null) {
                 $subnet2 = $subnet;
             }
-            $this->assertSame($subnet2, (string) $subnetRange2);
-            $this->assertSame((string) $subnetRange->getStartAddress(), (string) $subnetRange2->getStartAddress());
-            $this->assertSame((string) $subnetRange->getEndAddress(), (string) $subnetRange2->getEndAddress());
+            static::assertSame($subnet2, (string) $subnetRange2);
+            static::assertSame((string) $subnetRange->getStartAddress(), (string) $subnetRange2->getStartAddress());
+            static::assertSame((string) $subnetRange->getEndAddress(), (string) $subnetRange2->getEndAddress());
         }
         $singleRange = Single::fromAddress($subnetRange->getStartAddress());
         $singleRangeAsPattern = $singleRange->asPattern();
-        $this->assertInstanceOf('IPLib\Range\Pattern', $singleRangeAsPattern);
-        $this->assertStringNotContainsString('*', (string) $singleRangeAsPattern);
+        static::assertInstanceOf('IPLib\Range\Pattern', $singleRangeAsPattern);
+        static::assertStringNotContainsString('*', (string) $singleRangeAsPattern);
         $singleRangeAsSubnet = $singleRange->asSubnet();
-        $this->assertInstanceOf('IPLib\Range\Subnet', $singleRangeAsSubnet);
+        static::assertInstanceOf('IPLib\Range\Subnet', $singleRangeAsSubnet);
         $sizes = array(
             AddressType::T_IPv4 => 32,
             AddressType::T_IPv6 => 128,
         );
-        $this->assertMatchRegExp('_/' . $sizes[$singleRange->getStartAddress()->getAddressType()] . '$_', (string) $singleRangeAsSubnet);
+        static::assertMatchRegExp('_/' . $sizes[$singleRange->getStartAddress()->getAddressType()] . '$_', (string) $singleRangeAsSubnet);
     }
 }

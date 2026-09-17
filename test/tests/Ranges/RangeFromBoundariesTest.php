@@ -34,10 +34,10 @@ class RangeFromBoundariesTest extends TestCase
     public function testInvalid($from, $to)
     {
         $range = Factory::rangeFromBoundaries($from, $to);
-        $this->assertNull($range, "Boundaries '" . json_encode($from) . "' -> '" . json_encode($to) . "' should not be resolved to an address");
+        static::assertNull($range, "Boundaries '" . json_encode($from) . "' -> '" . json_encode($to) . "' should not be resolved to an address");
         list($from, $to) = array($to, $from);
         $range = Factory::rangeFromBoundaries($from, $to);
-        $this->assertNull($range, "Boundaries '" . json_encode($from) . "' -> '" . json_encode($to) . "' should not be resolved to an address");
+        static::assertNull($range, "Boundaries '" . json_encode($from) . "' -> '" . json_encode($to) . "' should not be resolved to an address");
     }
 
     /**
@@ -90,12 +90,12 @@ class RangeFromBoundariesTest extends TestCase
     public function testValid($from, $to, $expected)
     {
         $range = Factory::rangeFromBoundaries($from, $to);
-        $this->assertNotNull($range, "Boundaries '{$from}' -> '{$to}' should be resolved to an address");
-        $this->assertSame($expected, (string) $range, "Boundaries '{$from}' -> '{$to}' should be resolved to '{$expected}' instead of {$range}");
+        static::assertNotNull($range, "Boundaries '{$from}' -> '{$to}' should be resolved to an address");
+        static::assertSame($expected, (string) $range, "Boundaries '{$from}' -> '{$to}' should be resolved to '{$expected}' instead of {$range}");
         list($from, $to) = array($to, $from);
         $range = Factory::rangeFromBoundaries($from, $to);
-        $this->assertNotNull($range, "Boundaries '{$from}' -> '{$to}' should be resolved to an address");
-        $this->assertSame($expected, (string) $range, "Boundaries '{$from}' -> '{$to}' should be resolved to '{$expected}' instead of {$range}");
+        static::assertNotNull($range, "Boundaries '{$from}' -> '{$to}' should be resolved to an address");
+        static::assertSame($expected, (string) $range, "Boundaries '{$from}' -> '{$to}' should be resolved to '{$expected}' instead of {$range}");
     }
 
     /**
@@ -133,10 +133,10 @@ class RangeFromBoundariesTest extends TestCase
         $toAddress = $to === null ? null : Factory::parseAddressString($to);
         $range = FactoryTestWrapper::callRangeFromBoundaryAddresses($fromAddress, $toAddress);
         if ($expected === null) {
-            $this->assertNull($range);
+            static::assertNull($range);
         } else {
-            $this->assertNotNull($range);
-            $this->assertSame($expected, (string) $range);
+            static::assertNotNull($range);
+            static::assertSame($expected, (string) $range);
         }
     }
 }

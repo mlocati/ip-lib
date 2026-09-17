@@ -55,15 +55,15 @@ class AddTest extends TestCase
     public function testAdd($addressA, $addressB, $expectedSum)
     {
         $ipA = Factory::parseAddressString($addressA);
-        $this->assertNotNull($ipA, "'{$addressA}' has been detected as an invalid IP, but it should be valid");
+        static::assertNotNull($ipA, "'{$addressA}' has been detected as an invalid IP, but it should be valid");
         $ipB = Factory::parseAddressString($addressB);
-        $this->assertNotNull($ipB, "'{$addressB}' has been detected as an invalid IP, but it should be valid");
+        static::assertNotNull($ipB, "'{$addressB}' has been detected as an invalid IP, but it should be valid");
         if ($expectedSum === null) {
-            $this->assertNull($ipA->add($ipB));
-            $this->assertNull($ipB->add($ipA));
+            static::assertNull($ipA->add($ipB));
+            static::assertNull($ipB->add($ipA));
         } else {
-            $this->assertSame($expectedSum, (string) $ipA->add($ipB));
-            $this->assertSame($expectedSum, (string) $ipB->add($ipA));
+            static::assertSame($expectedSum, (string) $ipA->add($ipB));
+            static::assertSame($expectedSum, (string) $ipB->add($ipA));
         }
     }
 }

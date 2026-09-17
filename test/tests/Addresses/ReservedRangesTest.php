@@ -29,12 +29,12 @@ class ReservedRangesTest extends TestCase
     public function testReservedRanges($addressClass)
     {
         $reservedRanges = $addressClass::getReservedRanges();
-        $this->assertNotEmpty($reservedRanges);
+        static::assertNotEmpty($reservedRanges);
         foreach ($reservedRanges as $reservedRange) {
-            $this->assertInstanceOf('IPLib\Address\AssignedRange', $reservedRange);
+            static::assertInstanceOf('IPLib\Address\AssignedRange', $reservedRange);
             $this->checkAssignedRange($reservedRange, $addressClass);
         }
-        $this->assertSame($reservedRanges, $addressClass::getReservedRanges(), 'The reserved ranges should be cached');
+        static::assertSame($reservedRanges, $addressClass::getReservedRanges(), 'The reserved ranges should be cached');
     }
 
     /**
@@ -46,16 +46,16 @@ class ReservedRangesTest extends TestCase
     private function checkAssignedRange(AssignedRange $assignedRange, $addressClass)
     {
         $range = $assignedRange->getRange();
-        $this->assertInstanceOf('IPLib\Range\RangeInterface', $range);
-        $this->assertInstanceOf($addressClass, $range->getStartAddress());
+        static::assertInstanceOf('IPLib\Range\RangeInterface', $range);
+        static::assertInstanceOf($addressClass, $range->getStartAddress());
         $type = $assignedRange->getType();
-        $this->assertMatchRegExp('/^(?!Unknown type)/', RangeType::getName($type), "{$range} has an unknown type");
+        static::assertMatchRegExp('/^(?!Unknown type)/', RangeType::getName($type), "{$range} has an unknown type");
         foreach ($assignedRange->getExceptions() as $exception) {
-            $this->assertInstanceOf('IPLib\Address\AssignedRange', $exception);
+            static::assertInstanceOf('IPLib\Address\AssignedRange', $exception);
             $exceptionRange = $exception->getRange();
-            $this->assertTrue($range->containsRange($exceptionRange), "{$exceptionRange} should be contained in {$range}");
-            $this->assertNotSame($type, $exception->getType(), "{$exceptionRange} has the same type as {$range}");
-            $this->assertSame($exception->getType(), $assignedRange->getAddressType($exceptionRange->getStartAddress()));
+            static::assertTrue($range->containsRange($exceptionRange), "{$exceptionRange} should be contained in {$range}");
+            static::assertNotSame($type, $exception->getType(), "{$exceptionRange} has the same type as {$range}");
+            static::assertSame($exception->getType(), $assignedRange->getAddressType($exceptionRange->getStartAddress()));
             $this->checkAssignedRange($exception, $addressClass);
         }
     }

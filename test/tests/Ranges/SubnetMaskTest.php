@@ -54,8 +54,8 @@ class SubnetMaskTest extends TestCase
     public function testSubnetMask($rangeString, $subnetMaskString)
     {
         $range = Factory::rangeFromString($rangeString);
-        $this->assertNotNull($range);
-        $this->assertInstanceOf('IPLib\Range\RangeInterface', $range);
+        static::assertNotNull($range);
+        static::assertInstanceOf('IPLib\Range\RangeInterface', $range);
         $this->checkSubnetMask($range, $subnetMaskString);
         // The subnet mask must not depend on the range type
         $this->checkSubnetMask($range->asSubnet(), $subnetMaskString);
@@ -75,10 +75,10 @@ class SubnetMaskTest extends TestCase
     {
         $subnetMask = $range->getSubnetMask();
         if ($subnetMaskString === '') {
-            $this->assertNull($subnetMask);
+            static::assertNull($subnetMask);
         } else {
-            $this->assertInstanceOf('IPLib\Address\AddressInterface', $subnetMask);
-            $this->assertSame($subnetMaskString, (string) $subnetMask);
+            static::assertInstanceOf('IPLib\Address\AddressInterface', $subnetMask);
+            static::assertSame($subnetMaskString, (string) $subnetMask);
         }
     }
 }

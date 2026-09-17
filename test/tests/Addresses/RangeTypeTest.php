@@ -285,9 +285,9 @@ class RangeTypeTest extends TestCase
     public function testRangeTypes($address, $expectedType)
     {
         $ip = Factory::addressFromString($address);
-        $this->assertNotNull($ip, "'{$address}' has been detected as an invalid IP, but it should be valid");
+        static::assertNotNull($ip, "'{$address}' has been detected as an invalid IP, but it should be valid");
         $detectedType = $ip->getRangeType();
-        $this->assertSame($expectedType, $detectedType, sprintf("'%s' has been detected as\n%s\ninstead of\n%s", $ip->toString(), Type::getName($detectedType), Type::getName($expectedType)));
+        static::assertSame($expectedType, $detectedType, sprintf("'%s' has been detected as\n%s\ninstead of\n%s", $ip->toString(), Type::getName($detectedType), Type::getName($expectedType)));
     }
 
     /**
@@ -312,6 +312,6 @@ class RangeTypeTest extends TestCase
      */
     public function testRangeTypeName($type, $expectedName)
     {
-        $this->assertSame($expectedName, Type::getName($type));
+        static::assertSame($expectedName, Type::getName($type));
     }
 }

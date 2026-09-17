@@ -48,7 +48,7 @@ class GetBitsTest extends TestCase
     public function testGetBits($expectedBits, $address)
     {
         $ip = Factory::addressFromString($address);
-        $this->assertNotNull($ip, "'{$address}' has been detected as an invalid IP, but it should be valid");
-        $this->assertSame($expectedBits, $ip->getBits());
+        static::assertNotNull($ip, "'{$address}' has been detected as an invalid IP, but it should be valid");
+        static::assertSame($expectedBits, $ip->getBits());
     }
 }

@@ -49,13 +49,13 @@ class RangeSizeTest extends TestCase
     public function testSize($addressRange, $expectedSize, $expectedExactSize = null)
     {
         $range = Factory::rangeFromString($addressRange);
-        $this->assertInstanceOf('IPLib\Range\RangeInterface', $range);
+        static::assertInstanceOf('IPLib\Range\RangeInterface', $range);
         $actualSize = $range->getSize();
-        $this->assertSame($expectedSize, $actualSize, 'getSize()');
+        static::assertSame($expectedSize, $actualSize, 'getSize()');
         if ($expectedExactSize === null) {
             $expectedExactSize = $expectedSize;
         }
         $actualExactSize = $range->getExactSize();
-        $this->assertSame($expectedExactSize, $actualExactSize, 'getExactSize()');
+        static::assertSame($expectedExactSize, $actualExactSize, 'getExactSize()');
     }
 }
