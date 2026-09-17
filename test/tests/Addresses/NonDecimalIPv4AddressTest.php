@@ -271,6 +271,8 @@ class NonDecimalIPv4AddressTest extends TestCase
             array('.0'),
             array('.0', ParseStringFlag::IPV4_MAYBE_NON_DECIMAL | ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED),
             array('4294967296', ParseStringFlag::IPV4_MAYBE_NON_DECIMAL | ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED),
+            array("0xFa.010.100.0000011\n", ParseStringFlag::IPV4_MAYBE_NON_DECIMAL),
+            array("4294967295\n", ParseStringFlag::IPV4_MAYBE_NON_DECIMAL | ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED),
         );
     }
 

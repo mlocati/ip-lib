@@ -27,6 +27,8 @@ class AtOffsetTest extends TestCase
             array('::ffff:ffff:ffff:fffd', 3, '0:0:0:1::'),
             array('0:ffff:ffff:ffff:ffff:ffff:ffff:ffff', 3, '1::2'),
             array('ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffd', 3, ''),
+            array('0.0.0.0', "1\n", ''),
+            array('::', "1\n", ''),
             array('ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffd', null, ''),
             array('0.0.0.0', -1, ''),
             array('0.0.0.0', 0, '0.0.0.0'),

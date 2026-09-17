@@ -48,6 +48,8 @@ class PortsTest extends TestCase
             array('[127.0.0.1]:80'),
             array('[::1]'),
             array('[::1]:a'),
+            array("127.0.0.1:80\n"),
+            array("[::1]:80\n"),
         );
     }
 

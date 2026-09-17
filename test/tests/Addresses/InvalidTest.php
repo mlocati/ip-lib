@@ -34,6 +34,10 @@ class InvalidTest extends TestCase
             array('1.-.1.1'),
             array('00000::1'),
             array('z::'),
+            array("127.0.0.1\n"),
+            array("::1\n"),
+            array("1:2:3:4:5:6:7:8\n"),
+            array("::ffff:127.0.0.1\n"),
         );
     }
 

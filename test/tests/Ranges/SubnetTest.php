@@ -25,6 +25,8 @@ class SubnetTest extends TestCase
             array('::'),
             array('::/-1'),
             array('::/129'),
+            array("127.0.0.0/8\n"),
+            array("::/8\n"),
         );
     }
 
