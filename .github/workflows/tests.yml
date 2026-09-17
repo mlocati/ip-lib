@@ -157,7 +157,7 @@ jobs:
       -
         name: Download Coveralls
         if: matrix.php-coverage && matrix.php-coverage != 'none'
-        run: curl -sSLf -o php-coveralls.phar https://github.com/php-coveralls/php-coveralls/releases/download/v2.8.0/php-coveralls.phar
+        run: curl -sSLf -o php-coveralls.phar https://github.com/php-coveralls/php-coveralls/releases/download/v2.9.1/php-coveralls.phar
       -
         name: Upload Coveralls data
         if: matrix.php-coverage && matrix.php-coverage != 'none'
