@@ -43,7 +43,7 @@ class Subnet extends AbstractRange
     /**
      * The type of the range of this IP range.
      *
-     * @var int|null
+     * @var int|false|null false if this range crosses multiple range types, null if yet to be determined
      *
      * @since 1.5.0
      */

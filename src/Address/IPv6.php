@@ -629,7 +629,7 @@ class IPv6 implements AddressInterface
         }
         $absBits = abs($bits);
         if ($absBits >= 128) {
-            return new self('0000:0000:0000:0000:0000:0000:0000:0000');
+            return new static('0000:0000:0000:0000:0000:0000:0000:0000');
         }
         $pad = str_repeat('0', $absBits);
         $paddedBits = $this->getBits();

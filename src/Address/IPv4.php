@@ -535,7 +535,7 @@ class IPv4 implements AddressInterface
         }
         $absBits = abs($bits);
         if ($absBits >= 32) {
-            return new self('0.0.0.0');
+            return new static('0.0.0.0');
         }
         $pad = str_repeat('0', $absBits);
         $paddedBits = $this->getBits();

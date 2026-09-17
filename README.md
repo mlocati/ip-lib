@@ -21,7 +21,7 @@ IPLib has very basic requirements as:
 
 ### Manual installation
 
-[Download](https://github.com/mlocati/ip-lib/releases) the latest version, unzip it and add these lines in our PHP files:
+[Download](https://github.com/mlocati/ip-lib/releases) the latest version, unzip it and add these lines in your PHP files:
 
 ```php
 require_once 'path/to/iplib/ip-lib.php';
@@ -134,7 +134,7 @@ echo (string) $address->getAddressAtOffset(1000);
 echo (string) $address->getAddressAtOffset(-1);
 
 // This will print NULL
-echo var_dump($address->getAddressAtOffset(-2));
+var_dump($address->getAddressAtOffset(-2));
 
 // This will print ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff
 echo (string) $address->getAddressAtOffset('340282366920938463463374607431768211454');
@@ -215,6 +215,16 @@ $range = \IPLib\Factory::parseRangeString('::1/128');
 $range = \IPLib\Factory::parseRangeString('::');
 ```
 
+Please remark that in pattern ranges the asterisks must be at the end of the string, and that IPv6 patterns are not supported in the mixed IPv6/IPv4 notation:
+
+```php
+// This will print NULL
+var_export(\IPLib\Factory::parseRangeString('::ffff:1.2.*.*'));
+
+// This will print ::ffff:102:*
+echo (string) \IPLib\Factory::parseRangeString('::ffff:102:*');
+```
+
 ### Retrieve a range from its boundaries
 
 You can calculate the smallest range that comprises two addresses:
@@ -279,7 +289,7 @@ echo \IPLib\Factory::parseAddressString('::1')->toString();
 // This will print ::1
 echo \IPLib\Factory::parseAddressString('0:0::1')->toString();
 
-// This will print ::1/64
+// This will print ::/64 (the start address of a subnet is normalized)
 echo \IPLib\Factory::parseRangeString('0:0::1/64')->toString();
 ```
 
@@ -301,8 +311,8 @@ echo \IPLib\Factory::parseAddressString('::0:0')->toString(true);
 // This will print 0001:0002:0003:0004:0005:0006:0007:0008
 echo \IPLib\Factory::parseAddressString('1:2:3:4:5:6:7:8')->toString(true);
 
-// This will print 0000:0000:0000:0000:0000:0000:0000:0001/64
-echo \IPLib\Factory::parseRangeString('0:0::1/64')->toString();
+// This will print 0000:0000:0000:0000:0000:0000:0000:0000/64
+echo \IPLib\Factory::parseRangeString('0:0::1/64')->toString(true);
 ```
 
 You may also want a *long* representation for IPv4 addresses: here again you can use `true`as the parameter for the `toString` method:
@@ -315,6 +325,49 @@ echo \IPLib\Factory::parseAddressString('1.2.3.4')->toString();
 echo \IPLib\Factory::parseAddressString('1.2.3.4')->toString(true);
 ```
 
+IPv4 addresses can also be formatted in octal or hexadecimal notation with the `toOctal()` and `toHexadecimal()` methods (they too accept a `true` parameter for the *long* representation):
+
+```php
+$address = \IPLib\Factory::parseAddressString('0.7.8.255');
+
+// This will print 00.07.010.0377
+echo $address->toOctal();
+
+// This will print 0000.0007.0010.0377
+echo $address->toOctal(true);
+
+// This will print 0x0.0x7.0x8.0xff
+echo $address->toHexadecimal();
+
+// This will print 0x00.0x07.0x08.0xff
+echo $address->toHexadecimal(true);
+```
+
+IPv6 addresses can be formatted in the [mixed IPv6/IPv4 notation](https://tools.ietf.org/html/rfc4291#section-2.2) (the last 4 bytes in dotted-decimal format) with the `toMixedIPv6IPv4String()` method:
+
+```php
+$address = \IPLib\Factory::parseAddressString('2001:db8::1.2.3.4');
+
+// This will print 2001:db8::102:304
+echo $address->toString();
+
+// This will print 2001:db8::1.2.3.4
+echo $address->toMixedIPv6IPv4String();
+
+// This will print 2001:0db8:0000:0000:0000:0000:1.2.3.4
+echo $address->toMixedIPv6IPv4String(true);
+
+// This will print 2001:db8::001.002.003.004
+echo $address->toMixedIPv6IPv4String(false, true);
+```
+
+Please note that IPv4-mapped IPv6 addresses (`::ffff:0:0/96`) are always rendered in the mixed notation by `toString()`:
+
+```php
+// This will print ::ffff:1.2.3.4
+echo \IPLib\Factory::parseAddressString('::ffff:102:304')->toString();
+```
+
 The address and range objects implements the `__toString()` method, which call the `toString()` method.
 So, if you want the string (short) representation of an object, you can do any of the following:
 
@@ -325,6 +378,38 @@ $address = \IPLib\Address\IPv6::parseString('::1');
 echo $address->toString();
 echo $address->toString(false);
 echo (string) $address;
+```
+
+### Working with bytes, words and bits
+
+If you need the binary representation of an address (for example to work with the result of `inet_pton`), you can use the `getBytes()` method, which returns an array of integers (4 for IPv4, 16 for IPv6).
+IPv6 addresses also offer a `getWords()` method, which returns the 8 16-bit words of the address.
+
+```php
+// This will print 192, 168, 0, 1
+echo implode(', ', \IPLib\Factory::parseAddressString('192.168.0.1')->getBytes());
+
+// This will print 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+echo implode(', ', \IPLib\Factory::parseAddressString('::1')->getBytes());
+
+// This will print 1, 2, 0, 0, 0, 0, 0, 8
+echo implode(', ', \IPLib\Factory::parseAddressString('1:2::8')->getWords());
+
+// This will print 00000001000000100000001100000100
+echo \IPLib\Factory::parseAddressString('1.2.3.4')->getBits();
+```
+
+To build an address starting from its bytes (or words) you can use the `fromBytes()` and `fromWords()` methods:
+
+```php
+// This will print 192.168.0.1
+echo (string) \IPLib\Factory::addressFromBytes(array(192, 168, 0, 1));
+
+// This will print 2001:db8::1
+echo (string) \IPLib\Address\IPv6::fromWords(array(0x2001, 0xdb8, 0, 0, 0, 0, 0, 1));
+
+// This will print NULL (an array of 3 bytes is not a valid address)
+var_export(\IPLib\Factory::addressFromBytes(array(1, 2, 3)));
 ```
 
 ### Check if an address is contained in a range
@@ -370,7 +455,24 @@ The most notable values of the range type are:
 - `\IPLib\Range\Type::T_UNSPECIFIED` if the address is all zeros (`0.0.0.0` or `::`)
 - `\IPLib\Range\Type::T_LOOPBACK` if the address is the localhost (usually `127.0.0.1` or `::1`)
 - `\IPLib\Range\Type::T_PRIVATENETWORK` if the address is in the local network (for instance `192.168.0.1` or `fc00::1`)
+- `\IPLib\Range\Type::T_CGNAT` if the address is in the [carrier-grade NAT](https://tools.ietf.org/html/rfc6598) range (`100.64.0.0/10`)
 - `\IPLib\Range\Type::T_PUBLIC` if the address is for public usage (for instance `104.25.25.33` or `2001:503:ba3e::2:30`)
+
+The full list of the reserved ranges (and their types) can be retrieved with the static `getReservedRanges()` method of the `IPv4` and `IPv6` classes:
+
+```php
+foreach (\IPLib\Address\IPv4::getReservedRanges() as $reservedRange) {
+    // This will print (for instance) 10.0.0.0/8: For use in private networks
+    echo $reservedRange->getRange(), ': ', \IPLib\Range\Type::getName($reservedRange->getType()), "\n";
+}
+```
+
+Please note that IPv6 addresses that represent an IPv4 address (in the [6to4 notation](https://tools.ietf.org/html/rfc3056) or in the [IPv4-mapped notation](https://tools.ietf.org/html/rfc4291#section-2.5.5.2)) have the type of the corresponding IPv4 address:
+
+```php
+// $type will contain the value of \IPLib\Range\Type::T_PRIVATENETWORK (that's the type of 192.168.0.1)
+$type = \IPLib\Factory::parseAddressString('::ffff:192.168.0.1')->getRangeType();
+```
 
 ### Getting the type of an IP address range
 
@@ -398,6 +500,13 @@ $type = $range->getRangeType();
 echo \IPLib\Range\Type::getName($type);
 ```
 
+As for addresses, IPv6 ranges in the 6to4 or in the IPv4-mapped notation have the type of the corresponding IPv4 range:
+
+```php
+// $type will contain the value of \IPLib\Range\Type::T_PRIVATENETWORK (that's the type of 10.0.0.0/8)
+$type = \IPLib\Factory::parseRangeString('::ffff:10.0.0.0/104')->getRangeType();
+```
+
 ### Converting IP addresses
 
 This library supports converting IPv4 to/from IPv6 addresses using the [6to4 notation](https://tools.ietf.org/html/rfc3056) or the [IPv4-mapped notation](https://tools.ietf.org/html/rfc4291#section-2.5.5.2):
@@ -415,14 +524,16 @@ echo (string) $ipv6;
 echo $ipv6->toIPv4();
 
 // IPv4-mapped notation
-$ipv6_6to4 = $ipv4->toIPv6IPv4Mapped();
+$ipv6_mapped = $ipv4->toIPv6IPv4Mapped();
 
 // This will print ::ffff:1.2.3.4
-echo (string) $ipv6_6to4;
+echo (string) $ipv6_mapped;
 
 // This will print 1.2.3.4
-echo $ipv6_6to4->toIPv4();
+echo $ipv6_mapped->toIPv4();
 ```
+
+Please note that `toIPv4()` returns `NULL` for IPv6 addresses that are neither in the 6to4 nor in the IPv4-mapped notation.
 
 ### Converting IP ranges
 
@@ -493,6 +604,21 @@ print_r(array_map('strval', $smallerSubnets));
  *     [255] => 192.168.255.0/24
  * )
  */
+```
+
+### Getting the network prefix
+
+All the range types offer a `getNetworkPrefix()` method, which returns the length (in bits) of the network prefix (for pattern ranges, it's the number of bits that are not covered by the asterisks; for single addresses it's 32 for IPv4 and 128 for IPv6):
+
+```php
+// This will print 24
+echo \IPLib\Factory::parseRangeString('192.168.0.*')->getNetworkPrefix();
+
+// This will print 64
+echo \IPLib\Factory::parseRangeString('::/64')->getNetworkPrefix();
+
+// This will print 32
+echo \IPLib\Factory::parseRangeString('10.0.0.1')->getNetworkPrefix();
 ```
 
 ### Getting the subnet mask for IPv4 ranges
@@ -664,8 +790,6 @@ If you want to accept addresses that may include ports, you can specify the `IPL
 use IPLib\Factory;
 use IPLib\ParseStringFlag;
 
-require_once __DIR__ . '/../ip-lib.php';
-
 // These will print NULL
 var_export(Factory::parseAddressString('127.0.0.1:80'));
 var_export(Factory::parseAddressString('[::]:80'));
@@ -716,13 +840,13 @@ use IPLib\ParseStringFlag;
 var_export(Factory::parseAddressString('0177.0.0.0x1'));
 
 // This will print 127.0.0.1
-var_export((string) Factory::parseAddressString('0177.0.0.0x1', ParseStringFlag::IPV4_MAYBE_NON_DECIMAL));
+echo (string) Factory::parseAddressString('0177.0.0.0x1', ParseStringFlag::IPV4_MAYBE_NON_DECIMAL);
 
 // This will print NULL
 var_export(Factory::parseRangeString('0177.0.0.0x1/32'));
 
 // This will print 127.0.0.1/32
-var_export((string) Factory::parseRangeString('0177.0.0.0x1/32', ParseStringFlag::IPV4_MAYBE_NON_DECIMAL));
+echo (string) Factory::parseRangeString('0177.0.0.0x1/32', ParseStringFlag::IPV4_MAYBE_NON_DECIMAL);
 ```
 
 Please be aware that the `IPV4_MAYBE_NON_DECIMAL` flag may also affect parsing decimal numbers:
@@ -732,10 +856,10 @@ use IPLib\Factory;
 use IPLib\ParseStringFlag;
 
 // This will print 127.0.0.10 since the last digit is assumed to be decimal
-var_export((string) Factory::parseAddressString('127.0.0.010'));
+echo (string) Factory::parseAddressString('127.0.0.010');
 
 // This will print 127.0.0.8 since the last digit is assumed to be octal
-var_export((string) Factory::parseAddressString('127.0.0.010', ParseStringFlag::IPV4_MAYBE_NON_DECIMAL));
+echo (string) Factory::parseAddressString('127.0.0.010', ParseStringFlag::IPV4_MAYBE_NON_DECIMAL);
 ```
 
 ### Accepting IPv4 addresses in not-quad-dotted notation
@@ -746,7 +870,7 @@ By the way, the GNU (used in many Linux distros), BSD (used in Mac) and Windows 
 
 Please remark that this does not apply to the `inet_pton` and `ip2long` functions, as well as to the Musl implementation (used in Alpine Linux) of `inet_aton` and `inet_addr`.
 
-If you want to accept this non-decimal syntax, you may use the `IPLib\ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED` flag:
+If you want to accept this notation, you may use the `IPLib\ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED` flag:
 
 ```php
 use IPLib\Factory;
@@ -756,16 +880,16 @@ use IPLib\ParseStringFlag;
 var_export(Factory::parseAddressString('1.2.500'));
 
 // This will print 0.0.0.0
-var_export((string) Factory::parseAddressString('0', ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED));
+echo (string) Factory::parseAddressString('0', ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED);
 
 // This will print 0.0.0.1
-var_export((string) Factory::parseAddressString('1', ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED));
+echo (string) Factory::parseAddressString('1', ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED);
 
 // This will print 0.0.1.244
-var_export((string) Factory::parseAddressString('0.0.500', ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED));
+echo (string) Factory::parseAddressString('0.0.500', ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED);
 
 // This will print 255.255.255.255
-var_export((string) Factory::parseAddressString('4294967295', ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED));
+echo (string) Factory::parseAddressString('4294967295', ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED);
 ```
 
 ### Accepting compact IPv4 subnet notation
@@ -793,15 +917,15 @@ use IPLib\Factory;
 use IPLib\ParseStringFlag;
 
 // This will print 127.0.0.255
-var_export((string) Factory::parseAddressString('127.0.0.0xff:80', ParseStringFlag::MAY_INCLUDE_PORT | ParseStringFlag::IPV4_MAYBE_NON_DECIMAL));
+echo (string) Factory::parseAddressString('127.0.0.0xff:80', ParseStringFlag::MAY_INCLUDE_PORT | ParseStringFlag::IPV4_MAYBE_NON_DECIMAL);
 
 // This will print ::
-var_export((string) Factory::parseAddressString('[::%11]:80', ParseStringFlag::MAY_INCLUDE_PORT | ParseStringFlag::MAY_INCLUDE_ZONEID));
+echo (string) Factory::parseAddressString('[::%11]:80', ParseStringFlag::MAY_INCLUDE_PORT | ParseStringFlag::MAY_INCLUDE_ZONEID);
 ```
 
 ## Gitpod Environment Variables
 
-The following features can be enabled through environment variables that have been set in your [Gitpod preferences](https://gitpod.io/variables).:
+The following features can be enabled through environment variables that have been set in your [Gitpod preferences](https://gitpod.io/variables):
 
 \* _Please note that storing sensitive data in environment variables is not ultimately secure but should be OK for most development situations._
 - ### Sign Git commits with a GPG key
