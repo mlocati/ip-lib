@@ -3,6 +3,7 @@
 namespace IPLib\Test\Ranges;
 
 use IPLib\Factory;
+use IPLib\Test\Helpers\FactoryTestWrapper;
 use IPLib\Test\TestCase;
 
 class RangeFromBoundariesTest extends TestCase
@@ -95,5 +96,47 @@ class RangeFromBoundariesTest extends TestCase
         $range = Factory::rangeFromBoundaries($from, $to);
         $this->assertNotNull($range, "Boundaries '{$from}' -> '{$to}' should be resolved to an address");
         $this->assertSame($expected, (string) $range, "Boundaries '{$from}' -> '{$to}' should be resolved to '{$expected}' instead of {$range}");
+    }
+
+    /**
+     * @return array{string|null, string|null, string|null}[]
+     */
+    public function rangeFromBoundaryAddressesProvider()
+    {
+        return array(
+            array(null, null, null),
+            array('1.2.3.4', null, '1.2.3.4'),
+            array(null, '1.2.3.4', '1.2.3.4'),
+            array('1.2.3.4', '1.2.3.4', '1.2.3.4'),
+            array('192.168.0.1', '192.168.255.255', '192.168.0.0/16'),
+            array('192.168.255.255', '192.168.0.1', '192.168.0.0/16'),
+            array('::1', '::ffff', '::/112'),
+            array('::ffff', '::1', '::/112'),
+            array('1.2.3.4', '::1', null),
+        );
+    }
+
+    /**
+     * The protected Factory::rangeFromBoundaryAddresses() method may be called by subclasses with unordered addresses.
+     *
+     * @dataProvider rangeFromBoundaryAddressesProvider
+     *
+     * @param string|null $from
+     * @param string|null $to
+     * @param string|null $expected
+     *
+     * @return void
+     */
+    public function testRangeFromBoundaryAddresses($from, $to, $expected)
+    {
+        $fromAddress = $from === null ? null : Factory::parseAddressString($from);
+        $toAddress = $to === null ? null : Factory::parseAddressString($to);
+        $range = FactoryTestWrapper::callRangeFromBoundaryAddresses($fromAddress, $toAddress);
+        if ($expected === null) {
+            $this->assertNull($range);
+        } else {
+            $this->assertNotNull($range);
+            $this->assertSame($expected, (string) $range);
+        }
     }
 }

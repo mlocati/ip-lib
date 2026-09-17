@@ -188,6 +188,21 @@ class NumberInChunksTest extends TestCase
                     array(0x7F, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF),
                     array(0x7FFF, 0xFFFF, 0xFFFF, 0xFFFF),
                 ),
+                // Minimum integer (its absolute value doesn't fit in an integer)
+                array(
+                    -PHP_INT_MAX - 1,
+                    array(0x80, 0, 0, 0, 0, 0, 0, 0),
+                    array(0x8000, 0, 0, 0),
+                ),
+            ));
+        } else {
+            $baseCases = array_merge($baseCases, array(
+                // Minimum integer (its absolute value doesn't fit in an integer)
+                array(
+                    -PHP_INT_MAX - 1,
+                    array(0x80, 0, 0, 0),
+                    array(0x8000, 0),
+                ),
             ));
         }
 

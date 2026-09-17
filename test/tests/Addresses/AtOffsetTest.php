@@ -29,6 +29,9 @@ class AtOffsetTest extends TestCase
             array('ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffd', 3, ''),
             array('0.0.0.0', "1\n", ''),
             array('::', "1\n", ''),
+            // Minimum integer (its absolute value doesn't fit in an integer)
+            array('0.0.0.0', -PHP_INT_MAX - 1, ''),
+            array('::', -PHP_INT_MAX - 1, ''),
             array('ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffd', null, ''),
             array('0.0.0.0', -1, ''),
             array('0.0.0.0', 0, '0.0.0.0'),
