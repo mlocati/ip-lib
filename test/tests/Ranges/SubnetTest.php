@@ -72,4 +72,21 @@ class SubnetTest extends TestCase
         $this->assertSame($short, $ex->toString(false));
         $this->assertSame($long, $ex->toString(true));
     }
+
+    /**
+     * @return void
+     */
+    public function testGet6to4()
+    {
+        $subnet = Subnet::get6to4();
+        $this->assertInstanceOf('IPLib\Range\Subnet', $subnet);
+        $this->assertSame('2002::/16', (string) $subnet);
+        $this->assertSame($subnet, Subnet::get6to4());
+        $address = Factory::parseAddressString('2002:102:304::');
+        $this->assertNotNull($address);
+        $this->assertTrue($subnet->contains($address));
+        $address = Factory::parseAddressString('2003::');
+        $this->assertNotNull($address);
+        $this->assertFalse($subnet->contains($address));
+    }
 }
