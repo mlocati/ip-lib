@@ -98,12 +98,17 @@ class ConversionTest extends TestCase
             $this->assertSame((string) $patternRange, (string) $patternRange->asPattern());
             $this->assertInstanceOf('IPLib\Range\Pattern', $patternRange);
             $this->assertSame($pattern, (string) $patternRange);
+            $this->assertSame((string) $subnetRange->getStartAddress(), (string) $patternRange->getStartAddress());
+            $this->assertSame((string) $subnetRange->getEndAddress(), (string) $patternRange->getEndAddress());
+            $this->assertTrue($patternRange->contains($subnetRange->getEndAddress()));
             $subnetRange2 = $patternRange->asSubnet();
             $this->assertInstanceOf('IPLib\Range\Subnet', $subnetRange2);
             if ($subnet2 === null) {
                 $subnet2 = $subnet;
             }
             $this->assertSame($subnet2, (string) $subnetRange2);
+            $this->assertSame((string) $subnetRange->getStartAddress(), (string) $subnetRange2->getStartAddress());
+            $this->assertSame((string) $subnetRange->getEndAddress(), (string) $subnetRange2->getEndAddress());
         }
         $singleRange = Single::fromAddress($subnetRange->getStartAddress());
         $singleRangeAsPattern = $singleRange->asPattern();
