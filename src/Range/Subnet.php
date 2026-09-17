@@ -131,7 +131,7 @@ class Subnet extends AbstractRange
         if ($address === null) {
             return null;
         }
-        if (!preg_match('/^[0-9]{1,9}$/', $parts[1])) {
+        if (!preg_match('/^[0-9]{1,9}$/D', $parts[1])) {
             return null;
         }
         $networkPrefix = (int) $parts[1];

@@ -162,7 +162,7 @@ class BinaryMath
             $value = substr($value, 1);
         }
         $matches = null;
-        if (!preg_match('/^0*([0-9]+)$/', $value, $matches)) {
+        if (!preg_match('/^0*([0-9]+)$/D', $value, $matches)) {
             return '';
         }
         $numericString = $matches[1];

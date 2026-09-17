@@ -124,7 +124,7 @@ class Pattern extends AbstractRange
             return new static($fromAddress, $toAddress, 8);
         }
         $matches = null;
-        if (strpos($range, '.') !== false && preg_match('/^[^*]+((?:\.\*)+)$/', $range, $matches)) {
+        if (strpos($range, '.') !== false && preg_match('/^[^*]+((?:\.\*)+)$/D', $range, $matches)) {
             $asterisksCount = strlen($matches[1]) >> 1;
             if ($asterisksCount > 0) {
                 $missingDots = 3 - substr_count($range, '.');
@@ -144,7 +144,7 @@ class Pattern extends AbstractRange
 
             return new static($fromAddress, $toAddress, $asterisksCount);
         }
-        if (strpos($range, ':') !== false && preg_match('/^[^*]+((?::\*)+)$/', $range, $matches)) {
+        if (strpos($range, ':') !== false && preg_match('/^[^*]+((?::\*)+)$/D', $range, $matches)) {
             $asterisksCount = strlen($matches[1]) >> 1;
             $fromAddress = IPv6::parseString(str_replace('*', '0', $range));
             if ($fromAddress === null) {

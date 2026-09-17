@@ -25,6 +25,8 @@ class PatternTest extends TestCase
             array('255.255.255.255'),
             array('255.255.255.**'),
             array('*::*'),
+            array("127.0.0.*\n"),
+            array("::*\n"),
             array(':*::'),
         );
     }
