@@ -258,6 +258,26 @@ class RangeTypeTest extends TestCase
             array('2002:ffff:ffff:0000:0000:0000:0000:0000/48', Type::T_LIMITEDBROADCAST), //Assumed as 255.255.255.255 IPv4
             array('2002:ffff:ffff:ffff:ffff:ffff:ffff:ffff/48', Type::T_LIMITEDBROADCAST), //Assumed as 255.255.255.255 IPv4
             array('2002:ffff:ffff:*:*:*:*:*', Type::T_LIMITEDBROADCAST), //Assumed as 255.255.255.255 IPv4
+            // ::ffff:0:0/96 (IPv4-mapped)
+            array('::ffff:0:0/96', null), // 0.0.0.0/0
+            array('::ffff:0.0.0.0/128', Type::T_UNSPECIFIED),
+            array('::ffff:0.0.0.0/104', null), // 0.0.0.0/8
+            array('::ffff:10.0.0.0/104', Type::T_PRIVATENETWORK), // 10.0.0.0/8
+            array('::ffff:10.1.2.3/128', Type::T_PRIVATENETWORK),
+            array('::ffff:a00:*', Type::T_PRIVATENETWORK), // 10.0.*.*
+            array('::ffff:127.0.0.0/104', Type::T_LOOPBACK), // 127.0.0.0/8
+            array('::ffff:127.0.0.1/128', Type::T_LOOPBACK),
+            array('::ffff:169.254.0.0/112', Type::T_LINKLOCAL), // 169.254.0.0/16
+            array('::ffff:172.16.0.0/108', Type::T_PRIVATENETWORK), // 172.16.0.0/12
+            array('::ffff:192.168.0.0/112', Type::T_PRIVATENETWORK), // 192.168.0.0/16
+            array('::ffff:c0a8:*', Type::T_PRIVATENETWORK), // 192.168.*.*
+            array('::ffff:224.0.0.0/100', Type::T_MULTICAST), // 224.0.0.0/4
+            array('::ffff:240.0.0.0/100', null), // 240.0.0.0/4
+            array('::ffff:255.255.255.255/128', Type::T_LIMITEDBROADCAST),
+            array('::ffff:8.8.8.8/128', Type::T_PUBLIC),
+            array('::ffff:8.8.0.0/112', Type::T_PUBLIC),
+            // ::fffe:0:0/95 (not IPv4-mapped: contains ::ffff:0:0/96 but also ::fffe:0:0/96)
+            array('::fffe:0:0/95', Type::T_RESERVED),
             // 2000::/3
             array('2000:0000:0000:0000:0000:0000:0000:0000/3', Type::T_PUBLIC),
             array('3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/3', Type::T_PUBLIC),
