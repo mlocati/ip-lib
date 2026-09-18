@@ -62,6 +62,21 @@ abstract class AbstractRange implements RangeInterface
     /**
      * {@inheritdoc}
      *
+     * @see \IPLib\Range\RangeInterface::getRangeTypeName()
+     */
+    public function getRangeTypeName()
+    {
+        $rangeType = $this->getRangeType();
+        if ($rangeType === null) {
+            $rangeType = $this->getStartAddress()->getRangeType();
+        }
+
+        return Type::getName($rangeType);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \IPLib\Range\RangeInterface::getAddressAtOffset()
      */
     public function getAddressAtOffset($n)
@@ -184,5 +199,32 @@ abstract class AbstractRange implements RangeInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Build the subnet mask of this range's address type with the specified number of leading bits set.
+     *
+     * @param int $prefix
+     *
+     * @return \IPLib\Address\AddressInterface
+     */
+    protected function buildSubnetMask($prefix)
+    {
+        $startAddress = $this->getStartAddress();
+        $bytes = array();
+        while ($prefix >= 8) {
+            $bytes[] = 255;
+            $prefix -= 8;
+        }
+        if ($prefix !== 0) {
+            $bytes[] = bindec(str_pad(str_repeat('1', $prefix), 8, '0'));
+        }
+        $bytes = array_pad($bytes, $startAddress::getNumberOfBits() >> 3, 0);
+        $mask = $startAddress::fromBytes($bytes);
+        if ($mask === null) {
+            throw new OutOfBoundsException('Invalid subnet mask prefix: ' . $prefix);
+        }
+
+        return $mask;
     }
 }

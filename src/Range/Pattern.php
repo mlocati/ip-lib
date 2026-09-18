@@ -281,22 +281,11 @@ class Pattern extends AbstractRange
      */
     public function getSubnetMask()
     {
-        if ($this->getAddressType() !== AddressType::T_IPv4) {
-            return null;
-        }
-        switch ($this->asterisksCount) {
-            case 0:
-                $bytes = array(255, 255, 255, 255);
-                break;
-            case 4:
-                $bytes = array(0, 0, 0, 0);
-                break;
-            default:
-                $bytes = array_pad(array_fill(0, 4 - $this->asterisksCount, 255), 4, 0);
-                break;
-        }
+        $fromAddress = $this->fromAddress;
+        /** @var \IPLib\Address\AddressInterface $fromAddress */
+        $bitsPerAsterisk = $this->getAddressType() === AddressType::T_IPv4 ? 8 : 16;
 
-        return IPv4::fromBytes($bytes);
+        return $this->buildSubnetMask($fromAddress::getNumberOfBits() - $this->asterisksCount * $bitsPerAsterisk);
     }
 
     /**

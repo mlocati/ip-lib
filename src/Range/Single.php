@@ -3,7 +3,6 @@
 namespace IPLib\Range;
 
 use IPLib\Address\AddressInterface;
-use IPLib\Address\IPv4;
 use IPLib\Address\Type as AddressType;
 use IPLib\Factory;
 use IPLib\ParseStringFlag;
@@ -212,11 +211,9 @@ class Single extends AbstractRange
      */
     public function getSubnetMask()
     {
-        if ($this->getAddressType() !== AddressType::T_IPv4) {
-            return null;
-        }
+        $address = $this->address;
 
-        return IPv4::fromBytes(array(255, 255, 255, 255));
+        return $this->buildSubnetMask($address::getNumberOfBits());
     }
 
     /**
