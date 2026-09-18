@@ -36,10 +36,16 @@ class SubnetMaskTest extends TestCase
             array('1.2.3.4/25', '255.255.255.128'),
             array('1.2.3.4/31', '255.255.255.254'),
             array('1.2.3.4/32', '255.255.255.255'),
-            // No subnet mask for IPv6 ranges
-            array('::', ''),
-            array('::*', ''),
-            array('::/1', ''),
+            array('::', 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'),
+            array('::*', 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:0'),
+            array('2001:db8::*:*', 'ffff:ffff:ffff:ffff:ffff:ffff::'),
+            array('*:*:*:*:*:*:*:*', '::'),
+            array('::/0', '::'),
+            array('::/1', '8000::'),
+            array('2001:db8::/64', 'ffff:ffff:ffff:ffff::'),
+            array('2001:db8::/100', 'ffff:ffff:ffff:ffff:ffff:ffff:f000:0'),
+            array('2001:db8::/127', 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffe'),
+            array('2001:db8::/128', 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'),
         );
     }
 
@@ -57,11 +63,7 @@ class SubnetMaskTest extends TestCase
         $this->assertNotNull($range);
         $this->assertInstanceOf('IPLib\Range\RangeInterface', $range);
         $subnetMask = $range->getSubnetMask();
-        if ($subnetMaskString === '') {
-            $this->assertNull($subnetMask);
-        } else {
-            $this->assertInstanceOf('IPLib\Address\AddressInterface', $subnetMask);
-            $this->assertSame($subnetMaskString, (string) $subnetMask);
-        }
+        $this->assertInstanceOf('IPLib\Address\AddressInterface', $subnetMask);
+        $this->assertSame($subnetMaskString, (string) $subnetMask);
     }
 }

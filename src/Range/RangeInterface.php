@@ -46,6 +46,14 @@ interface RangeInterface
     public function getRangeType();
 
     /**
+     * Get the name of the range type of this range (see the \IPLib\Range\Type::getName() method).
+     * When this range crosses multiple range types, the type of its starting address is used.
+     *
+     * @return string
+     */
+    public function getRangeTypeName();
+
+    /**
      * Get the address at a certain offset of this range.
      *
      * @param int|numeric-string|mixed $n the offset of the address (support negative offset)
@@ -114,9 +122,9 @@ interface RangeInterface
     public function getComparableEndString();
 
     /**
-     * Get the subnet mask representing this range (only for IPv4 ranges).
+     * Get the subnet mask representing this range.
      *
-     * @return \IPLib\Address\IPv4|null return NULL if the range is an IPv6 range, the subnet mask otherwise
+     * @return \IPLib\Address\AddressInterface
      *
      * @since 1.8.0
      */

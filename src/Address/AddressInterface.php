@@ -29,6 +29,15 @@ interface AddressInterface
     public static function getNumberOfBits();
 
     /**
+     * Parse an array of bytes and returns an address instance if the array is valid, or null otherwise.
+     *
+     * @param array<int|mixed> $bytes
+     *
+     * @return static|null
+     */
+    public static function fromBytes(array $bytes);
+
+    /**
      * Get the string representation of this address.
      *
      * @param bool $long set to true to have a long/full representation, false otherwise

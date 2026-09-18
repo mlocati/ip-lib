@@ -159,6 +159,35 @@ class Factory
     }
 
     /**
+     * Create the subnet whose boundaries are exactly the two specified addresses.
+     *
+     * @param string|\IPLib\Address\AddressInterface|mixed $from
+     * @param string|\IPLib\Address\AddressInterface|mixed $to
+     * @param int $flags A combination or zero or more flags
+     *
+     * @return \IPLib\Range\Subnet|null return NULL if $from and/or $to are invalid addresses, if they are addresses of different types, or if the range between them is not exactly one subnet
+     *
+     * @see \IPLib\ParseStringFlag
+     */
+    public static function getSubnetFromBoundaries($from, $to, $flags = 0)
+    {
+        list($from, $to) = self::parseBoundaries($from, $to, $flags);
+        if (!$from instanceof AddressInterface || !$to instanceof AddressInterface) {
+            return null;
+        }
+        $range = static::rangeFromBoundaryAddresses($from, $to);
+        if ($range === null) {
+            return null;
+        }
+        $subnet = $range->asSubnet();
+        if ($subnet->getStartAddress()->getComparableString() !== $from->getComparableString() || $subnet->getEndAddress()->getComparableString() !== $to->getComparableString()) {
+            return null;
+        }
+
+        return $subnet;
+    }
+
+    /**
      * Calculate the minimal range that contains all the specified addresses.
      *
      * @param array<non-empty-string|\IPLib\Address\AddressInterface|mixed> $addresses

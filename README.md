@@ -495,9 +495,9 @@ print_r(array_map('strval', $smallerSubnets));
  */
 ```
 
-### Getting the subnet mask for IPv4 ranges
+### Getting the subnet mask
 
-You can use the `getSubnetMask()` to get the subnet mask for IPv4 ranges:
+You can use the `getSubnetMask()` to get the subnet mask of a range:
 
 ```php
 // This will print 255.255.255.0
@@ -505,6 +505,9 @@ echo \IPLib\Factory::parseRangeString('192.168.0.*')->getSubnetMask()->toString(
 
 // This will print 255.255.255.252
 echo \IPLib\Factory::parseRangeString('192.168.0.12/30')->getSubnetMask()->toString();
+
+// This will print ffff:ffff:ffff:ffff::
+echo \IPLib\Factory::parseRangeString('2001:db8::/64')->getSubnetMask()->toString();
 ```
 
 ### Getting the range size

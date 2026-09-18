@@ -109,7 +109,7 @@ class Type
 
     /**
      * Address reserved for documentation.
-     * 
+     *
      * @var int
      */
     const T_DOCUMENTATION = 15;
