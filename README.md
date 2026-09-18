@@ -7,7 +7,7 @@
 
 ## Introduction
 
-IPLib is a modern, PSR-compliant, test-driven IP addresses and subnets manipulation library. It implements primitives to handle IPv4 and IPv6 addresses, as well as IP ranges (subnets), in CIDR format (like `::1/128` or `127.0.0.1/32`) and in pattern format (like `::*:*` or `127.0.*.*`).
+IPLib is a modern, PSR-compliant, test-driven IP addresses and ranges manipulation library. It implements primitives to handle IPv4 and IPv6 addresses, as well as IP ranges in CIDR/subnet format (like `::1/128` or `127.0.0.1/32`), pattern format (like `::*:*` or `127.0.*.*`), and arbitrary inclusive-boundary format (like `127.0.0.10-127.0.0.20`).
 
 ## Requirements
 
@@ -200,6 +200,18 @@ $range = \IPLib\Range\Pattern::parseString('127.0.0.*');
 $range = \IPLib\Range\Pattern::parseString('::*');
 ```
 
+To parse an arbitrary range with inclusive boundaries:
+
+```php
+$range = \IPLib\Range\Range::parseString('127.0.0.10-127.0.0.20');
+$range = \IPLib\Range\Range::fromBoundaries(
+    \IPLib\Factory::parseAddressString('2001:db8::1'),
+    \IPLib\Factory::parseAddressString('2001:db8::ff')
+);
+```
+
+`Range` preserves the exact inclusive boundaries. Its `getSize()`, `getAddressAtOffset()`, `contains()`, and `containsRange()` methods operate on those boundaries. `asSubnet()` returns the smallest CIDR subnet that contains the range, so it can include additional addresses; use `split()` to obtain an exact CIDR decomposition.
+
 To parse an address as a range:
 
 ```php
@@ -207,11 +219,12 @@ $range = \IPLib\Range\Single::parseString('127.0.0.1');
 $range = \IPLib\Range\Single::parseString('::1');
 ```
 
-To parse a range in any format:
+To parse a range in any supported format:
 
 ```php
 $range = \IPLib\Factory::parseRangeString('127.0.0.*');
 $range = \IPLib\Factory::parseRangeString('::1/128');
+$range = \IPLib\Factory::parseRangeString('127.0.0.10-127.0.0.20');
 $range = \IPLib\Factory::parseRangeString('::');
 ```
 

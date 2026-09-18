@@ -122,7 +122,9 @@ interface RangeInterface
     public function getComparableEndString();
 
     /**
-     * Get the subnet mask representing this range.
+     * Get the subnet mask for this range's network prefix.
+     *
+     * For an arbitrary-boundary range, this is the mask of its smallest containing subnet.
      *
      * @return \IPLib\Address\AddressInterface
      *
@@ -132,6 +134,8 @@ interface RangeInterface
 
     /**
      * Get the subnet/CIDR representation of this range.
+     *
+     * For an arbitrary-boundary range, this is the smallest subnet that contains the range and may include additional addresses.
      *
      * @return \IPLib\Range\Subnet
      *
@@ -180,6 +184,8 @@ interface RangeInterface
 
     /**
      * Get the "network prefix", that is how many bits of the address are dedicated to the network portion.
+     *
+     * For an arbitrary-boundary range, this is the number of leading bits shared by its boundaries.
      *
      * @return int
      *

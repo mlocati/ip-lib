@@ -108,7 +108,10 @@ class Factory
      */
     public static function parseRangeString($range, $flags = 0)
     {
-        $result = Range\Subnet::parseString($range, $flags);
+        $result = Range\Range::parseString($range, $flags);
+        if ($result === null) {
+            $result = Range\Subnet::parseString($range, $flags);
+        }
         if ($result === null) {
             $result = Range\Pattern::parseString($range, $flags);
         }
