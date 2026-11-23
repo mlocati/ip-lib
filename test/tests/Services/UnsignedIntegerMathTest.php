@@ -74,7 +74,7 @@ class UnsignedIntegerMathTest extends TestCase
      * @dataProvider provideCases
      *
      * @param string $value
-     * @param int $numBytes
+     * @param int<0, max> $numBytes
      * @param int[]|null $expectedResult
      * @param bool $onlyDecimal
      *
