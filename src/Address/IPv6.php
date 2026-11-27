@@ -399,7 +399,31 @@ class IPv6 implements AddressInterface
                 '100::/8' => array(RangeType::T_DISCARD, array('100::/64' => RangeType::T_DISCARDONLY)),
                 //'2002::/16' => array(RangeType::),
                 // RFC 4291
-                '2000::/3' => array(RangeType::T_PUBLIC),
+                '2000::/3' => array(RangeType::T_PUBLIC, array(
+                    // RFC 2928
+                    '2001::/23' => array(RangeType::T_RESERVED, array(
+                        // RFC 4380
+                        '2001::/32' => RangeType::T_PUBLIC,
+                        // RFC 7723
+                        '2001:1::1/128' => RangeType::T_PUBLIC,
+                        // RFC 8155
+                        '2001:1::2/128' => RangeType::T_PUBLIC,
+                        // RFC 9665
+                        '2001:1::3/128' => RangeType::T_PUBLIC,
+                        // RFC 7450
+                        '2001:3::/32' => RangeType::T_PUBLIC,
+                        // RFC 7535
+                        '2001:4:112::/48' => RangeType::T_PUBLIC,
+                        // RFC 7343
+                        '2001:20::/28' => RangeType::T_PUBLIC,
+                        // RFC 9374
+                        '2001:30::/28' => RangeType::T_PUBLIC,
+                    )),
+                    // RFC 3849
+                    '2001:db8::/32' => RangeType::T_RESERVED,
+                    // RFC 9637
+                    '3fff::/20' => RangeType::T_RESERVED,
+                )),
                 // RFC 4193
                 'fc00::/7' => array(RangeType::T_PRIVATENETWORK),
                 // RFC 4291
@@ -437,17 +461,7 @@ class IPv6 implements AddressInterface
                 // RFC 3879
                 //'fec0::/10' => array(RangeType::T_RESERVED),
             ) as $range => $data) {
-                $exceptions = array();
-                if (isset($data[1])) {
-                    foreach ($data[1] as $exceptionRange => $exceptionType) {
-                        $subnet = Subnet::parseString($exceptionRange);
-                        /** @var Subnet $subnet */
-                        $exceptions[] = new AssignedRange($subnet, $exceptionType);
-                    }
-                }
-                $subnet = Subnet::parseString($range);
-                /** @var Subnet $subnet */
-                $reservedRanges[] = new AssignedRange($subnet, $data[0], $exceptions);
+                $reservedRanges[] = self::createAssignedRange($range, $data);
             }
             self::$reservedRanges = $reservedRanges;
         }
@@ -672,5 +686,28 @@ class IPv6 implements AddressInterface
         }
 
         return static::fromWords($sum);
+    }
+
+    /**
+     * @param string $range
+     * @param int|array{0: int, 1?: array<string, int|array{0: int, 1?: array<string, int>}>} $data
+     *
+     * @return \IPLib\Address\AssignedRange
+     */
+    private static function createAssignedRange($range, $data)
+    {
+        if (!is_array($data)) {
+            $data = array($data);
+        }
+        $exceptions = array();
+        if (isset($data[1])) {
+            foreach ($data[1] as $exceptionRange => $exceptionData) {
+                $exceptions[] = self::createAssignedRange($exceptionRange, $exceptionData);
+            }
+        }
+        $subnet = Subnet::parseString($range);
+        /** @var Subnet $subnet */
+
+        return new AssignedRange($subnet, $data[0], $exceptions);
     }
 }

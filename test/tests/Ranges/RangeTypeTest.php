@@ -279,8 +279,30 @@ class RangeTypeTest extends TestCase
             // ::fffe:0:0/95 (not IPv4-mapped: contains ::ffff:0:0/96 but also ::fffe:0:0/96)
             array('::fffe:0:0/95', Type::T_RESERVED),
             // 2000::/3
-            array('2000:0000:0000:0000:0000:0000:0000:0000/3', Type::T_PUBLIC),
-            array('3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/3', Type::T_PUBLIC),
+            array('2000:0000:0000:0000:0000:0000:0000:0000/3', null),
+            array('3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/3', null),
+            array('2001:200::/23', Type::T_PUBLIC),
+            array('3fff:1000::/20', Type::T_PUBLIC),
+            // 2001::/23
+            array('2001::/23', null),
+            array('2001::/32', Type::T_PUBLIC),
+            array('2001:1::/32', null),
+            array('2001:1::1/128', Type::T_PUBLIC),
+            array('2001:1::4/126', Type::T_RESERVED),
+            array('2001:2::/48', Type::T_RESERVED),
+            array('2001:3::/32', Type::T_PUBLIC),
+            array('2001:4:112::/48', Type::T_PUBLIC),
+            array('2001:4::/32', null),
+            array('2001:10::/28', Type::T_RESERVED),
+            array('2001:20::/28', Type::T_PUBLIC),
+            array('2001:30::/28', Type::T_PUBLIC),
+            array('2001:100::/24', Type::T_RESERVED),
+            // 2001:db8::/32
+            array('2001:db8::/32', Type::T_RESERVED),
+            array('2001:db8::/31', null),
+            // 3fff::/20
+            array('3fff::/20', Type::T_RESERVED),
+            array('3fff::/16', null),
             // 4000::/3
             array('4000:0000:0000:0000:0000:0000:0000:0000/3', Type::T_RESERVED),
             array('5fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/3', Type::T_RESERVED),
