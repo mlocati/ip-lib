@@ -55,7 +55,8 @@ class ReservedRangesTest extends TestCase
             $exceptionRange = $exception->getRange();
             static::assertTrue($range->containsRange($exceptionRange), "{$exceptionRange} should be contained in {$range}");
             static::assertNotSame($type, $exception->getType(), "{$exceptionRange} has the same type as {$range}");
-            static::assertSame($exception->getType(), $assignedRange->getAddressType($exceptionRange->getStartAddress()));
+            // The start address may belong to a nested exception (for example 2001::/32 in 2001::/23)
+            static::assertSame($exception->getAddressType($exceptionRange->getStartAddress()), $assignedRange->getAddressType($exceptionRange->getStartAddress()));
             $this->checkAssignedRange($exception, $addressClass);
         }
     }
